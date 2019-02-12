@@ -1,5 +1,5 @@
 ﻿namespace Manager {
-	partial class NewTable {
+	partial class NameDialog {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -80,6 +80,7 @@
 			this.MinimizeBox = false;
 			this.Name = "NewTable";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Create table";
 			this.ResumeLayout(false);
 			this.PerformLayout();

@@ -24,42 +24,122 @@
 		/// </summary>
 		private void InitializeComponent() {
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-			this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.renameDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.deleteDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.deleteTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.renameTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.treeView1 = new System.Windows.Forms.TreeView();
 			this.button1 = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
 			this.button3 = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
-			this.renameDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.closeDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.archivoToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.tablesToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(368, 24);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
-			// archivoToolStripMenuItem
+			// fileToolStripMenuItem
 			// 
-			this.archivoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newDBToolStripMenuItem,
             this.openToolStripMenuItem,
-            this.renameDBToolStripMenuItem});
-			this.archivoToolStripMenuItem.Name = "archivoToolStripMenuItem";
-			this.archivoToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-			this.archivoToolStripMenuItem.Text = "File";
+            this.closeDBToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.renameDBToolStripMenuItem,
+            this.deleteDBToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.exitToolStripMenuItem});
+			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+			this.fileToolStripMenuItem.Text = "File";
 			// 
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
-			this.openToolStripMenuItem.Text = "Open";
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.openToolStripMenuItem.Text = "Open DB";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+			// 
+			// renameDBToolStripMenuItem
+			// 
+			this.renameDBToolStripMenuItem.Enabled = false;
+			this.renameDBToolStripMenuItem.Name = "renameDBToolStripMenuItem";
+			this.renameDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.renameDBToolStripMenuItem.Text = "Rename DB";
+			this.renameDBToolStripMenuItem.Click += new System.EventHandler(this.renameDBToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+			// 
+			// deleteDBToolStripMenuItem
+			// 
+			this.deleteDBToolStripMenuItem.Enabled = false;
+			this.deleteDBToolStripMenuItem.Name = "deleteDBToolStripMenuItem";
+			this.deleteDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.deleteDBToolStripMenuItem.Text = "Delete DB";
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+			// 
+			// exitToolStripMenuItem
+			// 
+			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.exitToolStripMenuItem.Text = "Exit";
+			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+			// 
+			// tablesToolStripMenuItem
+			// 
+			this.tablesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newTableToolStripMenuItem,
+            this.deleteTableToolStripMenuItem,
+            this.renameTableToolStripMenuItem});
+			this.tablesToolStripMenuItem.Name = "tablesToolStripMenuItem";
+			this.tablesToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+			this.tablesToolStripMenuItem.Text = "Tables";
+			// 
+			// newTableToolStripMenuItem
+			// 
+			this.newTableToolStripMenuItem.Enabled = false;
+			this.newTableToolStripMenuItem.Name = "newTableToolStripMenuItem";
+			this.newTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.newTableToolStripMenuItem.Text = "New table";
+			// 
+			// deleteTableToolStripMenuItem
+			// 
+			this.deleteTableToolStripMenuItem.Enabled = false;
+			this.deleteTableToolStripMenuItem.Name = "deleteTableToolStripMenuItem";
+			this.deleteTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.deleteTableToolStripMenuItem.Text = "Delete table";
+			// 
+			// renameTableToolStripMenuItem
+			// 
+			this.renameTableToolStripMenuItem.Enabled = false;
+			this.renameTableToolStripMenuItem.Name = "renameTableToolStripMenuItem";
+			this.renameTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.renameTableToolStripMenuItem.Text = "Rename Table";
 			// 
 			// treeView1
 			// 
@@ -94,6 +174,7 @@
 			// 
 			// button3
 			// 
+			this.button3.Enabled = false;
 			this.button3.Location = new System.Drawing.Point(249, 132);
 			this.button3.Name = "button3";
 			this.button3.Size = new System.Drawing.Size(95, 23);
@@ -110,13 +191,22 @@
 			this.label1.Size = new System.Drawing.Size(35, 13);
 			this.label1.TabIndex = 6;
 			this.label1.Text = "label1";
+			this.label1.Visible = false;
 			// 
-			// renameDBToolStripMenuItem
+			// closeDBToolStripMenuItem
 			// 
-			this.renameDBToolStripMenuItem.Name = "renameDBToolStripMenuItem";
-			this.renameDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.renameDBToolStripMenuItem.Text = "Rename DB";
-			this.renameDBToolStripMenuItem.Click += new System.EventHandler(this.renameDBToolStripMenuItem_Click);
+			this.closeDBToolStripMenuItem.Enabled = false;
+			this.closeDBToolStripMenuItem.Name = "closeDBToolStripMenuItem";
+			this.closeDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.closeDBToolStripMenuItem.Text = "Close DB";
+			this.closeDBToolStripMenuItem.Click += new System.EventHandler(this.closeDBToolStripMenuItem_Click);
+			// 
+			// newDBToolStripMenuItem
+			// 
+			this.newDBToolStripMenuItem.Name = "newDBToolStripMenuItem";
+			this.newDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.newDBToolStripMenuItem.Text = "New DB";
+			this.newDBToolStripMenuItem.Click += new System.EventHandler(this.newDBToolStripMenuItem_Click);
 			// 
 			// Form1
 			// 
@@ -131,7 +221,8 @@
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "Form1";
-			this.Text = "Form1";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			this.Text = "Data Base Management System";
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
@@ -142,7 +233,7 @@
 		#endregion
 
 		private System.Windows.Forms.MenuStrip menuStrip1;
-		private System.Windows.Forms.ToolStripMenuItem archivoToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
 		private System.Windows.Forms.TreeView treeView1;
 		private System.Windows.Forms.Button button1;
@@ -150,6 +241,16 @@
 		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ToolStripMenuItem renameDBToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripMenuItem deleteDBToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem tablesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem newTableToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem deleteTableToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem renameTableToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem closeDBToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem newDBToolStripMenuItem;
 	}
 }
 
