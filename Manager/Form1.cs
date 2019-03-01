@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
@@ -18,21 +20,37 @@ namespace Manager {
 		}
 
 		/*Guarda una base de datos con todos sus valores utilizando serialización en XML*/
-		private void Save() {
-			foreach (Table table in dataBase.Tables) { 
-				try {
-					XmlDocument xmlDocument = new XmlDocument();
-					XmlSerializer xmlSerializer = new XmlSerializer(dataBase.GetType());
+		private void SaveFile(Table table) {
+            Stream stream = null;
+            try {
+                IFormatter formatter = new BinaryFormatter();
+                stream = new FileStream(dataBase.Path + "\\" + table.Name, FileMode.Create, FileAccess.Write, FileShare.None);
+                formatter.Serialize(stream, table);
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.ToString());
+            }
+            finally {
+                if (null != stream) {
+                    stream.Close();
+                }
+            }
+        }
 
-					using (MemoryStream stream = new MemoryStream()) {
-						xmlSerializer.Serialize(stream, dataBase);
-						stream.Position = 0;
-						xmlDocument.Load(stream);
-						xmlDocument.Save(selectedTable);
-					}
-				}
-				catch (Exception ex) {
-					MessageBox.Show(ex.ToString());
+		private void LoadFile(string tableName) {
+			Stream stream = null;
+			try {
+				IFormatter formatter = new BinaryFormatter();
+				stream = new FileStream(dataBase.Path + "\\" + tableName, FileMode.Open, FileAccess.Read, FileShare.None);
+				Table table = (Table)formatter.Deserialize(stream);
+				dataBase.AddTable(table);
+			}
+			catch (Exception ex) {
+				MessageBox.Show(ex.ToString());
+			}
+			finally {
+				if (null != stream) {
+					stream.Close();
 				}
 			}
 		}
@@ -44,10 +62,10 @@ namespace Manager {
 				Description = "New database",
 				ShowNewFolderButton = false
 			};
+			
 			dataBase = new DataBase(); //crea la base de datos que va a guardar
 
 			treeView1.Nodes.Clear();
-
 			if (op.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(op.SelectedPath)) {
 				NameDialog nt = new NameDialog("New database name", "");
 				if (nt.ShowDialog() == DialogResult.OK && nt.NewName != "") {
@@ -75,23 +93,25 @@ namespace Manager {
 			};
 
 			treeView1.Nodes.Clear(); // Control de treeview para ver las tablas
-			dbPath = "";
+			dataBase = new DataBase();
+			dataBase.Path = "";
 
 			if (op.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(op.SelectedPath)) {
 				string[] files = Directory.GetFiles(op.SelectedPath); // Obtiene los archivos que se encuentran
 				// en la carpeta
-				dbPath = op.SelectedPath; // Dirección de la base de datos actual
+				dataBase.Path = op.SelectedPath; // Dirección de la base de datos actual
 
 				// Muestra las tablas sin el nombre de la extensión
 				foreach (string file in files) {
 					treeView1.Nodes.Add(Path.GetFileNameWithoutExtension(file));
+					// Carga toda la información de los archivos de las tablas y almacena en dataBase
+					LoadFile(Path.GetFileName(file));
 				}
 
 				// Nomre de la base de datos
-				dbName = label1.Text = op.SelectedPath.Split('\\').Last().ToString();
+				dataBase.Name = label1.Text = op.SelectedPath.Split('\\').Last().ToString();
 
 				// Actualizacion de los controles
-				label1.Text = dbName;
 				label1.Visible = true;
 				treeView1.Enabled = true;
 				btnNewTable.Enabled = true;
@@ -110,29 +130,23 @@ namespace Manager {
 			// Dialogo de nombre
 			NameDialog nt = new NameDialog("Create table", "");
 			if (nt.ShowDialog() == DialogResult.OK) {
-				try {
-					// Crea el archivo de la tabla
-					BinaryWriter bw = new BinaryWriter(new FileStream(dbPath + "\\" + nt.NewName + ".bin", FileMode.Create));
-					bw.Close();
-				}
-				catch (IOException ex) {
-					Console.WriteLine(ex.Message + "\n Cannot create file.");
-					return;
-				}
+				Table t = new Table(nt.NewName);
+
+				SaveFile(t);
+				dataBase.AddTable(t);
 				treeView1.Nodes.Add(nt.NewName);// Agrega la tabla al treeview
 			}
-			dataBase.AddTable(new Table(nt.NewName));
-			//Save();
+			
 		}
 
 		/*Elimina una tabla de la base de datos. Actualiza el tree view y elimina los datos de la tabla*/
 		private void BtnDeleteTable_Click(object sender, EventArgs e) {
 			if (MessageBox.Show("Are you sure you want delete table?", "Delete table", MessageBoxButtons.OKCancel) == DialogResult.OK) {
 				// Comprueba que la tabla exista antes de eliminarla.
-				if (File.Exists(dbPath + "\\" + treeView1.SelectedNode.Text + ".bin")) {
+				if (File.Exists(dataBase.Path + "\\" + treeView1.SelectedNode.Text + ".bin")) {
 					// Elimina la tabla utilizando el nombre elegido en treeview
 					dataBase.RemoveTable(treeView1.SelectedNode.Text);
-					File.Delete(dbPath + "\\" + treeView1.SelectedNode.Text + ".bin");
+					File.Delete(dataBase.Path + "\\" + treeView1.SelectedNode.Text + ".bin");
 				}
 				// Elimina del treeview
 				treeView1.Nodes.Remove(treeView1.SelectedNode);
@@ -153,9 +167,11 @@ namespace Manager {
 			NameDialog nt = new NameDialog("Rename table", treeView1.SelectedNode.Text);
 			if (nt.ShowDialog() == DialogResult.OK) {
 				// Comprueba que la tabla exista
-				if (File.Exists(dbPath + "\\" + treeView1.SelectedNode.Text + ".bin")) {
+				if (File.Exists(dataBase.Path + "\\" + treeView1.SelectedNode.Text + ".bin")) {
 					// El metodo de mover cambia el nombre de la tabla, se tiene que dar la misma dirección
-					File.Move(dbPath + "\\" + treeView1.SelectedNode.Text + ".bin", dbPath + "\\" + nt.NewName + ".bin");
+					Table table = dataBase.FindTable(treeView1.SelectedNode.Text);
+					table.Name = nt.NewName;
+					File.Move(dataBase.Path + "\\" + treeView1.SelectedNode.Text + ".bin", dataBase.Path + "\\" + nt.NewName + ".bin");
 				}
 				treeView1.SelectedNode.Text = nt.NewName;
 
@@ -181,7 +197,9 @@ namespace Manager {
 				btnAddAttrib.Enabled = true;
 				btnDeleteAttrib.Enabled = true;
 				btnModifyAttrib.Enabled = true;
-				selectedTable = dbPath + "\\" + treeView1.SelectedNode.Name;
+				selectedTable = dataBase.Path + "\\" + treeView1.SelectedNode.Name;
+				currentTable = dataBase.FindTable(treeView1.SelectedNode.Name);
+				//ShowTableInfo();
 			}
 			else {
 				// Si no se elige nada, se desactivan los controles y se limpia la tabla elegida
@@ -195,14 +213,25 @@ namespace Manager {
 			}
 		}
 
+		private void ShowTableInfo(Table table) {
+			dataGridView1 = new DataGridView();
+			foreach (Attribute attribute in table.Attributes) {
+				DataGridViewTextBoxColumn dgc = new DataGridViewTextBoxColumn {
+					Name = attribute.Name,
+					HeaderText = attribute.Name
+				};
+				dataGridView1.Columns.Add(dgc);
+			}
+		}
+
 		/*Opción del menu que permite cambiar el nombre de la base de datos. Se muestra un dialogo de confirmación
 		 y un dialogo de nuevo nombre*/
 		private void RenameDBToolStripMenuItem_Click(object sender, EventArgs e) {
-			NameDialog nt = new NameDialog("Change DB name", dbName);
+			NameDialog nt = new NameDialog("Change DB name", dataBase.Name);
 			if (nt.ShowDialog() == DialogResult.OK) { 
-				if (Directory.Exists(dbPath)) { // Verifica que exite el directorio
+				if (Directory.Exists(dataBase.Path)) { // Verifica que exite el directorio
 					// Se mueve la carpeta en la misma dirección con un nuevo nombre
-					Directory.Move(dbPath, dbPath.Replace("\\" + dbName, "") + "\\" + nt.NewName);
+					Directory.Move(dataBase.Path, dataBase.Path.Replace("\\" + dataBase.Name, "") + "\\" + nt.NewName);
 				}
 				label1.Text = nt.NewName;
 			}
@@ -217,7 +246,7 @@ namespace Manager {
 
 		/* Cierra la base de datos actual. Desactiva los controles y limpia las variables. Se desactivan los controles */
 		private void CloseDBToolStripMenuItem_Click(object sender, EventArgs e) {
-			dbPath = dbName = "";
+			dataBase.Name = dataBase.Path = "";
 			label1.Visible = false;
 
 			treeView1.Nodes.Clear();
@@ -241,8 +270,8 @@ namespace Manager {
 		Se desactivan los controles*/
 		private void DeleteDBToolStripMenuItem_Click(object sender, EventArgs e) {
 			if (MessageBox.Show("Are you sure you want to delete the database?", "Delete database", MessageBoxButtons.OKCancel) == DialogResult.OK) {
-				Directory.Delete(dbPath, true);
-				dbPath = dbName = "";
+				Directory.Delete(dataBase.Path, true);
+				dataBase.Name = dataBase.Path = "";
 				label1.Visible = false;
 
 				treeView1.Nodes.Clear();
@@ -260,9 +289,14 @@ namespace Manager {
 				deleteDBToolStripMenuItem.Enabled = false;
 				closeDBToolStripMenuItem.Enabled = false;
 			}
-
 		}
 
-
+		private void BtnAddAttrib_Click(object sender, EventArgs e) {
+			AttributeDialog nd = new AttributeDialog("New attribute");
+			if (nd.ShowDialog() == DialogResult.OK) {
+				Attribute attribute = new Attribute();
+				//currentTable.AddAttribute();
+			}
+		}
 	}
 }

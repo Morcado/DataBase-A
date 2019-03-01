@@ -13,5 +13,9 @@ namespace Manager {
 			Name = newName;
 			Attributes = new List<Attribute>();
 		}
+
+		internal void AddAttribute() {
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace Manager {
+    [Serializable]
 	class Attribute {
 		public string Name { get; set; } // Nombre del atributo
 		public int Type { get; set; } // Caracter o Entero o Flotante

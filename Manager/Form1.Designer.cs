@@ -46,11 +46,8 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.btnAddAttrib = new System.Windows.Forms.Button();
 			this.btnDeleteAttrib = new System.Windows.Forms.Button();
-			this.treeView2 = new System.Windows.Forms.TreeView();
-			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.btnModifyAttrib = new System.Windows.Forms.Button();
-			this.button7 = new System.Windows.Forms.Button();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -170,16 +167,16 @@
 			// 
 			// treeView1
 			// 
-			this.treeView1.Location = new System.Drawing.Point(12, 73);
+			this.treeView1.Location = new System.Drawing.Point(12, 72);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(212, 265);
+			this.treeView1.Size = new System.Drawing.Size(183, 231);
 			this.treeView1.TabIndex = 1;
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
 			// 
 			// btnNewTable
 			// 
 			this.btnNewTable.Enabled = false;
-			this.btnNewTable.Location = new System.Drawing.Point(230, 72);
+			this.btnNewTable.Location = new System.Drawing.Point(201, 73);
 			this.btnNewTable.Name = "btnNewTable";
 			this.btnNewTable.Size = new System.Drawing.Size(96, 23);
 			this.btnNewTable.TabIndex = 2;
@@ -190,7 +187,7 @@
 			// btnDeleteTable
 			// 
 			this.btnDeleteTable.Enabled = false;
-			this.btnDeleteTable.Location = new System.Drawing.Point(230, 101);
+			this.btnDeleteTable.Location = new System.Drawing.Point(201, 102);
 			this.btnDeleteTable.Name = "btnDeleteTable";
 			this.btnDeleteTable.Size = new System.Drawing.Size(96, 23);
 			this.btnDeleteTable.TabIndex = 3;
@@ -201,7 +198,7 @@
 			// btnRenameTable
 			// 
 			this.btnRenameTable.Enabled = false;
-			this.btnRenameTable.Location = new System.Drawing.Point(230, 131);
+			this.btnRenameTable.Location = new System.Drawing.Point(201, 132);
 			this.btnRenameTable.Name = "btnRenameTable";
 			this.btnRenameTable.Size = new System.Drawing.Size(96, 23);
 			this.btnRenameTable.TabIndex = 4;
@@ -222,15 +219,15 @@
 			// dataGridView1
 			// 
 			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridView1.Location = new System.Drawing.Point(550, 72);
+			this.dataGridView1.Location = new System.Drawing.Point(303, 73);
 			this.dataGridView1.Name = "dataGridView1";
-			this.dataGridView1.Size = new System.Drawing.Size(302, 266);
+			this.dataGridView1.Size = new System.Drawing.Size(302, 300);
 			this.dataGridView1.TabIndex = 7;
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(560, 57);
+			this.label2.Location = new System.Drawing.Point(313, 58);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(0, 13);
 			this.label2.TabIndex = 8;
@@ -238,45 +235,28 @@
 			// btnAddAttrib
 			// 
 			this.btnAddAttrib.Enabled = false;
-			this.btnAddAttrib.Location = new System.Drawing.Point(230, 181);
+			this.btnAddAttrib.Location = new System.Drawing.Point(611, 72);
 			this.btnAddAttrib.Name = "btnAddAttrib";
 			this.btnAddAttrib.Size = new System.Drawing.Size(96, 23);
 			this.btnAddAttrib.TabIndex = 9;
 			this.btnAddAttrib.Text = "Add attribute";
 			this.btnAddAttrib.UseVisualStyleBackColor = true;
+			this.btnAddAttrib.Click += new System.EventHandler(this.BtnAddAttrib_Click);
 			// 
 			// btnDeleteAttrib
 			// 
 			this.btnDeleteAttrib.Enabled = false;
-			this.btnDeleteAttrib.Location = new System.Drawing.Point(230, 210);
+			this.btnDeleteAttrib.Location = new System.Drawing.Point(611, 101);
 			this.btnDeleteAttrib.Name = "btnDeleteAttrib";
 			this.btnDeleteAttrib.Size = new System.Drawing.Size(96, 23);
 			this.btnDeleteAttrib.TabIndex = 9;
 			this.btnDeleteAttrib.Text = "Delete attribute";
 			this.btnDeleteAttrib.UseVisualStyleBackColor = true;
 			// 
-			// treeView2
-			// 
-			this.treeView2.Location = new System.Drawing.Point(332, 72);
-			this.treeView2.Name = "treeView2";
-			this.treeView2.Size = new System.Drawing.Size(212, 265);
-			this.treeView2.TabIndex = 1;
-			this.treeView2.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(329, 57);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(51, 13);
-			this.label3.TabIndex = 6;
-			this.label3.Text = "Attributes";
-			this.label3.Visible = false;
-			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(547, 56);
+			this.label4.Location = new System.Drawing.Point(300, 57);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(39, 13);
 			this.label4.TabIndex = 6;
@@ -286,25 +266,16 @@
 			// btnModifyAttrib
 			// 
 			this.btnModifyAttrib.Enabled = false;
-			this.btnModifyAttrib.Location = new System.Drawing.Point(230, 239);
+			this.btnModifyAttrib.Location = new System.Drawing.Point(611, 130);
 			this.btnModifyAttrib.Name = "btnModifyAttrib";
 			this.btnModifyAttrib.Size = new System.Drawing.Size(96, 23);
 			this.btnModifyAttrib.TabIndex = 9;
 			this.btnModifyAttrib.Text = "Modify attribute";
 			this.btnModifyAttrib.UseVisualStyleBackColor = true;
 			// 
-			// button7
-			// 
-			this.button7.Location = new System.Drawing.Point(392, 354);
-			this.button7.Name = "button7";
-			this.button7.Size = new System.Drawing.Size(75, 23);
-			this.button7.TabIndex = 10;
-			this.button7.Text = "button7";
-			this.button7.UseVisualStyleBackColor = true;
-			// 
 			// statusStrip1
 			// 
-			this.statusStrip1.Location = new System.Drawing.Point(0, 388);
+			this.statusStrip1.Location = new System.Drawing.Point(0, 394);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Size = new System.Drawing.Size(864, 22);
 			this.statusStrip1.TabIndex = 11;
@@ -314,21 +285,18 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(864, 410);
+			this.ClientSize = new System.Drawing.Size(864, 416);
 			this.Controls.Add(this.statusStrip1);
-			this.Controls.Add(this.button7);
 			this.Controls.Add(this.btnModifyAttrib);
 			this.Controls.Add(this.btnDeleteAttrib);
 			this.Controls.Add(this.btnAddAttrib);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.dataGridView1);
 			this.Controls.Add(this.label4);
-			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.btnRenameTable);
 			this.Controls.Add(this.btnDeleteTable);
 			this.Controls.Add(this.btnNewTable);
-			this.Controls.Add(this.treeView2);
 			this.Controls.Add(this.treeView1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
@@ -368,11 +336,8 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Button btnAddAttrib;
 		private System.Windows.Forms.Button btnDeleteAttrib;
-		private System.Windows.Forms.TreeView treeView2;
-		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Button btnModifyAttrib;
-		private System.Windows.Forms.Button button7;
 		private System.Windows.Forms.StatusStrip statusStrip1;
 	}
 }

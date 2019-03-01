@@ -7,20 +7,24 @@ namespace Manager {
 	class DataBase {
 		public string Name { get; set; }
 		public string Path { get; set; }
-		public List<Table> Tables { get; set; }
+		private List<Table> tables;
 
 		public DataBase() {
 			Name = Path = "";
-			Tables = new List<Table>();
+			tables = new List<Table>();
 		}
 
 		public void AddTable(Table table) {
-			Tables.Add(table);
+			tables.Add(table);
 		}
 
 		public void RemoveTable(string text) {
-			Table table = Tables.Find(x => x.Name == text);
-			Tables.Remove(table);
+			Table table = tables.Find(x => x.Name == text);
+			tables.Remove(table);
+		}
+
+		public Table FindTable(string text) {
+			return tables.Find(x => x.Name == text);
 		}
 	}
 }
