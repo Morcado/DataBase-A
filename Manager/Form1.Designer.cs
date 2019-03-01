@@ -51,6 +51,7 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.btnModifyAttrib = new System.Windows.Forms.Button();
 			this.button7 = new System.Windows.Forms.Button();
+			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
@@ -86,14 +87,14 @@
 			this.newDBToolStripMenuItem.Name = "newDBToolStripMenuItem";
 			this.newDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
 			this.newDBToolStripMenuItem.Text = "New DB";
-			this.newDBToolStripMenuItem.Click += new System.EventHandler(this.newDBToolStripMenuItem_Click);
+			this.newDBToolStripMenuItem.Click += new System.EventHandler(this.NewDBToolStripMenuItem_Click);
 			// 
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
 			this.openToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
 			this.openToolStripMenuItem.Text = "Open DB";
-			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+			this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
 			// 
 			// closeDBToolStripMenuItem
 			// 
@@ -101,7 +102,7 @@
 			this.closeDBToolStripMenuItem.Name = "closeDBToolStripMenuItem";
 			this.closeDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
 			this.closeDBToolStripMenuItem.Text = "Close DB";
-			this.closeDBToolStripMenuItem.Click += new System.EventHandler(this.closeDBToolStripMenuItem_Click);
+			this.closeDBToolStripMenuItem.Click += new System.EventHandler(this.CloseDBToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
@@ -114,7 +115,7 @@
 			this.renameDBToolStripMenuItem.Name = "renameDBToolStripMenuItem";
 			this.renameDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
 			this.renameDBToolStripMenuItem.Text = "Rename DB";
-			this.renameDBToolStripMenuItem.Click += new System.EventHandler(this.renameDBToolStripMenuItem_Click);
+			this.renameDBToolStripMenuItem.Click += new System.EventHandler(this.RenameDBToolStripMenuItem_Click);
 			// 
 			// deleteDBToolStripMenuItem
 			// 
@@ -122,7 +123,7 @@
 			this.deleteDBToolStripMenuItem.Name = "deleteDBToolStripMenuItem";
 			this.deleteDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
 			this.deleteDBToolStripMenuItem.Text = "Delete DB";
-			this.deleteDBToolStripMenuItem.Click += new System.EventHandler(this.deleteDBToolStripMenuItem_Click);
+			this.deleteDBToolStripMenuItem.Click += new System.EventHandler(this.DeleteDBToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator2
 			// 
@@ -134,7 +135,7 @@
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
 			this.exitToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
-			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+			this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
 			// 
 			// tablesToolStripMenuItem
 			// 
@@ -173,7 +174,7 @@
 			this.treeView1.Name = "treeView1";
 			this.treeView1.Size = new System.Drawing.Size(212, 265);
 			this.treeView1.TabIndex = 1;
-			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
 			// 
 			// btnNewTable
 			// 
@@ -184,7 +185,7 @@
 			this.btnNewTable.TabIndex = 2;
 			this.btnNewTable.Text = "New Table";
 			this.btnNewTable.UseVisualStyleBackColor = true;
-			this.btnNewTable.Click += new System.EventHandler(this.btnNewTable_Click);
+			this.btnNewTable.Click += new System.EventHandler(this.BtnNewTable_Click);
 			// 
 			// btnDeleteTable
 			// 
@@ -195,7 +196,7 @@
 			this.btnDeleteTable.TabIndex = 3;
 			this.btnDeleteTable.Text = "Delete table";
 			this.btnDeleteTable.UseVisualStyleBackColor = true;
-			this.btnDeleteTable.Click += new System.EventHandler(this.btnDeleteTable_Click);
+			this.btnDeleteTable.Click += new System.EventHandler(this.BtnDeleteTable_Click);
 			// 
 			// btnRenameTable
 			// 
@@ -206,7 +207,7 @@
 			this.btnRenameTable.TabIndex = 4;
 			this.btnRenameTable.Text = "Rename Table";
 			this.btnRenameTable.UseVisualStyleBackColor = true;
-			this.btnRenameTable.Click += new System.EventHandler(this.btnRenameTable_Click);
+			this.btnRenameTable.Click += new System.EventHandler(this.BtnRenameTable_Click);
 			// 
 			// label1
 			// 
@@ -223,7 +224,7 @@
 			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridView1.Location = new System.Drawing.Point(550, 72);
 			this.dataGridView1.Name = "dataGridView1";
-			this.dataGridView1.Size = new System.Drawing.Size(283, 266);
+			this.dataGridView1.Size = new System.Drawing.Size(302, 266);
 			this.dataGridView1.TabIndex = 7;
 			// 
 			// label2
@@ -260,7 +261,7 @@
 			this.treeView2.Name = "treeView2";
 			this.treeView2.Size = new System.Drawing.Size(212, 265);
 			this.treeView2.TabIndex = 1;
-			this.treeView2.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+			this.treeView2.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
 			// 
 			// label3
 			// 
@@ -301,11 +302,20 @@
 			this.button7.Text = "button7";
 			this.button7.UseVisualStyleBackColor = true;
 			// 
+			// statusStrip1
+			// 
+			this.statusStrip1.Location = new System.Drawing.Point(0, 388);
+			this.statusStrip1.Name = "statusStrip1";
+			this.statusStrip1.Size = new System.Drawing.Size(864, 22);
+			this.statusStrip1.TabIndex = 11;
+			this.statusStrip1.Text = "statusStrip1";
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(864, 389);
+			this.ClientSize = new System.Drawing.Size(864, 410);
+			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.button7);
 			this.Controls.Add(this.btnModifyAttrib);
 			this.Controls.Add(this.btnDeleteAttrib);
@@ -363,6 +373,7 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Button btnModifyAttrib;
 		private System.Windows.Forms.Button button7;
+		private System.Windows.Forms.StatusStrip statusStrip1;
 	}
 }
 

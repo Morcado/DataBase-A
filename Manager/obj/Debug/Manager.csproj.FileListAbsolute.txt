@@ -37,3 +37,16 @@ C:\Users\Morcado\Desktop\DataBase A\Manager\obj\Debug\Manager.csproj.CoreCompile
 C:\Users\Morcado\Desktop\DataBase A\Manager\obj\Debug\Manager.csproj.CopyComplete
 C:\Users\Morcado\Desktop\DataBase A\Manager\obj\Debug\Manager.exe
 C:\Users\Morcado\Desktop\DataBase A\Manager\obj\Debug\Manager.pdb
+C:\Users\Morcado\Desktop\Data Base MS\Manager\bin\Debug\Manager.exe
+C:\Users\Morcado\Desktop\Data Base MS\Manager\bin\Debug\Manager.pdb
+C:\Users\Morcado\Desktop\Data Base MS\Manager\bin\Debug\Antlr4.Runtime.dll
+C:\Users\Morcado\Desktop\Data Base MS\Manager\bin\Debug\Antlr4.Runtime.xml
+C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.csprojAssemblyReference.cache
+C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.Form1.resources
+C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.NameDialog.resources
+C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.Properties.Resources.resources
+C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.csproj.GenerateResource.cache
+C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.csproj.CoreCompileInputs.cache
+C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.csproj.CopyComplete
+C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.exe
+C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.pdb

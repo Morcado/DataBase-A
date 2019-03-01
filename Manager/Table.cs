@@ -9,8 +9,8 @@ namespace Manager {
 		public List<Attribute> Attributes { get; set; }
 		public string Name { get; set; }
 
-
-		public Table() {
+		public Table(string newName) {
+			Name = newName;
 			Attributes = new List<Attribute>();
 		}
 	}
