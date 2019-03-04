@@ -18,6 +18,8 @@ namespace Manager {
 			InitializeComponent();
 			currentTable = null;
 		}
+		#region File operations
+
 
 		/*Guarda una base de datos con todos sus valores utilizando serialización en XML*/
 		private void SaveFile(Table table) {
@@ -54,6 +56,9 @@ namespace Manager {
 				}
 			}
 		}
+
+		#endregion
+		#region File menu operations
 
 		/*Crea una nueva base de datos en la ubicación especificada, crea una nueva carpeta
 		Inicializa los controles y establece la variable de db como nueva*/
@@ -124,6 +129,76 @@ namespace Manager {
 			}
 		}
 
+		/*Opción del menu que permite cambiar el nombre de la base de datos. Se muestra un dialogo de confirmación
+		y un dialogo de nuevo nombre*/
+		private void RenameDBToolStripMenuItem_Click(object sender, EventArgs e) {
+			NameDialog nt = new NameDialog("Change DB name", dataBase.Name);
+			if (nt.ShowDialog() == DialogResult.OK) {
+				if (Directory.Exists(dataBase.Path)) { // Verifica que exite el directorio
+													   // Se mueve la carpeta en la misma dirección con un nuevo nombre
+					Directory.Move(dataBase.Path, dataBase.Path.Replace("\\" + dataBase.Name, "") + "\\" + nt.NewName);
+				}
+				label1.Text = nt.NewName;
+			}
+		}
+
+		/* Cierra la base de datos actual. Desactiva los controles y limpia las variables. Se desactivan los controles */
+		private void CloseDBToolStripMenuItem_Click(object sender, EventArgs e) {
+			dataBase.Name = dataBase.Path = "";
+			label1.Visible = false;
+
+			treeView1.Nodes.Clear();
+			treeView1.Enabled = false;
+
+			btnNewTable.Enabled = newTableToolStripMenuItem.Enabled = false;
+			btnDeleteTable.Enabled = deleteTableToolStripMenuItem.Enabled = false;
+			btnRenameTable.Enabled = renameTableToolStripMenuItem.Enabled = false;
+
+			btnAddAttrib.Enabled = false;
+			btnDeleteAttrib.Enabled = false;
+			btnModifyAttrib.Enabled = false;
+
+			renameDBToolStripMenuItem.Enabled = false;
+			deleteDBToolStripMenuItem.Enabled = false;
+			closeDBToolStripMenuItem.Enabled = false;
+		}
+
+		/* Elimina la base de datos elegida. Se comporta de la misma manera que cerrar, pero las variables
+		y los archivos se eliminan y se muestra una confirmación antes de eliminarla 
+		Se desactivan los controles*/
+		private void DeleteDBToolStripMenuItem_Click(object sender, EventArgs e) {
+			if (MessageBox.Show("Are you sure you want to delete the database?", "Delete database", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+				Directory.Delete(dataBase.Path, true);
+				dataBase.Name = dataBase.Path = "";
+				label1.Visible = false;
+
+				treeView1.Nodes.Clear();
+				treeView1.Enabled = false;
+
+				btnNewTable.Enabled = newTableToolStripMenuItem.Enabled = false;
+				btnDeleteTable.Enabled = deleteTableToolStripMenuItem.Enabled = false;
+				btnRenameTable.Enabled = renameTableToolStripMenuItem.Enabled = false;
+
+				btnAddAttrib.Enabled = false;
+				btnDeleteAttrib.Enabled = false;
+				btnModifyAttrib.Enabled = false;
+
+				renameDBToolStripMenuItem.Enabled = false;
+				deleteDBToolStripMenuItem.Enabled = false;
+				closeDBToolStripMenuItem.Enabled = false;
+			}
+		}
+
+		/* Menu para salir del programa. Cierra la aplicación*/
+		private void ExitToolStripMenuItem_Click(object sender, EventArgs e) {
+			if (MessageBox.Show("Are you sure you want to exit?", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+				Close();
+			}
+		}
+
+		#endregion
+		#region Table menu operations
+
 		/*Crea una nueva tabla en la base de datos actual. Se inicializa la variable de tabla y se guarda en la 
 		base de datos.Se pide el nombre de la tabla*/
 		private void BtnNewTable_Click(object sender, EventArgs e) {
@@ -186,8 +261,10 @@ namespace Manager {
 			}
 		}
 
+		#endregion
+
 		/*Al elegir un elemento del tree view. Si no hay un elemento elegido, los botones se desactivan para
-		 evitar problemas. Al elegir un elemento se actvan los botones de modificar y eliminar*/ 
+		 evitar problemas. Al elegir un elemento se actvan los botones de modificar y eliminar*/
 		private void TreeView1_AfterSelect(object sender, TreeViewEventArgs e) {
 			if (treeView1.SelectedNode != null) { 
 				// Si se elige un elemento, se activan los controles y se guarda la dirección de la tabla elegida
@@ -197,9 +274,9 @@ namespace Manager {
 				btnAddAttrib.Enabled = true;
 				btnDeleteAttrib.Enabled = true;
 				btnModifyAttrib.Enabled = true;
-				selectedTable = dataBase.Path + "\\" + treeView1.SelectedNode.Name;
-				currentTable = dataBase.FindTable(treeView1.SelectedNode.Name);
-				//ShowTableInfo();
+				selectedTable = dataBase.Path + "\\" + treeView1.SelectedNode.Text;
+				currentTable = dataBase.FindTable(treeView1.SelectedNode.Text);
+				ShowTableInfo(currentTable);
 			}
 			else {
 				// Si no se elige nada, se desactivan los controles y se limpia la tabla elegida
@@ -214,7 +291,7 @@ namespace Manager {
 		}
 
 		private void ShowTableInfo(Table table) {
-			dataGridView1 = new DataGridView();
+			dataGridView1.Columns.Clear();
 			foreach (Attribute attribute in table.Attributes) {
 				DataGridViewTextBoxColumn dgc = new DataGridViewTextBoxColumn {
 					Name = attribute.Name,
@@ -224,79 +301,12 @@ namespace Manager {
 			}
 		}
 
-		/*Opción del menu que permite cambiar el nombre de la base de datos. Se muestra un dialogo de confirmación
-		 y un dialogo de nuevo nombre*/
-		private void RenameDBToolStripMenuItem_Click(object sender, EventArgs e) {
-			NameDialog nt = new NameDialog("Change DB name", dataBase.Name);
-			if (nt.ShowDialog() == DialogResult.OK) { 
-				if (Directory.Exists(dataBase.Path)) { // Verifica que exite el directorio
-					// Se mueve la carpeta en la misma dirección con un nuevo nombre
-					Directory.Move(dataBase.Path, dataBase.Path.Replace("\\" + dataBase.Name, "") + "\\" + nt.NewName);
-				}
-				label1.Text = nt.NewName;
-			}
-		}
-
-		/* Menu para salir del programa. Cierra la aplicación*/
-		private void ExitToolStripMenuItem_Click(object sender, EventArgs e) {
-			if (MessageBox.Show("Are you sure you want to exit?", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK) {
-				Close();
-			}
-		}
-
-		/* Cierra la base de datos actual. Desactiva los controles y limpia las variables. Se desactivan los controles */
-		private void CloseDBToolStripMenuItem_Click(object sender, EventArgs e) {
-			dataBase.Name = dataBase.Path = "";
-			label1.Visible = false;
-
-			treeView1.Nodes.Clear();
-			treeView1.Enabled = false;
-
-			btnNewTable.Enabled = newTableToolStripMenuItem.Enabled = false;
-			btnDeleteTable.Enabled = deleteTableToolStripMenuItem.Enabled = false;
-			btnRenameTable.Enabled = renameTableToolStripMenuItem.Enabled = false;
-
-			btnAddAttrib.Enabled = false;
-			btnDeleteAttrib.Enabled = false;
-			btnModifyAttrib.Enabled = false;
-
-			renameDBToolStripMenuItem.Enabled = false;
-			deleteDBToolStripMenuItem.Enabled = false;
-			closeDBToolStripMenuItem.Enabled = false;
-		}
-
-		/* Elimina la base de datos elegida. Se comporta de la misma manera que cerrar, pero las variables
-		y los archivos se eliminan y se muestra una confirmación antes de eliminarla 
-		Se desactivan los controles*/
-		private void DeleteDBToolStripMenuItem_Click(object sender, EventArgs e) {
-			if (MessageBox.Show("Are you sure you want to delete the database?", "Delete database", MessageBoxButtons.OKCancel) == DialogResult.OK) {
-				Directory.Delete(dataBase.Path, true);
-				dataBase.Name = dataBase.Path = "";
-				label1.Visible = false;
-
-				treeView1.Nodes.Clear();
-				treeView1.Enabled = false;
-
-				btnNewTable.Enabled = newTableToolStripMenuItem.Enabled = false;
-				btnDeleteTable.Enabled = deleteTableToolStripMenuItem.Enabled = false;
-				btnRenameTable.Enabled = renameTableToolStripMenuItem.Enabled = false;
-
-				btnAddAttrib.Enabled = false;
-				btnDeleteAttrib.Enabled = false;
-				btnModifyAttrib.Enabled = false;
-
-				renameDBToolStripMenuItem.Enabled = false;
-				deleteDBToolStripMenuItem.Enabled = false;
-				closeDBToolStripMenuItem.Enabled = false;
-			}
-		}
-
 		private void BtnAddAttrib_Click(object sender, EventArgs e) {
 			AttributeDialog nd = new AttributeDialog("New attribute");
 			if (nd.ShowDialog() == DialogResult.OK) {
-				Attribute attribute = new Attribute();
-				//currentTable.AddAttribute();
+				currentTable.AddAttribute(nd.Attr);
 			}
+			ShowTableInfo(currentTable);
 		}
 	}
 }

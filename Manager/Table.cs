@@ -14,8 +14,8 @@ namespace Manager {
 			Attributes = new List<Attribute>();
 		}
 
-		internal void AddAttribute() {
-			throw new NotImplementedException();
+		internal void AddAttribute(Attribute attr) {
+			Attributes.Add(attr);
 		}
 	}
 }

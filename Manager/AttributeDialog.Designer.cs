@@ -34,7 +34,8 @@
 			this.radioButton2 = new System.Windows.Forms.RadioButton();
 			this.radioButton3 = new System.Windows.Forms.RadioButton();
 			this.label5 = new System.Windows.Forms.Label();
-			this.textBox2 = new System.Windows.Forms.TextBox();
+			this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// button1
@@ -46,10 +47,12 @@
 			this.button1.TabIndex = 0;
 			this.button1.Text = "OK";
 			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// button2
 			// 
 			this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.button2.Location = new System.Drawing.Point(12, 103);
 			this.button2.Name = "button2";
 			this.button2.Size = new System.Drawing.Size(75, 23);
@@ -146,12 +149,12 @@
 			this.label5.TabIndex = 6;
 			this.label5.Text = "Size";
 			// 
-			// textBox2
+			// numericUpDown1
 			// 
-			this.textBox2.Location = new System.Drawing.Point(336, 41);
-			this.textBox2.Name = "textBox2";
-			this.textBox2.Size = new System.Drawing.Size(61, 20);
-			this.textBox2.TabIndex = 7;
+			this.numericUpDown1.Location = new System.Drawing.Point(336, 40);
+			this.numericUpDown1.Name = "numericUpDown1";
+			this.numericUpDown1.Size = new System.Drawing.Size(61, 20);
+			this.numericUpDown1.TabIndex = 7;
 			// 
 			// AttributeDialog
 			// 
@@ -160,7 +163,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.button2;
 			this.ClientSize = new System.Drawing.Size(407, 138);
-			this.Controls.Add(this.textBox2);
+			this.Controls.Add(this.numericUpDown1);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.radioButton3);
 			this.Controls.Add(this.radioButton2);
@@ -180,6 +183,7 @@
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "AttributeDialog";
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -198,6 +202,6 @@
 		private System.Windows.Forms.RadioButton radioButton2;
 		private System.Windows.Forms.RadioButton radioButton3;
 		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.TextBox textBox2;
+		private System.Windows.Forms.NumericUpDown numericUpDown1;
 	}
 }
