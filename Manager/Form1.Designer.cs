@@ -49,6 +49,7 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.btnModifyAttrib = new System.Windows.Forms.Button();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
@@ -221,8 +222,9 @@
 			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridView1.Location = new System.Drawing.Point(303, 73);
 			this.dataGridView1.Name = "dataGridView1";
-			this.dataGridView1.Size = new System.Drawing.Size(302, 300);
+			this.dataGridView1.Size = new System.Drawing.Size(302, 255);
 			this.dataGridView1.TabIndex = 7;
+			this.dataGridView1.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_ColumnHeaderMouseClick);
 			// 
 			// label2
 			// 
@@ -235,7 +237,7 @@
 			// btnAddAttrib
 			// 
 			this.btnAddAttrib.Enabled = false;
-			this.btnAddAttrib.Location = new System.Drawing.Point(611, 72);
+			this.btnAddAttrib.Location = new System.Drawing.Point(612, 73);
 			this.btnAddAttrib.Name = "btnAddAttrib";
 			this.btnAddAttrib.Size = new System.Drawing.Size(96, 23);
 			this.btnAddAttrib.TabIndex = 9;
@@ -246,12 +248,13 @@
 			// btnDeleteAttrib
 			// 
 			this.btnDeleteAttrib.Enabled = false;
-			this.btnDeleteAttrib.Location = new System.Drawing.Point(611, 101);
+			this.btnDeleteAttrib.Location = new System.Drawing.Point(713, 152);
 			this.btnDeleteAttrib.Name = "btnDeleteAttrib";
 			this.btnDeleteAttrib.Size = new System.Drawing.Size(96, 23);
 			this.btnDeleteAttrib.TabIndex = 9;
 			this.btnDeleteAttrib.Text = "Delete attribute";
 			this.btnDeleteAttrib.UseVisualStyleBackColor = true;
+			this.btnDeleteAttrib.Click += new System.EventHandler(this.BtnDeleteAttrib_Click);
 			// 
 			// label4
 			// 
@@ -266,7 +269,7 @@
 			// btnModifyAttrib
 			// 
 			this.btnModifyAttrib.Enabled = false;
-			this.btnModifyAttrib.Location = new System.Drawing.Point(611, 130);
+			this.btnModifyAttrib.Location = new System.Drawing.Point(611, 152);
 			this.btnModifyAttrib.Name = "btnModifyAttrib";
 			this.btnModifyAttrib.Size = new System.Drawing.Size(96, 23);
 			this.btnModifyAttrib.TabIndex = 9;
@@ -281,11 +284,20 @@
 			this.statusStrip1.TabIndex = 11;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
+			// comboBox1
+			// 
+			this.comboBox1.FormattingEnabled = true;
+			this.comboBox1.Location = new System.Drawing.Point(611, 125);
+			this.comboBox1.Name = "comboBox1";
+			this.comboBox1.Size = new System.Drawing.Size(198, 21);
+			this.comboBox1.TabIndex = 12;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(864, 416);
+			this.Controls.Add(this.comboBox1);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.btnModifyAttrib);
 			this.Controls.Add(this.btnDeleteAttrib);
@@ -339,6 +351,7 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Button btnModifyAttrib;
 		private System.Windows.Forms.StatusStrip statusStrip1;
+		private System.Windows.Forms.ComboBox comboBox1;
 	}
 }
 

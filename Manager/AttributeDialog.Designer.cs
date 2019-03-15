@@ -26,7 +26,6 @@
 			this.button1 = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
-			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -35,6 +34,7 @@
 			this.radioButton3 = new System.Windows.Forms.RadioButton();
 			this.label5 = new System.Windows.Forms.Label();
 			this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+			this.comboBox2 = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -68,13 +68,6 @@
 			this.label1.Size = new System.Drawing.Size(35, 13);
 			this.label1.TabIndex = 2;
 			this.label1.Text = "Name";
-			// 
-			// textBox1
-			// 
-			this.textBox1.Location = new System.Drawing.Point(122, 13);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(275, 20);
-			this.textBox1.TabIndex = 3;
 			// 
 			// label2
 			// 
@@ -156,6 +149,15 @@
 			this.numericUpDown1.Size = new System.Drawing.Size(61, 20);
 			this.numericUpDown1.TabIndex = 7;
 			// 
+			// comboBox2
+			// 
+			this.comboBox2.FormattingEnabled = true;
+			this.comboBox2.Location = new System.Drawing.Point(122, 13);
+			this.comboBox2.Name = "comboBox2";
+			this.comboBox2.Size = new System.Drawing.Size(273, 21);
+			this.comboBox2.TabIndex = 8;
+			this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
+			// 
 			// AttributeDialog
 			// 
 			this.AcceptButton = this.button1;
@@ -163,6 +165,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.button2;
 			this.ClientSize = new System.Drawing.Size(407, 138);
+			this.Controls.Add(this.comboBox2);
 			this.Controls.Add(this.numericUpDown1);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.radioButton3);
@@ -171,7 +174,6 @@
 			this.Controls.Add(this.comboBox1);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
-			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.button1);
@@ -194,7 +196,6 @@
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.ComboBox comboBox1;
@@ -203,5 +204,6 @@
 		private System.Windows.Forms.RadioButton radioButton3;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.NumericUpDown numericUpDown1;
+		private System.Windows.Forms.ComboBox comboBox2;
 	}
 }

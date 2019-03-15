@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -19,10 +20,8 @@ namespace Manager {
 			currentTable = null;
 		}
 		#region File operations
-
-
 		/*Guarda una base de datos con todos sus valores utilizando serialización en XML*/
-		private void SaveFile(Table table) {
+		private void SaveTable(Table table) {
             Stream stream = null;
             try {
                 IFormatter formatter = new BinaryFormatter();
@@ -39,13 +38,14 @@ namespace Manager {
             }
         }
 
-		private void LoadFile(string tableName) {
+		/* Carga una tabla en la base de datos*/
+		private Table LoadTable(string tableName) {
 			Stream stream = null;
 			try {
 				IFormatter formatter = new BinaryFormatter();
 				stream = new FileStream(dataBase.Path + "\\" + tableName, FileMode.Open, FileAccess.Read, FileShare.None);
 				Table table = (Table)formatter.Deserialize(stream);
-				dataBase.AddTable(table);
+				return table;
 			}
 			catch (Exception ex) {
 				MessageBox.Show(ex.ToString());
@@ -55,6 +55,7 @@ namespace Manager {
 					stream.Close();
 				}
 			}
+			return null;
 		}
 
 		#endregion
@@ -109,8 +110,16 @@ namespace Manager {
 				// Muestra las tablas sin el nombre de la extensión
 				foreach (string file in files) {
 					treeView1.Nodes.Add(Path.GetFileNameWithoutExtension(file));
+					Table t = LoadTable(Path.GetFileNameWithoutExtension(file));
+
+					foreach (Attribute attribute in t.Attributes) {
+						if (attribute.Key == 1) {
+							dataBase.PKKeys.Add(attribute.Name);
+						}
+					}
+					dataBase.AddTable(t);
 					// Carga toda la información de los archivos de las tablas y almacena en dataBase
-					LoadFile(Path.GetFileName(file));
+					//LoadFile(Path.GetFileName(file));
 				}
 
 				// Nomre de la base de datos
@@ -207,7 +216,7 @@ namespace Manager {
 			if (nt.ShowDialog() == DialogResult.OK) {
 				Table t = new Table(nt.NewName);
 
-				SaveFile(t);
+				SaveTable(t);
 				dataBase.AddTable(t);
 				treeView1.Nodes.Add(nt.NewName);// Agrega la tabla al treeview
 			}
@@ -258,6 +267,7 @@ namespace Manager {
 				btnModifyAttrib.Enabled = false;
 
 				treeView1.SelectedNode = null; // Se deselecciona de la tabla para desactivar los controles
+				
 			}
 		}
 
@@ -272,9 +282,11 @@ namespace Manager {
 				btnRenameTable.Enabled = true;
 
 				btnAddAttrib.Enabled = true;
-				btnDeleteAttrib.Enabled = true;
-				btnModifyAttrib.Enabled = true;
+				//btnDeleteAttrib.Enabled = true;
+				//btnModifyAttrib.Enabled = true;
 				selectedTable = dataBase.Path + "\\" + treeView1.SelectedNode.Text;
+				//Table = dataBase.FindTable(treeView1.SelectedNode.Text);
+				//currentTable = LoadTable(treeView1.SelectedNode.Text);
 				currentTable = dataBase.FindTable(treeView1.SelectedNode.Text);
 				ShowTableInfo(currentTable);
 			}
@@ -290,6 +302,7 @@ namespace Manager {
 			}
 		}
 
+		/* Muestra la tabla completa en el datagrid */
 		private void ShowTableInfo(Table table) {
 			dataGridView1.Columns.Clear();
 			foreach (Attribute attribute in table.Attributes) {
@@ -301,12 +314,27 @@ namespace Manager {
 			}
 		}
 
+
+		/* Agrega un atributo a la tabla. Pueden ser las llaves primarias de los otros atriburtos*/
 		private void BtnAddAttrib_Click(object sender, EventArgs e) {
-			AttributeDialog nd = new AttributeDialog("New attribute");
+			List<string> keys = new List<string>();
+			AttributeDialog nd = new AttributeDialog("New attribute", dataBase.PKKeys);
 			if (nd.ShowDialog() == DialogResult.OK) {
 				currentTable.AddAttribute(nd.Attr);
+				comboBox1.Items.Add(nd.Attr.Name);
 			}
 			ShowTableInfo(currentTable);
+		}
+
+
+
+		private void BtnDeleteAttrib_Click(object sender, EventArgs e) {
+			
+		}
+
+		private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
+	
+			btnDeleteAttrib.Enabled = true;	
 		}
 	}
 }

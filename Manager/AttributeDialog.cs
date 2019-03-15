@@ -10,8 +10,9 @@ using System.Windows.Forms;
 namespace Manager {
 	public partial class AttributeDialog : Form {
 		public Attribute Attr { get; set; }
-		public AttributeDialog(string title) {
+		public AttributeDialog(string title, List<string> keys) {
 			Name = title;
+			comboBox2.Items.AddRange(keys.ToArray());
 			InitializeComponent();
 		}
 
@@ -27,6 +28,15 @@ namespace Manager {
 				DialogResult = DialogResult.OK;
 				Close();
 			}
+		}
+
+		private void comboBox2_SelectedIndexChanged(object sender, EventArgs e) {
+			radioButton1.Enabled = false;
+			radioButton2.Checked = true;
+			radioButton2.Enabled = false;
+			radioButton3.Enabled = false;
+			numericUpDown1.Value = Convert.ToInt32();
+
 		}
 	}
 }

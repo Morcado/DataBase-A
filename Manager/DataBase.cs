@@ -8,6 +8,7 @@ namespace Manager {
 		public string Name { get; set; }
 		public string Path { get; set; }
 		private List<Table> tables;
+		public List<Attributes> PKKeys { get; set; }
 
 		public DataBase() {
 			Name = Path = "";
