@@ -21,12 +21,12 @@ namespace Manager {
 		}
 		#region File operations
 		/*Guarda una base de datos con todos sus valores utilizando serialización en XML*/
-		private void SaveTable(Table table) {
+		private void SaveTable() {
             Stream stream = null;
             try {
                 IFormatter formatter = new BinaryFormatter();
-                stream = new FileStream(dataBase.Path + "\\" + table.Name, FileMode.Create, FileAccess.Write, FileShare.None);
-                formatter.Serialize(stream, table);
+                stream = new FileStream(dataBase.Path + "\\" + currentTable.Name, FileMode.Create, FileAccess.Write, FileShare.None);
+                formatter.Serialize(stream, currentTable);
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.ToString());
@@ -215,12 +215,12 @@ namespace Manager {
 			NameDialog nt = new NameDialog("Create table", "");
 			if (nt.ShowDialog() == DialogResult.OK) {
 				Table t = new Table(nt.NewName);
-
-				SaveTable(t);
 				dataBase.AddTable(t);
+				currentTable = t;
 				treeView1.Nodes.Add(nt.NewName);// Agrega la tabla al treeview
+				SaveTable();
+				currentTable = null;
 			}
-			
 		}
 
 		/*Elimina una tabla de la base de datos. Actualiza el tree view y elimina los datos de la tabla*/
@@ -314,8 +314,6 @@ namespace Manager {
 				dataGridView1.Columns.Add(dgc);
 				comboBox1.Items.Add(dgc.Name);
 			}
-
-
 		}
 
 
@@ -327,12 +325,9 @@ namespace Manager {
 				currentTable.AddAttribute(nd.Attr);
 				//comboBox1.Items.Add(nd.Attr.Name);
 				dataBase.PKKeys.Add(nd.Attr);
-
-				if (nd.Attr.Key == 1) {
-					currentTable.HasPK = true;
-				}
 			}
 			ShowTableInfo();
+			SaveTable();
 		}
 		
 
@@ -342,22 +337,27 @@ namespace Manager {
 
 			currentTable.Attributes.Remove(at);
 			dataBase.PKKeys.Remove(at);
+			
 
-			ShowTableInfo();
+
 			comboBox1_SelectedIndexChanged(this, null);
+			ShowTableInfo();
+			SaveTable();
 
 		}
 
 		/* Modifica un atributo mostrando los parámetros que ya tiene para modificar de una forma más fácil */
 		private void btnModifyAttrib_Click(object sender, EventArgs e) {
 			Attribute at = currentTable.Attributes.Find(x => x.Name == comboBox1.Text);
-			int index = currentTable.Attributes.IndexOf(at);
+			
 			AttributeDialog atrDlg = new AttributeDialog("Modify attribute", dataBase.PKKeys, currentTable, at);
 
 			if (atrDlg.ShowDialog() == DialogResult.OK) {
-				currentTable.Attributes[index] = atrDlg.Attr;
+				currentTable.ModifyAttribute(at, atrDlg.Attr);
+
 			}
 			ShowTableInfo();
+			SaveTable();
 		}
 
 		private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
@@ -378,14 +378,14 @@ namespace Manager {
 
 		private void CreateListTypes(object sender, EventArgs e) {
 
-			currentTable.CreateList();
+			//currentTable.CreateList();
 		}
 
 		private void btnAddEntry_Click(object sender, EventArgs e) {
 			RegisterDialog regDlg = new RegisterDialog(currentTable);
 
 			if (regDlg.ShowDialog() == DialogResult.OK) {
-
+				currentTable = regDlg.Table;
 			}
 		}
 	}
