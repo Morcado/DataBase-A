@@ -114,7 +114,7 @@ namespace Manager {
 
 					foreach (Attribute attribute in t.Attributes) {
 						if (attribute.Key == 1) {
-							dataBase.PKKeys.Add(attribute.Name);
+							dataBase.PKKeys.Add(attribute);
 						}
 					}
 					dataBase.AddTable(t);
@@ -288,7 +288,7 @@ namespace Manager {
 				//Table = dataBase.FindTable(treeView1.SelectedNode.Text);
 				//currentTable = LoadTable(treeView1.SelectedNode.Text);
 				currentTable = dataBase.FindTable(treeView1.SelectedNode.Text);
-				ShowTableInfo(currentTable);
+				ShowTableInfo();
 			}
 			else {
 				// Si no se elige nada, se desactivan los controles y se limpia la tabla elegida
@@ -303,38 +303,90 @@ namespace Manager {
 		}
 
 		/* Muestra la tabla completa en el datagrid */
-		private void ShowTableInfo(Table table) {
+		private void ShowTableInfo() {
 			dataGridView1.Columns.Clear();
-			foreach (Attribute attribute in table.Attributes) {
+			comboBox1.Items.Clear();
+			foreach (Attribute attribute in currentTable.Attributes) {
 				DataGridViewTextBoxColumn dgc = new DataGridViewTextBoxColumn {
 					Name = attribute.Name,
 					HeaderText = attribute.Name
 				};
 				dataGridView1.Columns.Add(dgc);
+				comboBox1.Items.Add(dgc.Name);
 			}
+
+
 		}
 
 
 		/* Agrega un atributo a la tabla. Pueden ser las llaves primarias de los otros atriburtos*/
 		private void BtnAddAttrib_Click(object sender, EventArgs e) {
 			List<string> keys = new List<string>();
-			AttributeDialog nd = new AttributeDialog("New attribute", dataBase.PKKeys);
+			AttributeDialog nd = new AttributeDialog("New attribute", dataBase.PKKeys, currentTable, null);
 			if (nd.ShowDialog() == DialogResult.OK) {
 				currentTable.AddAttribute(nd.Attr);
-				comboBox1.Items.Add(nd.Attr.Name);
+				//comboBox1.Items.Add(nd.Attr.Name);
+				dataBase.PKKeys.Add(nd.Attr);
+
+				if (nd.Attr.Key == 1) {
+					currentTable.HasPK = true;
+				}
 			}
-			ShowTableInfo(currentTable);
+			ShowTableInfo();
+		}
+		
+
+		/* Elimina un atributo de la tabla actual, elimina las referencias a aquel atributo */
+		private void BtnDeleteAttrib_Click(object sender, EventArgs e) {
+			Attribute at = currentTable.Attributes.Find(x => x.Name == comboBox1.Text);
+
+			currentTable.Attributes.Remove(at);
+			dataBase.PKKeys.Remove(at);
+
+			ShowTableInfo();
+			comboBox1_SelectedIndexChanged(this, null);
+
 		}
 
+		/* Modifica un atributo mostrando los parámetros que ya tiene para modificar de una forma más fácil */
+		private void btnModifyAttrib_Click(object sender, EventArgs e) {
+			Attribute at = currentTable.Attributes.Find(x => x.Name == comboBox1.Text);
+			int index = currentTable.Attributes.IndexOf(at);
+			AttributeDialog atrDlg = new AttributeDialog("Modify attribute", dataBase.PKKeys, currentTable, at);
 
-
-		private void BtnDeleteAttrib_Click(object sender, EventArgs e) {
-			
+			if (atrDlg.ShowDialog() == DialogResult.OK) {
+				currentTable.Attributes[index] = atrDlg.Attr;
+			}
+			ShowTableInfo();
 		}
 
 		private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
 	
 			btnDeleteAttrib.Enabled = true;	
+		}
+
+		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
+			if (comboBox1.SelectedIndex != -1) {
+				btnDeleteAttrib.Enabled = true;
+				btnModifyAttrib.Enabled = true;
+			}
+			else {
+				btnDeleteAttrib.Enabled = false;
+				btnModifyAttrib.Enabled = false;
+			}
+		}
+
+		private void CreateListTypes(object sender, EventArgs e) {
+
+			currentTable.CreateList();
+		}
+
+		private void btnAddEntry_Click(object sender, EventArgs e) {
+			RegisterDialog regDlg = new RegisterDialog(currentTable);
+
+			if (regDlg.ShowDialog() == DialogResult.OK) {
+
+			}
 		}
 	}
 }

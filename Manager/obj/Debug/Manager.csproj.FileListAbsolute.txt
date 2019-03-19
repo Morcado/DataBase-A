@@ -64,3 +64,5 @@ C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.csproj.CopyComp
 C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.exe
 C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.pdb
 C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.AttributeDialog.resources
+C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.AttributeDialog.resources
+C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.RegisterDialog.resources

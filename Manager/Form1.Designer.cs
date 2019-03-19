@@ -50,6 +50,12 @@
 			this.btnModifyAttrib = new System.Windows.Forms.Button();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
+			this.attributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.addAttributeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.modifyAttributeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.deleteAttributeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.btnCreateList = new System.Windows.Forms.Button();
+			this.btnAddEntry = new System.Windows.Forms.Button();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
@@ -58,7 +64,8 @@
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.tablesToolStripMenuItem});
+            this.tablesToolStripMenuItem,
+            this.attributesToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(864, 24);
@@ -149,21 +156,21 @@
 			// 
 			this.newTableToolStripMenuItem.Enabled = false;
 			this.newTableToolStripMenuItem.Name = "newTableToolStripMenuItem";
-			this.newTableToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+			this.newTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.newTableToolStripMenuItem.Text = "New table";
 			// 
 			// deleteTableToolStripMenuItem
 			// 
 			this.deleteTableToolStripMenuItem.Enabled = false;
 			this.deleteTableToolStripMenuItem.Name = "deleteTableToolStripMenuItem";
-			this.deleteTableToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+			this.deleteTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.deleteTableToolStripMenuItem.Text = "Delete table";
 			// 
 			// renameTableToolStripMenuItem
 			// 
 			this.renameTableToolStripMenuItem.Enabled = false;
 			this.renameTableToolStripMenuItem.Name = "renameTableToolStripMenuItem";
-			this.renameTableToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+			this.renameTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.renameTableToolStripMenuItem.Text = "Rename Table";
 			// 
 			// treeView1
@@ -237,9 +244,9 @@
 			// btnAddAttrib
 			// 
 			this.btnAddAttrib.Enabled = false;
-			this.btnAddAttrib.Location = new System.Drawing.Point(612, 73);
+			this.btnAddAttrib.Location = new System.Drawing.Point(611, 72);
 			this.btnAddAttrib.Name = "btnAddAttrib";
-			this.btnAddAttrib.Size = new System.Drawing.Size(96, 23);
+			this.btnAddAttrib.Size = new System.Drawing.Size(92, 23);
 			this.btnAddAttrib.TabIndex = 9;
 			this.btnAddAttrib.Text = "Add attribute";
 			this.btnAddAttrib.UseVisualStyleBackColor = true;
@@ -248,9 +255,9 @@
 			// btnDeleteAttrib
 			// 
 			this.btnDeleteAttrib.Enabled = false;
-			this.btnDeleteAttrib.Location = new System.Drawing.Point(713, 152);
+			this.btnDeleteAttrib.Location = new System.Drawing.Point(709, 131);
 			this.btnDeleteAttrib.Name = "btnDeleteAttrib";
-			this.btnDeleteAttrib.Size = new System.Drawing.Size(96, 23);
+			this.btnDeleteAttrib.Size = new System.Drawing.Size(92, 23);
 			this.btnDeleteAttrib.TabIndex = 9;
 			this.btnDeleteAttrib.Text = "Delete attribute";
 			this.btnDeleteAttrib.UseVisualStyleBackColor = true;
@@ -269,12 +276,13 @@
 			// btnModifyAttrib
 			// 
 			this.btnModifyAttrib.Enabled = false;
-			this.btnModifyAttrib.Location = new System.Drawing.Point(611, 152);
+			this.btnModifyAttrib.Location = new System.Drawing.Point(611, 132);
 			this.btnModifyAttrib.Name = "btnModifyAttrib";
-			this.btnModifyAttrib.Size = new System.Drawing.Size(96, 23);
+			this.btnModifyAttrib.Size = new System.Drawing.Size(92, 23);
 			this.btnModifyAttrib.TabIndex = 9;
 			this.btnModifyAttrib.Text = "Modify attribute";
 			this.btnModifyAttrib.UseVisualStyleBackColor = true;
+			this.btnModifyAttrib.Click += new System.EventHandler(this.btnModifyAttrib_Click);
 			// 
 			// statusStrip1
 			// 
@@ -286,17 +294,69 @@
 			// 
 			// comboBox1
 			// 
+			this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBox1.FormattingEnabled = true;
-			this.comboBox1.Location = new System.Drawing.Point(611, 125);
+			this.comboBox1.Location = new System.Drawing.Point(611, 104);
 			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(198, 21);
+			this.comboBox1.Size = new System.Drawing.Size(190, 21);
 			this.comboBox1.TabIndex = 12;
+			this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+			// 
+			// attributesToolStripMenuItem
+			// 
+			this.attributesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addAttributeToolStripMenuItem,
+            this.modifyAttributeToolStripMenuItem,
+            this.deleteAttributeToolStripMenuItem});
+			this.attributesToolStripMenuItem.Name = "attributesToolStripMenuItem";
+			this.attributesToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
+			this.attributesToolStripMenuItem.Text = "Attributes";
+			// 
+			// addAttributeToolStripMenuItem
+			// 
+			this.addAttributeToolStripMenuItem.Name = "addAttributeToolStripMenuItem";
+			this.addAttributeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.addAttributeToolStripMenuItem.Text = "Add Attribute";
+			// 
+			// modifyAttributeToolStripMenuItem
+			// 
+			this.modifyAttributeToolStripMenuItem.Name = "modifyAttributeToolStripMenuItem";
+			this.modifyAttributeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.modifyAttributeToolStripMenuItem.Text = "Modify Attribute";
+			// 
+			// deleteAttributeToolStripMenuItem
+			// 
+			this.deleteAttributeToolStripMenuItem.Name = "deleteAttributeToolStripMenuItem";
+			this.deleteAttributeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.deleteAttributeToolStripMenuItem.Text = "Delete Attribute";
+			// 
+			// btnCreateList
+			// 
+			this.btnCreateList.Location = new System.Drawing.Point(611, 206);
+			this.btnCreateList.Name = "btnCreateList";
+			this.btnCreateList.Size = new System.Drawing.Size(92, 23);
+			this.btnCreateList.TabIndex = 13;
+			this.btnCreateList.Text = "Create list type";
+			this.btnCreateList.UseVisualStyleBackColor = true;
+			this.btnCreateList.Click += new System.EventHandler(this.CreateListTypes);
+			// 
+			// btnAddEntry
+			// 
+			this.btnAddEntry.Location = new System.Drawing.Point(611, 235);
+			this.btnAddEntry.Name = "btnAddEntry";
+			this.btnAddEntry.Size = new System.Drawing.Size(92, 23);
+			this.btnAddEntry.TabIndex = 14;
+			this.btnAddEntry.Text = "Add new entry";
+			this.btnAddEntry.UseVisualStyleBackColor = true;
+			this.btnAddEntry.Click += new System.EventHandler(this.btnAddEntry_Click);
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(864, 416);
+			this.Controls.Add(this.btnAddEntry);
+			this.Controls.Add(this.btnCreateList);
 			this.Controls.Add(this.comboBox1);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.btnModifyAttrib);
@@ -352,6 +412,12 @@
 		private System.Windows.Forms.Button btnModifyAttrib;
 		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.ComboBox comboBox1;
+		private System.Windows.Forms.ToolStripMenuItem attributesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem addAttributeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem modifyAttributeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem deleteAttributeToolStripMenuItem;
+		private System.Windows.Forms.Button btnCreateList;
+		private System.Windows.Forms.Button btnAddEntry;
 	}
 }
 
