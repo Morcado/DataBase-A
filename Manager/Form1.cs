@@ -22,21 +22,21 @@ namespace Manager {
 		#region File operations
 		/*Guarda una base de datos con todos sus valores utilizando serialización en XML*/
 		private void SaveTable() {
-            Stream stream = null;
-            try {
-                IFormatter formatter = new BinaryFormatter();
-                stream = new FileStream(dataBase.Path + "\\" + currentTable.Name, FileMode.Create, FileAccess.Write, FileShare.None);
-                formatter.Serialize(stream, currentTable);
-            }
-            catch (Exception ex) {
-                MessageBox.Show(ex.ToString());
-            }
-            finally {
-                if (null != stream) {
-                    stream.Close();
-                }
-            }
-        }
+			Stream stream = null;
+			try {
+				IFormatter formatter = new BinaryFormatter();
+				stream = new FileStream(dataBase.Path + "\\" + currentTable.Name, FileMode.Create, FileAccess.Write, FileShare.None);
+				formatter.Serialize(stream, currentTable);
+			}
+			catch (Exception ex) {
+				MessageBox.Show(ex.ToString());
+			}
+			finally {
+				if (null != stream) {
+					stream.Close();
+				}
+			}
+		}
 
 		/* Carga una tabla en la base de datos*/
 		private Table LoadTable(string tableName) {
@@ -68,7 +68,7 @@ namespace Manager {
 				Description = "New database",
 				ShowNewFolderButton = false
 			};
-			
+
 			dataBase = new DataBase(); //crea la base de datos que va a guardar
 
 			treeView1.Nodes.Clear();
@@ -104,7 +104,7 @@ namespace Manager {
 
 			if (op.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(op.SelectedPath)) {
 				string[] files = Directory.GetFiles(op.SelectedPath); // Obtiene los archivos que se encuentran
-				// en la carpeta
+																	  // en la carpeta
 				dataBase.Path = op.SelectedPath; // Dirección de la base de datos actual
 
 				// Muestra las tablas sin el nombre de la extensión
@@ -267,7 +267,7 @@ namespace Manager {
 				btnModifyAttrib.Enabled = false;
 
 				treeView1.SelectedNode = null; // Se deselecciona de la tabla para desactivar los controles
-				
+
 			}
 		}
 
@@ -276,7 +276,7 @@ namespace Manager {
 		/*Al elegir un elemento del tree view. Si no hay un elemento elegido, los botones se desactivan para
 		 evitar problemas. Al elegir un elemento se actvan los botones de modificar y eliminar*/
 		private void TreeView1_AfterSelect(object sender, TreeViewEventArgs e) {
-			if (treeView1.SelectedNode != null) { 
+			if (treeView1.SelectedNode != null) {
 				// Si se elige un elemento, se activan los controles y se guarda la dirección de la tabla elegida
 				btnDeleteTable.Enabled = true;
 				btnRenameTable.Enabled = true;
@@ -314,6 +314,28 @@ namespace Manager {
 				dataGridView1.Columns.Add(dgc);
 				comboBox1.Items.Add(dgc.Name);
 			}
+
+
+			for (int k = 0; currentTable.List != null && k < currentTable.List.Count; k++) {
+				DataGridViewRow dg = new DataGridViewRow();
+				for (int i = 0; i < currentTable.Attributes.Count; i++) {
+					switch (currentTable.Attributes[i].Type) {
+						case "Int":
+							dg.Cells[i].Value = Convert.ToInt32(currentTable.List[i][k]);
+							break;
+						case "Float":
+							dg.Cells[i].Value = Convert.ToDouble(currentTable.List[i][k]);
+							break;
+						case "String":
+							dg.Cells[i].Value = Convert.ToString(currentTable.List[i][k]);
+							break;
+						default:
+							break;
+					}
+
+				}	
+				dataGridView1.Rows.Add();
+			}
 		}
 
 
@@ -337,8 +359,6 @@ namespace Manager {
 
 			currentTable.Attributes.Remove(at);
 			dataBase.PKKeys.Remove(at);
-			
-
 
 			comboBox1_SelectedIndexChanged(this, null);
 			ShowTableInfo();
@@ -349,7 +369,6 @@ namespace Manager {
 		/* Modifica un atributo mostrando los parámetros que ya tiene para modificar de una forma más fácil */
 		private void btnModifyAttrib_Click(object sender, EventArgs e) {
 			Attribute at = currentTable.Attributes.Find(x => x.Name == comboBox1.Text);
-			
 			AttributeDialog atrDlg = new AttributeDialog("Modify attribute", dataBase.PKKeys, currentTable, at);
 
 			if (atrDlg.ShowDialog() == DialogResult.OK) {
