@@ -315,26 +315,27 @@ namespace Manager {
 				comboBox1.Items.Add(dgc.Name);
 			}
 
+			if (currentTable.List != null && currentTable.List.Count > 0 && currentTable.List[0].Count > 0) {
 
-			for (int k = 0; currentTable.List != null && k < currentTable.List.Count; k++) {
-				DataGridViewRow dg = new DataGridViewRow();
-				for (int i = 0; i < currentTable.Attributes.Count; i++) {
-					switch (currentTable.Attributes[i].Type) {
-						case "Int":
-							dg.Cells[i].Value = Convert.ToInt32(currentTable.List[i][k]);
-							break;
-						case "Float":
-							dg.Cells[i].Value = Convert.ToDouble(currentTable.List[i][k]);
-							break;
-						case "String":
-							dg.Cells[i].Value = Convert.ToString(currentTable.List[i][k]);
-							break;
-						default:
-							break;
+				for (int k = 0; k < currentTable.List[0].Count; k++) { // Recorre las filas
+					dataGridView1.Rows.Add();
+					for (int i = 0; i < currentTable.Attributes.Count; i++) { // Recorre las coluumneas
+						switch (currentTable.Attributes[i].Type) {
+							case "Int":
+								dataGridView1.Rows[k].Cells[i].Value = currentTable.List[i][k];
+								break;
+							case "Float":
+								dataGridView1.Rows[k].Cells[i].Value = currentTable.List[i][k];
+								break;
+							case "String":
+								dataGridView1.Rows[k].Cells[i].Value = currentTable.List[i][k];
+								break;
+							default:
+								break;
+						}
+
 					}
-
-				}	
-				dataGridView1.Rows.Add();
+				}
 			}
 		}
 
@@ -360,14 +361,14 @@ namespace Manager {
 			currentTable.Attributes.Remove(at);
 			dataBase.PKKeys.Remove(at);
 
-			comboBox1_SelectedIndexChanged(this, null);
+			ComboBox1_SelectedIndexChanged(this, null);
 			ShowTableInfo();
 			SaveTable();
 
 		}
 
 		/* Modifica un atributo mostrando los parámetros que ya tiene para modificar de una forma más fácil */
-		private void btnModifyAttrib_Click(object sender, EventArgs e) {
+		private void BtnModifyAttrib_Click(object sender, EventArgs e) {
 			Attribute at = currentTable.Attributes.Find(x => x.Name == comboBox1.Text);
 			AttributeDialog atrDlg = new AttributeDialog("Modify attribute", dataBase.PKKeys, currentTable, at);
 
@@ -381,10 +382,9 @@ namespace Manager {
 
 		private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
 	
-			btnDeleteAttrib.Enabled = true;	
 		}
 
-		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
+		private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e) {
 			if (comboBox1.SelectedIndex != -1) {
 				btnDeleteAttrib.Enabled = true;
 				btnModifyAttrib.Enabled = true;
@@ -395,17 +395,19 @@ namespace Manager {
 			}
 		}
 
-		private void CreateListTypes(object sender, EventArgs e) {
-
-			//currentTable.CreateList();
-		}
-
-		private void btnAddEntry_Click(object sender, EventArgs e) {
+		private void BtnAddEntry_Click(object sender, EventArgs e) {
 			RegisterDialog regDlg = new RegisterDialog(currentTable);
 
 			if (regDlg.ShowDialog() == DialogResult.OK) {
-				currentTable = regDlg.Table;
+
+				ShowTableInfo();
+				SaveTable();
 			}
+
+		}
+
+		private void Form1_Load(object sender, EventArgs e) {
+
 		}
 	}
 }

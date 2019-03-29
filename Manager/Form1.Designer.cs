@@ -37,6 +37,10 @@
 			this.newTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.renameTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.attributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.addAttributeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.modifyAttributeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.deleteAttributeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.treeView1 = new System.Windows.Forms.TreeView();
 			this.btnNewTable = new System.Windows.Forms.Button();
 			this.btnDeleteTable = new System.Windows.Forms.Button();
@@ -50,14 +54,14 @@
 			this.btnModifyAttrib = new System.Windows.Forms.Button();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
-			this.attributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.addAttributeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.modifyAttributeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.deleteAttributeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.btnCreateList = new System.Windows.Forms.Button();
 			this.btnAddEntry = new System.Windows.Forms.Button();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.label3 = new System.Windows.Forms.Label();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+			this.groupBox1.SuspendLayout();
+			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -156,151 +160,22 @@
 			// 
 			this.newTableToolStripMenuItem.Enabled = false;
 			this.newTableToolStripMenuItem.Name = "newTableToolStripMenuItem";
-			this.newTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.newTableToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
 			this.newTableToolStripMenuItem.Text = "New table";
 			// 
 			// deleteTableToolStripMenuItem
 			// 
 			this.deleteTableToolStripMenuItem.Enabled = false;
 			this.deleteTableToolStripMenuItem.Name = "deleteTableToolStripMenuItem";
-			this.deleteTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.deleteTableToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
 			this.deleteTableToolStripMenuItem.Text = "Delete table";
 			// 
 			// renameTableToolStripMenuItem
 			// 
 			this.renameTableToolStripMenuItem.Enabled = false;
 			this.renameTableToolStripMenuItem.Name = "renameTableToolStripMenuItem";
-			this.renameTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.renameTableToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
 			this.renameTableToolStripMenuItem.Text = "Rename Table";
-			// 
-			// treeView1
-			// 
-			this.treeView1.Location = new System.Drawing.Point(12, 72);
-			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(183, 231);
-			this.treeView1.TabIndex = 1;
-			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
-			// 
-			// btnNewTable
-			// 
-			this.btnNewTable.Enabled = false;
-			this.btnNewTable.Location = new System.Drawing.Point(201, 73);
-			this.btnNewTable.Name = "btnNewTable";
-			this.btnNewTable.Size = new System.Drawing.Size(96, 23);
-			this.btnNewTable.TabIndex = 2;
-			this.btnNewTable.Text = "New Table";
-			this.btnNewTable.UseVisualStyleBackColor = true;
-			this.btnNewTable.Click += new System.EventHandler(this.BtnNewTable_Click);
-			// 
-			// btnDeleteTable
-			// 
-			this.btnDeleteTable.Enabled = false;
-			this.btnDeleteTable.Location = new System.Drawing.Point(201, 102);
-			this.btnDeleteTable.Name = "btnDeleteTable";
-			this.btnDeleteTable.Size = new System.Drawing.Size(96, 23);
-			this.btnDeleteTable.TabIndex = 3;
-			this.btnDeleteTable.Text = "Delete table";
-			this.btnDeleteTable.UseVisualStyleBackColor = true;
-			this.btnDeleteTable.Click += new System.EventHandler(this.BtnDeleteTable_Click);
-			// 
-			// btnRenameTable
-			// 
-			this.btnRenameTable.Enabled = false;
-			this.btnRenameTable.Location = new System.Drawing.Point(201, 132);
-			this.btnRenameTable.Name = "btnRenameTable";
-			this.btnRenameTable.Size = new System.Drawing.Size(96, 23);
-			this.btnRenameTable.TabIndex = 4;
-			this.btnRenameTable.Text = "Rename Table";
-			this.btnRenameTable.UseVisualStyleBackColor = true;
-			this.btnRenameTable.Click += new System.EventHandler(this.BtnRenameTable_Click);
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(9, 57);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(39, 13);
-			this.label1.TabIndex = 6;
-			this.label1.Text = "Tables";
-			this.label1.Visible = false;
-			// 
-			// dataGridView1
-			// 
-			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridView1.Location = new System.Drawing.Point(303, 73);
-			this.dataGridView1.Name = "dataGridView1";
-			this.dataGridView1.Size = new System.Drawing.Size(302, 255);
-			this.dataGridView1.TabIndex = 7;
-			this.dataGridView1.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_ColumnHeaderMouseClick);
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(313, 58);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(0, 13);
-			this.label2.TabIndex = 8;
-			// 
-			// btnAddAttrib
-			// 
-			this.btnAddAttrib.Enabled = false;
-			this.btnAddAttrib.Location = new System.Drawing.Point(611, 72);
-			this.btnAddAttrib.Name = "btnAddAttrib";
-			this.btnAddAttrib.Size = new System.Drawing.Size(92, 23);
-			this.btnAddAttrib.TabIndex = 9;
-			this.btnAddAttrib.Text = "Add attribute";
-			this.btnAddAttrib.UseVisualStyleBackColor = true;
-			this.btnAddAttrib.Click += new System.EventHandler(this.BtnAddAttrib_Click);
-			// 
-			// btnDeleteAttrib
-			// 
-			this.btnDeleteAttrib.Enabled = false;
-			this.btnDeleteAttrib.Location = new System.Drawing.Point(709, 131);
-			this.btnDeleteAttrib.Name = "btnDeleteAttrib";
-			this.btnDeleteAttrib.Size = new System.Drawing.Size(92, 23);
-			this.btnDeleteAttrib.TabIndex = 9;
-			this.btnDeleteAttrib.Text = "Delete attribute";
-			this.btnDeleteAttrib.UseVisualStyleBackColor = true;
-			this.btnDeleteAttrib.Click += new System.EventHandler(this.BtnDeleteAttrib_Click);
-			// 
-			// label4
-			// 
-			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(300, 57);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(39, 13);
-			this.label4.TabIndex = 6;
-			this.label4.Text = "Tables";
-			this.label4.Visible = false;
-			// 
-			// btnModifyAttrib
-			// 
-			this.btnModifyAttrib.Enabled = false;
-			this.btnModifyAttrib.Location = new System.Drawing.Point(611, 132);
-			this.btnModifyAttrib.Name = "btnModifyAttrib";
-			this.btnModifyAttrib.Size = new System.Drawing.Size(92, 23);
-			this.btnModifyAttrib.TabIndex = 9;
-			this.btnModifyAttrib.Text = "Modify attribute";
-			this.btnModifyAttrib.UseVisualStyleBackColor = true;
-			this.btnModifyAttrib.Click += new System.EventHandler(this.btnModifyAttrib_Click);
-			// 
-			// statusStrip1
-			// 
-			this.statusStrip1.Location = new System.Drawing.Point(0, 394);
-			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(864, 22);
-			this.statusStrip1.TabIndex = 11;
-			this.statusStrip1.Text = "statusStrip1";
-			// 
-			// comboBox1
-			// 
-			this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBox1.FormattingEnabled = true;
-			this.comboBox1.Location = new System.Drawing.Point(611, 104);
-			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(190, 21);
-			this.comboBox1.TabIndex = 12;
-			this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
 			// 
 			// attributesToolStripMenuItem
 			// 
@@ -315,69 +190,221 @@
 			// addAttributeToolStripMenuItem
 			// 
 			this.addAttributeToolStripMenuItem.Name = "addAttributeToolStripMenuItem";
-			this.addAttributeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.addAttributeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
 			this.addAttributeToolStripMenuItem.Text = "Add Attribute";
 			// 
 			// modifyAttributeToolStripMenuItem
 			// 
 			this.modifyAttributeToolStripMenuItem.Name = "modifyAttributeToolStripMenuItem";
-			this.modifyAttributeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.modifyAttributeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
 			this.modifyAttributeToolStripMenuItem.Text = "Modify Attribute";
 			// 
 			// deleteAttributeToolStripMenuItem
 			// 
 			this.deleteAttributeToolStripMenuItem.Name = "deleteAttributeToolStripMenuItem";
-			this.deleteAttributeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.deleteAttributeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
 			this.deleteAttributeToolStripMenuItem.Text = "Delete Attribute";
 			// 
-			// btnCreateList
+			// treeView1
 			// 
-			this.btnCreateList.Location = new System.Drawing.Point(611, 206);
-			this.btnCreateList.Name = "btnCreateList";
-			this.btnCreateList.Size = new System.Drawing.Size(92, 23);
-			this.btnCreateList.TabIndex = 13;
-			this.btnCreateList.Text = "Create list type";
-			this.btnCreateList.UseVisualStyleBackColor = true;
-			this.btnCreateList.Click += new System.EventHandler(this.CreateListTypes);
+			this.treeView1.Location = new System.Drawing.Point(12, 72);
+			this.treeView1.Name = "treeView1";
+			this.treeView1.Size = new System.Drawing.Size(183, 285);
+			this.treeView1.TabIndex = 1;
+			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
+			// 
+			// btnNewTable
+			// 
+			this.btnNewTable.Enabled = false;
+			this.btnNewTable.Location = new System.Drawing.Point(20, 29);
+			this.btnNewTable.Name = "btnNewTable";
+			this.btnNewTable.Size = new System.Drawing.Size(96, 23);
+			this.btnNewTable.TabIndex = 2;
+			this.btnNewTable.Text = "New Table";
+			this.btnNewTable.UseVisualStyleBackColor = true;
+			this.btnNewTable.Click += new System.EventHandler(this.BtnNewTable_Click);
+			// 
+			// btnDeleteTable
+			// 
+			this.btnDeleteTable.Enabled = false;
+			this.btnDeleteTable.Location = new System.Drawing.Point(20, 58);
+			this.btnDeleteTable.Name = "btnDeleteTable";
+			this.btnDeleteTable.Size = new System.Drawing.Size(96, 23);
+			this.btnDeleteTable.TabIndex = 3;
+			this.btnDeleteTable.Text = "Delete table";
+			this.btnDeleteTable.UseVisualStyleBackColor = true;
+			this.btnDeleteTable.Click += new System.EventHandler(this.BtnDeleteTable_Click);
+			// 
+			// btnRenameTable
+			// 
+			this.btnRenameTable.Enabled = false;
+			this.btnRenameTable.Location = new System.Drawing.Point(20, 88);
+			this.btnRenameTable.Name = "btnRenameTable";
+			this.btnRenameTable.Size = new System.Drawing.Size(96, 23);
+			this.btnRenameTable.TabIndex = 4;
+			this.btnRenameTable.Text = "Rename Table";
+			this.btnRenameTable.UseVisualStyleBackColor = true;
+			this.btnRenameTable.Click += new System.EventHandler(this.BtnRenameTable_Click);
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(9, 57);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(66, 13);
+			this.label1.TabIndex = 6;
+			this.label1.Text = "List of tables";
+			this.label1.Visible = false;
+			// 
+			// dataGridView1
+			// 
+			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridView1.Location = new System.Drawing.Point(345, 72);
+			this.dataGridView1.Name = "dataGridView1";
+			this.dataGridView1.Size = new System.Drawing.Size(302, 285);
+			this.dataGridView1.TabIndex = 7;
+			this.dataGridView1.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_ColumnHeaderMouseClick);
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(339, 58);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(0, 13);
+			this.label2.TabIndex = 8;
+			// 
+			// btnAddAttrib
+			// 
+			this.btnAddAttrib.Enabled = false;
+			this.btnAddAttrib.Location = new System.Drawing.Point(17, 87);
+			this.btnAddAttrib.Name = "btnAddAttrib";
+			this.btnAddAttrib.Size = new System.Drawing.Size(92, 23);
+			this.btnAddAttrib.TabIndex = 9;
+			this.btnAddAttrib.Text = "New attribute";
+			this.btnAddAttrib.UseVisualStyleBackColor = true;
+			this.btnAddAttrib.Click += new System.EventHandler(this.BtnAddAttrib_Click);
+			// 
+			// btnDeleteAttrib
+			// 
+			this.btnDeleteAttrib.Enabled = false;
+			this.btnDeleteAttrib.Location = new System.Drawing.Point(17, 58);
+			this.btnDeleteAttrib.Name = "btnDeleteAttrib";
+			this.btnDeleteAttrib.Size = new System.Drawing.Size(92, 23);
+			this.btnDeleteAttrib.TabIndex = 9;
+			this.btnDeleteAttrib.Text = "Delete attribute";
+			this.btnDeleteAttrib.UseVisualStyleBackColor = true;
+			this.btnDeleteAttrib.Click += new System.EventHandler(this.BtnDeleteAttrib_Click);
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(342, 56);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(39, 13);
+			this.label4.TabIndex = 6;
+			this.label4.Text = "Tables";
+			this.label4.Visible = false;
+			// 
+			// btnModifyAttrib
+			// 
+			this.btnModifyAttrib.Enabled = false;
+			this.btnModifyAttrib.Location = new System.Drawing.Point(17, 29);
+			this.btnModifyAttrib.Name = "btnModifyAttrib";
+			this.btnModifyAttrib.Size = new System.Drawing.Size(92, 23);
+			this.btnModifyAttrib.TabIndex = 9;
+			this.btnModifyAttrib.Text = "Modify attribute";
+			this.btnModifyAttrib.UseVisualStyleBackColor = true;
+			this.btnModifyAttrib.Click += new System.EventHandler(this.BtnModifyAttrib_Click);
+			// 
+			// statusStrip1
+			// 
+			this.statusStrip1.Location = new System.Drawing.Point(0, 394);
+			this.statusStrip1.Name = "statusStrip1";
+			this.statusStrip1.Size = new System.Drawing.Size(864, 22);
+			this.statusStrip1.TabIndex = 11;
+			this.statusStrip1.Text = "statusStrip1";
+			// 
+			// comboBox1
+			// 
+			this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBox1.FormattingEnabled = true;
+			this.comboBox1.Location = new System.Drawing.Point(659, 72);
+			this.comboBox1.Name = "comboBox1";
+			this.comboBox1.Size = new System.Drawing.Size(190, 21);
+			this.comboBox1.TabIndex = 12;
+			this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
 			// 
 			// btnAddEntry
 			// 
-			this.btnAddEntry.Location = new System.Drawing.Point(611, 235);
+			this.btnAddEntry.Location = new System.Drawing.Point(345, 363);
 			this.btnAddEntry.Name = "btnAddEntry";
 			this.btnAddEntry.Size = new System.Drawing.Size(92, 23);
 			this.btnAddEntry.TabIndex = 14;
 			this.btnAddEntry.Text = "Add new entry";
 			this.btnAddEntry.UseVisualStyleBackColor = true;
-			this.btnAddEntry.Click += new System.EventHandler(this.btnAddEntry_Click);
+			this.btnAddEntry.Click += new System.EventHandler(this.BtnAddEntry_Click);
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.Controls.Add(this.btnRenameTable);
+			this.groupBox1.Controls.Add(this.btnNewTable);
+			this.groupBox1.Controls.Add(this.btnDeleteTable);
+			this.groupBox1.Location = new System.Drawing.Point(201, 72);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(138, 132);
+			this.groupBox1.TabIndex = 15;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "Tables";
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(656, 56);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(51, 13);
+			this.label3.TabIndex = 6;
+			this.label3.Text = "Attributes";
+			this.label3.Visible = false;
+			// 
+			// groupBox2
+			// 
+			this.groupBox2.Controls.Add(this.btnModifyAttrib);
+			this.groupBox2.Controls.Add(this.btnAddAttrib);
+			this.groupBox2.Controls.Add(this.btnDeleteAttrib);
+			this.groupBox2.Location = new System.Drawing.Point(659, 101);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(127, 125);
+			this.groupBox2.TabIndex = 16;
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = "groupBox2";
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(864, 416);
+			this.Controls.Add(this.groupBox2);
+			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.btnAddEntry);
-			this.Controls.Add(this.btnCreateList);
 			this.Controls.Add(this.comboBox1);
 			this.Controls.Add(this.statusStrip1);
-			this.Controls.Add(this.btnModifyAttrib);
-			this.Controls.Add(this.btnDeleteAttrib);
-			this.Controls.Add(this.btnAddAttrib);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.dataGridView1);
+			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.label1);
-			this.Controls.Add(this.btnRenameTable);
-			this.Controls.Add(this.btnDeleteTable);
-			this.Controls.Add(this.btnNewTable);
 			this.Controls.Add(this.treeView1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "Form1";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Data Base Management System";
+			this.Load += new System.EventHandler(this.Form1_Load);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+			this.groupBox1.ResumeLayout(false);
+			this.groupBox2.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -416,8 +443,10 @@
 		private System.Windows.Forms.ToolStripMenuItem addAttributeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem modifyAttributeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem deleteAttributeToolStripMenuItem;
-		private System.Windows.Forms.Button btnCreateList;
 		private System.Windows.Forms.Button btnAddEntry;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.GroupBox groupBox2;
 	}
 }
 

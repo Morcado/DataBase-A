@@ -51,16 +51,7 @@ namespace Manager {
 				}
 
 				yPos += 26;
-				//switch (attribute.Type) {
-				//	case "Int":
-				//		break;
-				//	case "String":
-				//		break;
-				//	case "Float":
-				//		break;
-				//	default:
-				//		break;
-				//}
+
 			}
 
 		}
@@ -76,7 +67,7 @@ namespace Manager {
 						break;
 					case "Float":
 						NumericUpDown fCtrl = (NumericUpDown)ctrl;
-						Table.List[i].Add(Convert.ToDouble(fCtrl.Value));
+						Table.List[i].Add((float)Convert.ToDouble(fCtrl.Value));
 						break;
 					case "String":
 						TextBox tBox = (TextBox)ctrl;
