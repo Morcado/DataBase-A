@@ -66,3 +66,4 @@ C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.pdb
 C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.AttributeDialog.resources
 C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.AttributeDialog.resources
 C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.RegisterDialog.resources
+C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.RegisterDialog.resources

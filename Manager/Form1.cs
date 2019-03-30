@@ -25,7 +25,7 @@ namespace Manager {
 			Stream stream = null;
 			try {
 				IFormatter formatter = new BinaryFormatter();
-				stream = new FileStream(dataBase.Path + "\\" + currentTable.Name, FileMode.Create, FileAccess.Write, FileShare.None);
+				stream = new FileStream(dataBase.Path + "\\" + currentTable.Name + ".bin", FileMode.Create, FileAccess.Write, FileShare.None);
 				formatter.Serialize(stream, currentTable);
 			}
 			catch (Exception ex) {
@@ -43,7 +43,7 @@ namespace Manager {
 			Stream stream = null;
 			try {
 				IFormatter formatter = new BinaryFormatter();
-				stream = new FileStream(dataBase.Path + "\\" + tableName, FileMode.Open, FileAccess.Read, FileShare.None);
+				stream = new FileStream(dataBase.Path + "\\" + tableName + ".bin", FileMode.Open, FileAccess.Read, FileShare.None);
 				Table table = (Table)formatter.Deserialize(stream);
 				return table;
 			}
@@ -280,6 +280,7 @@ namespace Manager {
 				// Si se elige un elemento, se activan los controles y se guarda la dirección de la tabla elegida
 				btnDeleteTable.Enabled = true;
 				btnRenameTable.Enabled = true;
+				btnAddEntry.Enabled = true;
 
 				btnAddAttrib.Enabled = true;
 				//btnDeleteAttrib.Enabled = true;
@@ -294,6 +295,7 @@ namespace Manager {
 				// Si no se elige nada, se desactivan los controles y se limpia la tabla elegida
 				btnDeleteTable.Enabled = false;
 				btnRenameTable.Enabled = false;
+				btnAddEntry.Enabled = false;
 
 				btnAddAttrib.Enabled = false;
 				btnDeleteAttrib.Enabled = false;
@@ -305,30 +307,31 @@ namespace Manager {
 		/* Muestra la tabla completa en el datagrid */
 		private void ShowTableInfo() {
 			dataGridView1.Columns.Clear();
-			comboBox1.Items.Clear();
+			//comboBox1.Items.Clear();
 			foreach (Attribute attribute in currentTable.Attributes) {
 				DataGridViewTextBoxColumn dgc = new DataGridViewTextBoxColumn {
 					Name = attribute.Name,
-					HeaderText = attribute.Name
+					HeaderText = attribute.Name,
+					SortMode = DataGridViewColumnSortMode.Programmatic
 				};
 				dataGridView1.Columns.Add(dgc);
-				comboBox1.Items.Add(dgc.Name);
+				//comboBox1.Items.Add(dgc.Name);
 			}
 
-			if (currentTable.List != null && currentTable.List.Count > 0 && currentTable.List[0].Count > 0) {
+			if (currentTable.Entries != null && currentTable.Entries.Count > 0 && currentTable.Entries[0].Count > 0) {
 
-				for (int k = 0; k < currentTable.List[0].Count; k++) { // Recorre las filas
+				for (int k = 0; k < currentTable.Entries[0].Count; k++) { // Recorre las filas
 					dataGridView1.Rows.Add();
 					for (int i = 0; i < currentTable.Attributes.Count; i++) { // Recorre las coluumneas
 						switch (currentTable.Attributes[i].Type) {
 							case "Int":
-								dataGridView1.Rows[k].Cells[i].Value = currentTable.List[i][k];
+								dataGridView1.Rows[k].Cells[i].Value = currentTable.Entries[i][k];
 								break;
 							case "Float":
-								dataGridView1.Rows[k].Cells[i].Value = currentTable.List[i][k];
+								dataGridView1.Rows[k].Cells[i].Value = currentTable.Entries[i][k];
 								break;
 							case "String":
-								dataGridView1.Rows[k].Cells[i].Value = currentTable.List[i][k];
+								dataGridView1.Rows[k].Cells[i].Value = currentTable.Entries[i][k];
 								break;
 							default:
 								break;
@@ -347,7 +350,9 @@ namespace Manager {
 			if (nd.ShowDialog() == DialogResult.OK) {
 				currentTable.AddAttribute(nd.Attr);
 				//comboBox1.Items.Add(nd.Attr.Name);
-				dataBase.PKKeys.Add(nd.Attr);
+				if (nd.Attr.Key == 1) {
+					dataBase.PKKeys.Add(nd.Attr);
+				}
 			}
 			ShowTableInfo();
 			SaveTable();
@@ -356,20 +361,21 @@ namespace Manager {
 
 		/* Elimina un atributo de la tabla actual, elimina las referencias a aquel atributo */
 		private void BtnDeleteAttrib_Click(object sender, EventArgs e) {
-			Attribute at = currentTable.Attributes.Find(x => x.Name == comboBox1.Text);
+			Attribute at = currentTable.Attributes.Find(x => x.Name == groupBox2.Text);
 
-			currentTable.Attributes.Remove(at);
+			//currentTable.Attributes.Remove(at);
+			currentTable.RemoveAttribute(at);
 			dataBase.PKKeys.Remove(at);
 
-			ComboBox1_SelectedIndexChanged(this, null);
+			//ComboBox1_SelectedIndexChanged(this, null);
+			dataGridView1_ColumnHeaderMouseClick(this, null);
 			ShowTableInfo();
 			SaveTable();
-
 		}
 
 		/* Modifica un atributo mostrando los parámetros que ya tiene para modificar de una forma más fácil */
 		private void BtnModifyAttrib_Click(object sender, EventArgs e) {
-			Attribute at = currentTable.Attributes.Find(x => x.Name == comboBox1.Text);
+			Attribute at = currentTable.Attributes.Find(x => x.Name == groupBox2.Text);
 			AttributeDialog atrDlg = new AttributeDialog("Modify attribute", dataBase.PKKeys, currentTable, at);
 
 			if (atrDlg.ShowDialog() == DialogResult.OK) {
@@ -380,26 +386,11 @@ namespace Manager {
 			SaveTable();
 		}
 
-		private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
-	
-		}
-
-		private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e) {
-			if (comboBox1.SelectedIndex != -1) {
-				btnDeleteAttrib.Enabled = true;
-				btnModifyAttrib.Enabled = true;
-			}
-			else {
-				btnDeleteAttrib.Enabled = false;
-				btnModifyAttrib.Enabled = false;
-			}
-		}
-
 		private void BtnAddEntry_Click(object sender, EventArgs e) {
 			RegisterDialog regDlg = new RegisterDialog(currentTable);
 
 			if (regDlg.ShowDialog() == DialogResult.OK) {
-
+				currentTable.AddEntry(regDlg.Entry);
 				ShowTableInfo();
 				SaveTable();
 			}
@@ -408,6 +399,62 @@ namespace Manager {
 
 		private void Form1_Load(object sender, EventArgs e) {
 
+		}
+
+		private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
+			if (e != null && e.ColumnIndex != -1) {
+				groupBox2.Text = dataGridView1.Columns[e.ColumnIndex].HeaderText;
+
+				//Buscar en las otras tablas si no tienen atributos para poder modificar o eliminar
+				if (currentTable.Entries[0].Count == 0) {
+					btnDeleteAttrib.Enabled = true;
+					btnModifyAttrib.Enabled = true;
+				}
+				else {
+					btnDeleteAttrib.Enabled = false;
+					btnModifyAttrib.Enabled = false;
+				}
+			}
+			else {
+				groupBox2.Text = "nada";
+				btnDeleteAttrib.Enabled = false;
+				btnModifyAttrib.Enabled = false;
+			}
+		}
+
+		private void dataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
+			if (e.RowIndex != -1) {
+				if (currentTable.Entries[0].Count > 0 && e.RowIndex != dataGridView1.Rows.Count - 1) {
+					btnDeleteEntry.Enabled = true;
+				}
+				else {
+					btnDeleteEntry.Enabled = false;
+				}
+			}
+			else {
+				btnDeleteEntry.Enabled = false;
+			}
+		}
+
+		private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
+			
+
+		}
+
+		private void BtnDeleteEntry_Click(object sender, EventArgs e) {
+			//string name = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();
+
+			if (MessageBox.Show("Are you sure you want to delete the database?", "Delete database", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+				int index = dataGridView1.CurrentCell.RowIndex;
+
+				currentTable.DeleteEntry(index);
+				ShowTableInfo();
+				SaveTable();
+
+				if (currentTable.Entries[0].Count == 0) {
+					btnDeleteEntry.Enabled = false;
+				}
+			}
 		}
 	}
 }

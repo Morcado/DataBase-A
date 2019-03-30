@@ -14,13 +14,14 @@ namespace Manager {
 		private Table table;
 		private bool modificable = false;
 
+		//ublic AttributeDialog(string title, List<Tuple<Attribute, Table>> keys, Table table, Attribute attr) {
 		public AttributeDialog(string title, List<Attribute> keys, Table table, Attribute attr) {
 			InitializeComponent();
 			Name = title;
 			this.keys = keys;
 			this.table = table;
 
-			foreach (Attribute attribute in keys) {
+			foreach (var attribute in keys) {
 				if (!table.Attributes.Contains(attribute)) {
 					comboBox2.Items.Add(attribute.Name);
 				}
@@ -88,6 +89,7 @@ namespace Manager {
 		private void comboBox2_SelectedIndexChanged(object sender, EventArgs e) {
 			int index = comboBox2.SelectedIndex;
 
+			comboBox1.Enabled = false;
 			radioButton1.Enabled = false;
 			radioButton2.Checked = true;
 			radioButton2.Enabled = false;
@@ -97,6 +99,42 @@ namespace Manager {
 			comboBox1.Text = keys[index].Type;
 			numericUpDown1.Value = Convert.ToInt32(keys[index].Size);
 
+		}
+
+		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
+			switch (comboBox1.Text) {
+				case "Int":
+				case "Float":
+					numericUpDown1.Enabled = false;
+					numericUpDown1.Value = 4;
+					break;
+				case "String":
+					numericUpDown1.Value = 30;
+					numericUpDown1.Enabled = true;
+					break;
+				default:
+					break;
+			}
+
+		}
+
+		private void comboBox2_TextUpdate(object sender, EventArgs e) {
+			if (!keys.Any(x => x.Name == comboBox2.Text)) {
+				comboBox1.Enabled = true;
+				radioButton1.Enabled = true;
+				radioButton2.Checked = false;
+				radioButton2.Enabled = true;
+				radioButton3.Enabled = true;
+
+			}
+			else {
+				comboBox1.Enabled = false;
+				radioButton1.Enabled = false;
+				radioButton2.Checked = true;
+				radioButton2.Enabled = false;
+				radioButton3.Enabled = false;
+
+			}
 		}
 	}
 }

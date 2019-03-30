@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Manager {
 	public partial class RegisterDialog : Form {
 		public Table Table { get; set; }
+		public List<object> Entry { get; set; }
+
 		public RegisterDialog(Table table) {
 			InitializeComponent();
 			panel1.AutoScroll = false;
@@ -20,6 +17,7 @@ namespace Manager {
 			panel1.AutoScroll = true;
 
 			Table = table;
+			Entry = new List<object>();
 			int xPos = 20, yPos = 10;
 
 			//for (int i = 0; i < 20; i++) {
@@ -57,27 +55,47 @@ namespace Manager {
 		}
 
 		private void button1_Click(object sender, EventArgs e) {
-
 			for (int i = 0; i < Table.Attributes.Count; i++) {
 				Control ctrl = panel1.Controls[Table.Attributes[i].Name];
 				switch (Table.Attributes[i].Type) {
 					case "Int":
 						NumericUpDown nCtrl = (NumericUpDown)ctrl;
-						Table.List[i].Add(Convert.ToInt32(nCtrl.Value));
+						Entry.Add(Convert.ToInt32(nCtrl.Value));
 						break;
 					case "Float":
 						NumericUpDown fCtrl = (NumericUpDown)ctrl;
-						Table.List[i].Add((float)Convert.ToDouble(fCtrl.Value));
+						Entry.Add((float)Convert.ToDouble(fCtrl.Value));
 						break;
 					case "String":
 						TextBox tBox = (TextBox)ctrl;
-						Table.List[i].Add(tBox.Text);
+						Entry.Add(tBox.Text);
 						break;
 					default:
 						break;
 				}
-
 			}
+
+
+			//for (int i = 0; i < Table.Attributes.Count; i++) {
+			//	Control ctrl = panel1.Controls[Table.Attributes[i].Name];
+			//	switch (Table.Attributes[i].Type) {
+			//		case "Int":
+			//			NumericUpDown nCtrl = (NumericUpDown)ctrl;
+			//			Table.Entries[i].Add(Convert.ToInt32(nCtrl.Value));
+			//			break;
+			//		case "Float":
+			//			NumericUpDown fCtrl = (NumericUpDown)ctrl;
+			//			Table.Entries[i].Add((float)Convert.ToDouble(fCtrl.Value));
+			//			break;
+			//		case "String":
+			//			TextBox tBox = (TextBox)ctrl;
+			//			Table.Entries[i].Add(tBox.Text);
+			//			break;
+			//		default:
+			//			break;
+			//	}
+
+			//}
 
 			DialogResult = DialogResult.OK;
 			Close();
