@@ -57,7 +57,11 @@
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.btnDeleteEntry = new System.Windows.Forms.Button();
-			this.button1 = new System.Windows.Forms.Button();
+			this.btnModifyEntry = new System.Windows.Forms.Button();
+			this.registersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.addNewEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.deleteEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.modifySelectedEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.groupBox1.SuspendLayout();
@@ -69,7 +73,8 @@
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.tablesToolStripMenuItem,
-            this.attributesToolStripMenuItem});
+            this.attributesToolStripMenuItem,
+            this.registersToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(864, 24);
@@ -94,14 +99,14 @@
 			// newDBToolStripMenuItem
 			// 
 			this.newDBToolStripMenuItem.Name = "newDBToolStripMenuItem";
-			this.newDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+			this.newDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.newDBToolStripMenuItem.Text = "New DB";
 			this.newDBToolStripMenuItem.Click += new System.EventHandler(this.NewDBToolStripMenuItem_Click);
 			// 
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.openToolStripMenuItem.Text = "Open DB";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
 			// 
@@ -109,20 +114,20 @@
 			// 
 			this.closeDBToolStripMenuItem.Enabled = false;
 			this.closeDBToolStripMenuItem.Name = "closeDBToolStripMenuItem";
-			this.closeDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+			this.closeDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.closeDBToolStripMenuItem.Text = "Close DB";
 			this.closeDBToolStripMenuItem.Click += new System.EventHandler(this.CloseDBToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(132, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
 			// 
 			// renameDBToolStripMenuItem
 			// 
 			this.renameDBToolStripMenuItem.Enabled = false;
 			this.renameDBToolStripMenuItem.Name = "renameDBToolStripMenuItem";
-			this.renameDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+			this.renameDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.renameDBToolStripMenuItem.Text = "Rename DB";
 			this.renameDBToolStripMenuItem.Click += new System.EventHandler(this.RenameDBToolStripMenuItem_Click);
 			// 
@@ -130,19 +135,19 @@
 			// 
 			this.deleteDBToolStripMenuItem.Enabled = false;
 			this.deleteDBToolStripMenuItem.Name = "deleteDBToolStripMenuItem";
-			this.deleteDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+			this.deleteDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.deleteDBToolStripMenuItem.Text = "Delete DB";
 			this.deleteDBToolStripMenuItem.Click += new System.EventHandler(this.DeleteDBToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(132, 6);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
 			// 
@@ -190,19 +195,19 @@
 			// addAttributeToolStripMenuItem
 			// 
 			this.addAttributeToolStripMenuItem.Name = "addAttributeToolStripMenuItem";
-			this.addAttributeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+			this.addAttributeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.addAttributeToolStripMenuItem.Text = "Add Attribute";
 			// 
 			// modifyAttributeToolStripMenuItem
 			// 
 			this.modifyAttributeToolStripMenuItem.Name = "modifyAttributeToolStripMenuItem";
-			this.modifyAttributeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+			this.modifyAttributeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.modifyAttributeToolStripMenuItem.Text = "Modify Attribute";
 			// 
 			// deleteAttributeToolStripMenuItem
 			// 
 			this.deleteAttributeToolStripMenuItem.Name = "deleteAttributeToolStripMenuItem";
-			this.deleteAttributeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+			this.deleteAttributeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.deleteAttributeToolStripMenuItem.Text = "Delete Attribute";
 			// 
 			// treeView1
@@ -212,6 +217,7 @@
 			this.treeView1.Size = new System.Drawing.Size(183, 285);
 			this.treeView1.TabIndex = 1;
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
+			this.treeView1.Leave += new System.EventHandler(this.TreeView1_Leave);
 			// 
 			// btnNewTable
 			// 
@@ -263,9 +269,8 @@
 			this.dataGridView1.Name = "dataGridView1";
 			this.dataGridView1.Size = new System.Drawing.Size(302, 285);
 			this.dataGridView1.TabIndex = 7;
-			this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseClick);
-			this.dataGridView1.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_ColumnHeaderMouseClick);
-			this.dataGridView1.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_RowHeaderMouseClick);
+			this.dataGridView1.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_ColumnHeaderMouseClick);
+			this.dataGridView1.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_RowHeaderMouseClick);
 			// 
 			// label2
 			// 
@@ -372,21 +377,51 @@
 			this.btnDeleteEntry.UseVisualStyleBackColor = true;
 			this.btnDeleteEntry.Click += new System.EventHandler(this.BtnDeleteEntry_Click);
 			// 
-			// button1
+			// btnModifyEntry
 			// 
-			this.button1.Location = new System.Drawing.Point(555, 363);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(92, 23);
-			this.button1.TabIndex = 18;
-			this.button1.Text = "Modify entry";
-			this.button1.UseVisualStyleBackColor = true;
+			this.btnModifyEntry.Enabled = false;
+			this.btnModifyEntry.Location = new System.Drawing.Point(555, 363);
+			this.btnModifyEntry.Name = "btnModifyEntry";
+			this.btnModifyEntry.Size = new System.Drawing.Size(92, 23);
+			this.btnModifyEntry.TabIndex = 18;
+			this.btnModifyEntry.Text = "Modify entry";
+			this.btnModifyEntry.UseVisualStyleBackColor = true;
+			this.btnModifyEntry.Click += new System.EventHandler(this.BtnModifyEntry_Click);
+			// 
+			// registersToolStripMenuItem
+			// 
+			this.registersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addNewEntryToolStripMenuItem,
+            this.deleteEntryToolStripMenuItem,
+            this.modifySelectedEntryToolStripMenuItem});
+			this.registersToolStripMenuItem.Name = "registersToolStripMenuItem";
+			this.registersToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
+			this.registersToolStripMenuItem.Text = "Registers";
+			// 
+			// addNewEntryToolStripMenuItem
+			// 
+			this.addNewEntryToolStripMenuItem.Name = "addNewEntryToolStripMenuItem";
+			this.addNewEntryToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+			this.addNewEntryToolStripMenuItem.Text = "Add new entry";
+			// 
+			// deleteEntryToolStripMenuItem
+			// 
+			this.deleteEntryToolStripMenuItem.Name = "deleteEntryToolStripMenuItem";
+			this.deleteEntryToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+			this.deleteEntryToolStripMenuItem.Text = "Delete entry";
+			// 
+			// modifySelectedEntryToolStripMenuItem
+			// 
+			this.modifySelectedEntryToolStripMenuItem.Name = "modifySelectedEntryToolStripMenuItem";
+			this.modifySelectedEntryToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+			this.modifySelectedEntryToolStripMenuItem.Text = "Modify selected entry";
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(864, 416);
-			this.Controls.Add(this.button1);
+			this.Controls.Add(this.btnModifyEntry);
 			this.Controls.Add(this.btnDeleteEntry);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
@@ -402,7 +437,6 @@
 			this.Name = "Form1";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Data Base Management System";
-			this.Load += new System.EventHandler(this.Form1_Load);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -449,7 +483,11 @@
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.Button btnDeleteEntry;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button btnModifyEntry;
+		private System.Windows.Forms.ToolStripMenuItem registersToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem addNewEntryToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem deleteEntryToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem modifySelectedEntryToolStripMenuItem;
 	}
 }
 

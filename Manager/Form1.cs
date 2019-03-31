@@ -19,6 +19,34 @@ namespace Manager {
 			InitializeComponent();
 			currentTable = null;
 		}
+		#region Utilities
+		/* Desactiva o activa los botones */
+		public void ToggleAttribButtons(bool add, bool delete, bool modify) {
+			btnAddAttrib.Enabled = addAttributeToolStripMenuItem.Enabled = add;
+			btnDeleteAttrib.Enabled = deleteAttributeToolStripMenuItem.Enabled = delete;
+			btnModifyAttrib.Enabled = modifyAttributeToolStripMenuItem.Enabled = modify;
+		}
+
+		public void ToggleTableButtons(bool newT, bool delete, bool rename) {
+			btnNewTable.Enabled = newTableToolStripMenuItem.Enabled = newT;
+			btnDeleteTable.Enabled = deleteTableToolStripMenuItem.Enabled = delete;
+			btnRenameTable.Enabled = renameTableToolStripMenuItem.Enabled = rename;
+		}
+		
+		public void ToggleEntryButtons(bool add, bool delete, bool modify) {
+			btnAddEntry.Enabled = addNewEntryToolStripMenuItem.Enabled = add;
+			btnDeleteEntry.Enabled = deleteEntryToolStripMenuItem.Enabled = delete;
+			btnModifyEntry.Enabled = modifySelectedEntryToolStripMenuItem.Enabled = modify;
+		}
+
+		public void ToggleDBButtons(bool enabled) {
+			deleteDBToolStripMenuItem.Enabled = enabled;
+			renameDBToolStripMenuItem.Enabled = enabled;
+			closeDBToolStripMenuItem.Enabled = enabled;
+		}
+
+		#endregion
+
 		#region File operations
 		/*Guarda una base de datos con todos sus valores utilizando serialización en XML*/
 		private void SaveTable() {
@@ -81,11 +109,8 @@ namespace Manager {
 					label1.Text = dataBase.Name;
 					label1.Visible = true;
 					btnNewTable.Enabled = true;
-					newTableToolStripMenuItem.Enabled = true;
-
-					renameDBToolStripMenuItem.Enabled = true;
-					deleteDBToolStripMenuItem.Enabled = true;
-					closeDBToolStripMenuItem.Enabled = true;
+					ToggleTableButtons(true, false, false);
+					ToggleDBButtons(true);
 				}
 			}
 		}
@@ -99,8 +124,9 @@ namespace Manager {
 			};
 
 			treeView1.Nodes.Clear(); // Control de treeview para ver las tablas
-			dataBase = new DataBase();
-			dataBase.Path = "";
+			dataBase = new DataBase {
+				Path = ""
+			};
 
 			if (op.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(op.SelectedPath)) {
 				string[] files = Directory.GetFiles(op.SelectedPath); // Obtiene los archivos que se encuentran
@@ -128,13 +154,9 @@ namespace Manager {
 				// Actualizacion de los controles
 				label1.Visible = true;
 				treeView1.Enabled = true;
-				btnNewTable.Enabled = true;
-				newTableToolStripMenuItem.Enabled = true;
 
-				renameDBToolStripMenuItem.Enabled = true;
-				deleteDBToolStripMenuItem.Enabled = true;
-				closeDBToolStripMenuItem.Enabled = true;
-
+				ToggleTableButtons(true, false, false);
+				ToggleDBButtons(true);
 			}
 		}
 
@@ -144,7 +166,7 @@ namespace Manager {
 			NameDialog nt = new NameDialog("Change DB name", dataBase.Name);
 			if (nt.ShowDialog() == DialogResult.OK) {
 				if (Directory.Exists(dataBase.Path)) { // Verifica que exite el directorio
-													   // Se mueve la carpeta en la misma dirección con un nuevo nombre
+					// Se mueve la carpeta en la misma dirección con un nuevo nombre
 					Directory.Move(dataBase.Path, dataBase.Path.Replace("\\" + dataBase.Name, "") + "\\" + nt.NewName);
 				}
 				label1.Text = nt.NewName;
@@ -158,18 +180,12 @@ namespace Manager {
 
 			treeView1.Nodes.Clear();
 			treeView1.Enabled = false;
+			dataGridView1.Columns.Clear();
 
-			btnNewTable.Enabled = newTableToolStripMenuItem.Enabled = false;
-			btnDeleteTable.Enabled = deleteTableToolStripMenuItem.Enabled = false;
-			btnRenameTable.Enabled = renameTableToolStripMenuItem.Enabled = false;
-
-			btnAddAttrib.Enabled = false;
-			btnDeleteAttrib.Enabled = false;
-			btnModifyAttrib.Enabled = false;
-
-			renameDBToolStripMenuItem.Enabled = false;
-			deleteDBToolStripMenuItem.Enabled = false;
-			closeDBToolStripMenuItem.Enabled = false;
+			ToggleTableButtons(false, false, false);
+			ToggleAttribButtons(false, false, false);
+			ToggleDBButtons(false);
+			ToggleEntryButtons(false, false, false);
 		}
 
 		/* Elimina la base de datos elegida. Se comporta de la misma manera que cerrar, pero las variables
@@ -184,17 +200,9 @@ namespace Manager {
 				treeView1.Nodes.Clear();
 				treeView1.Enabled = false;
 
-				btnNewTable.Enabled = newTableToolStripMenuItem.Enabled = false;
-				btnDeleteTable.Enabled = deleteTableToolStripMenuItem.Enabled = false;
-				btnRenameTable.Enabled = renameTableToolStripMenuItem.Enabled = false;
-
-				btnAddAttrib.Enabled = false;
-				btnDeleteAttrib.Enabled = false;
-				btnModifyAttrib.Enabled = false;
-
-				renameDBToolStripMenuItem.Enabled = false;
-				deleteDBToolStripMenuItem.Enabled = false;
-				closeDBToolStripMenuItem.Enabled = false;
+				ToggleTableButtons(false, false, false);
+				ToggleAttribButtons(false, false, false);
+				ToggleDBButtons(false);
 			}
 		}
 
@@ -236,11 +244,8 @@ namespace Manager {
 				treeView1.Nodes.Remove(treeView1.SelectedNode);
 
 				// Actualizar los controles
-				btnDeleteTable.Enabled = false;
-				btnRenameTable.Enabled = false;
-				btnAddAttrib.Enabled = false;
-				btnDeleteAttrib.Enabled = false;
-				btnModifyAttrib.Enabled = false;
+				ToggleTableButtons(true, false, false);
+				ToggleAttribButtons(false, false, false);
 				treeView1.SelectedNode = null;
 			}
 		}
@@ -260,11 +265,8 @@ namespace Manager {
 				treeView1.SelectedNode.Text = nt.NewName;
 
 				// Se actualizan los controles
-				btnDeleteTable.Enabled = false;
-				btnRenameTable.Enabled = false;
-				btnAddAttrib.Enabled = false;
-				btnDeleteAttrib.Enabled = false;
-				btnModifyAttrib.Enabled = false;
+				ToggleTableButtons(true, false, false);
+				ToggleAttribButtons(false, false, false);
 
 				treeView1.SelectedNode = null; // Se deselecciona de la tabla para desactivar los controles
 
@@ -276,32 +278,31 @@ namespace Manager {
 		/*Al elegir un elemento del tree view. Si no hay un elemento elegido, los botones se desactivan para
 		 evitar problemas. Al elegir un elemento se actvan los botones de modificar y eliminar*/
 		private void TreeView1_AfterSelect(object sender, TreeViewEventArgs e) {
-			if (treeView1.SelectedNode != null) {
-				// Si se elige un elemento, se activan los controles y se guarda la dirección de la tabla elegida
-				btnDeleteTable.Enabled = true;
-				btnRenameTable.Enabled = true;
-				btnAddEntry.Enabled = true;
+			currentTable = dataBase.FindTable(treeView1.SelectedNode.Text);
+			// se guarda la dirección de la tabla elegida
+			selectedTable = dataBase.Path + "\\" + treeView1.SelectedNode.Text;
+			ToggleTableButtons(true, true, true);
 
-				btnAddAttrib.Enabled = true;
-				//btnDeleteAttrib.Enabled = true;
-				//btnModifyAttrib.Enabled = true;
-				selectedTable = dataBase.Path + "\\" + treeView1.SelectedNode.Text;
-				//Table = dataBase.FindTable(treeView1.SelectedNode.Text);
-				//currentTable = LoadTable(treeView1.SelectedNode.Text);
-				currentTable = dataBase.FindTable(treeView1.SelectedNode.Text);
-				ShowTableInfo();
+			if (currentTable.Attributes.Count > 0) {
+				ToggleEntryButtons(true, false, false);
 			}
 			else {
-				// Si no se elige nada, se desactivan los controles y se limpia la tabla elegida
-				btnDeleteTable.Enabled = false;
-				btnRenameTable.Enabled = false;
-				btnAddEntry.Enabled = false;
-
-				btnAddAttrib.Enabled = false;
-				btnDeleteAttrib.Enabled = false;
-				btnModifyAttrib.Enabled = false;
-				selectedTable = "";
+				ToggleEntryButtons(false, false, false);
 			}
+
+			// Si la tabla tiene entradas, entonces no activa los controles
+			if (currentTable.Entries.Count > 0 && currentTable.Entries[0].Count > 0) {
+				btnAddAttrib.Enabled = addAttributeToolStripMenuItem.Enabled =  false;
+			}
+			else {
+				ToggleAttribButtons(true, false, false);
+			}
+			
+			ShowTableInfo();
+		}
+
+		private void TreeView1_Leave(object sender, EventArgs e) {
+			ToggleTableButtons(true, false, false);
 		}
 
 		/* Muestra la tabla completa en el datagrid */
@@ -323,20 +324,7 @@ namespace Manager {
 				for (int k = 0; k < currentTable.Entries[0].Count; k++) { // Recorre las filas
 					dataGridView1.Rows.Add();
 					for (int i = 0; i < currentTable.Attributes.Count; i++) { // Recorre las coluumneas
-						switch (currentTable.Attributes[i].Type) {
-							case "Int":
-								dataGridView1.Rows[k].Cells[i].Value = currentTable.Entries[i][k];
-								break;
-							case "Float":
-								dataGridView1.Rows[k].Cells[i].Value = currentTable.Entries[i][k];
-								break;
-							case "String":
-								dataGridView1.Rows[k].Cells[i].Value = currentTable.Entries[i][k];
-								break;
-							default:
-								break;
-						}
-
+						dataGridView1.Rows[k].Cells[i].Value = currentTable.Entries[i][k];
 					}
 				}
 			}
@@ -363,12 +351,10 @@ namespace Manager {
 		private void BtnDeleteAttrib_Click(object sender, EventArgs e) {
 			Attribute at = currentTable.Attributes.Find(x => x.Name == groupBox2.Text);
 
-			//currentTable.Attributes.Remove(at);
 			currentTable.RemoveAttribute(at);
 			dataBase.PKKeys.Remove(at);
 
-			//ComboBox1_SelectedIndexChanged(this, null);
-			dataGridView1_ColumnHeaderMouseClick(this, null);
+			DataGridView1_ColumnHeaderMouseClick(this, null);
 			ShowTableInfo();
 			SaveTable();
 		}
@@ -386,6 +372,7 @@ namespace Manager {
 			SaveTable();
 		}
 
+		/* Agrega una tupla en la tabla seleccionada. Desacva los botones de*/
 		private void BtnAddEntry_Click(object sender, EventArgs e) {
 			RegisterDialog regDlg = new RegisterDialog(currentTable);
 
@@ -393,56 +380,44 @@ namespace Manager {
 				currentTable.AddEntry(regDlg.Entry);
 				ShowTableInfo();
 				SaveTable();
+				ToggleAttribButtons(false, false, false);
 			}
 
 		}
 
-		private void Form1_Load(object sender, EventArgs e) {
-
-		}
-
-		private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
+		private void DataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
 			if (e != null && e.ColumnIndex != -1) {
 				groupBox2.Text = dataGridView1.Columns[e.ColumnIndex].HeaderText;
 
 				//Buscar en las otras tablas si no tienen atributos para poder modificar o eliminar
 				if (currentTable.Entries[0].Count == 0) {
-					btnDeleteAttrib.Enabled = true;
-					btnModifyAttrib.Enabled = true;
+					ToggleAttribButtons(true, true, true);
 				}
 				else {
-					btnDeleteAttrib.Enabled = false;
-					btnModifyAttrib.Enabled = false;
+					ToggleAttribButtons(false, false, false);
 				}
 			}
 			else {
+				ToggleAttribButtons(false, false, false);
 				groupBox2.Text = "nada";
-				btnDeleteAttrib.Enabled = false;
-				btnModifyAttrib.Enabled = false;
 			}
 		}
 
-		private void dataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
+		private void DataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
 			if (e.RowIndex != -1) {
 				if (currentTable.Entries[0].Count > 0 && e.RowIndex != dataGridView1.Rows.Count - 1) {
-					btnDeleteEntry.Enabled = true;
+					ToggleEntryButtons(true, true, true);
 				}
 				else {
-					btnDeleteEntry.Enabled = false;
+					ToggleEntryButtons(true, false, false);
 				}
 			}
 			else {
-				btnDeleteEntry.Enabled = false;
+				ToggleEntryButtons(true, false, false);
 			}
-		}
-
-		private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
-			
-
 		}
 
 		private void BtnDeleteEntry_Click(object sender, EventArgs e) {
-			//string name = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();
 
 			if (MessageBox.Show("Are you sure you want to delete the database?", "Delete database", MessageBoxButtons.OKCancel) == DialogResult.OK) {
 				int index = dataGridView1.CurrentCell.RowIndex;
@@ -454,6 +429,16 @@ namespace Manager {
 				if (currentTable.Entries[0].Count == 0) {
 					btnDeleteEntry.Enabled = false;
 				}
+			}
+		}
+
+		private void BtnModifyEntry_Click(object sender, EventArgs e) {
+			List<object> entry = currentTable.GetEntryAt(dataGridView1.CurrentCell.RowIndex);
+
+			RegisterDialog regDlg = new RegisterDialog(currentTable);
+
+			if (regDlg.ShowDialog() == DialogResult.OK) {
+
 			}
 		}
 	}

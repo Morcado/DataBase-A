@@ -93,5 +93,13 @@ namespace Manager {
 				Entries[i].RemoveAt(index);
 			}
 		}
+
+		internal List<object> GetEntryAt(int rowIndex) {
+			List<object> entry = new List<object>();
+			for (int i = 0; i < Entries.Count; i++) {
+				entry.Add(Entries[i][rowIndex]);
+			}
+			return entry;
+		}
 	}
 }
