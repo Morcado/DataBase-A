@@ -20,7 +20,7 @@ namespace Manager {
 
 		}
 
-		internal void AddAttribute(Attribute attr) {
+		public void AddAttribute(Attribute attr) {
 			Attributes.Add(attr);
 
 			if (attr.Key == 1) {
@@ -74,8 +74,11 @@ namespace Manager {
 		}
 
 		public void ModifyAttribute(Attribute oldAttr, Attribute newAttr) {
-			int index = Attributes.IndexOf(oldAttr);
-			Attributes[index] = newAttr;
+			//int index = Attributes.IndexOf(oldAttr);
+			//Attributes[index] = newAttr;
+
+			RemoveAttribute(oldAttr);
+			AddAttribute(newAttr);
 
 			//modificar atributo en la lista
 

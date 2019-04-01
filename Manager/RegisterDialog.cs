@@ -8,7 +8,7 @@ namespace Manager {
 		public Table Table { get; set; }
 		public List<object> Entry { get; set; }
 
-		public RegisterDialog(Table table) {
+		public RegisterDialog(Table table, List<object> entry) {
 			InitializeComponent();
 			panel1.AutoScroll = false;
 			panel1.HorizontalScroll.Enabled = false;
@@ -25,16 +25,17 @@ namespace Manager {
 
 				Label label = new Label();
 				label.Text = attribute.Name;
-				label.Width = label.Text.Length * 10;
+				label.Width = 50;
 				label.Location = new Point(xPos, yPos + 5);
 				panel1.Controls.Add(label);
 
 
 				if (attribute.Type == "Int" || attribute.Type == "Float") {
 					NumericUpDown nBox = new NumericUpDown();
-					nBox.Location = new Point(xPos + 70, yPos);
+					nBox.Location = new Point(xPos + 90, yPos);
 					nBox.Width = 100;
 					nBox.Name = attribute.Name;
+					nBox.Maximum = 2147483647;
 					panel1.Controls.Add(nBox);
 				}
 				else {
@@ -42,7 +43,7 @@ namespace Manager {
 					TextBox tBox = new TextBox();
 					tBox.Width = 100;
 					tBox.MaxLength = attribute.Size;
-					tBox.Location = new Point(xPos + 70, yPos);
+					tBox.Location = new Point(xPos + 90, yPos);
 					tBox.Name = attribute.Name;
 					panel1.Controls.Add(tBox);
 
@@ -74,28 +75,6 @@ namespace Manager {
 						break;
 				}
 			}
-
-
-			//for (int i = 0; i < Table.Attributes.Count; i++) {
-			//	Control ctrl = panel1.Controls[Table.Attributes[i].Name];
-			//	switch (Table.Attributes[i].Type) {
-			//		case "Int":
-			//			NumericUpDown nCtrl = (NumericUpDown)ctrl;
-			//			Table.Entries[i].Add(Convert.ToInt32(nCtrl.Value));
-			//			break;
-			//		case "Float":
-			//			NumericUpDown fCtrl = (NumericUpDown)ctrl;
-			//			Table.Entries[i].Add((float)Convert.ToDouble(fCtrl.Value));
-			//			break;
-			//		case "String":
-			//			TextBox tBox = (TextBox)ctrl;
-			//			Table.Entries[i].Add(tBox.Text);
-			//			break;
-			//		default:
-			//			break;
-			//	}
-
-			//}
 
 			DialogResult = DialogResult.OK;
 			Close();

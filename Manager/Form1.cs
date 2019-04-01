@@ -20,25 +20,29 @@ namespace Manager {
 			currentTable = null;
 		}
 		#region Utilities
-		/* Desactiva o activa los botones */
+
+		/* Desactiva o activa los botones de agregar, eliminar y modificar atributos */
 		public void ToggleAttribButtons(bool add, bool delete, bool modify) {
 			btnAddAttrib.Enabled = addAttributeToolStripMenuItem.Enabled = add;
 			btnDeleteAttrib.Enabled = deleteAttributeToolStripMenuItem.Enabled = delete;
 			btnModifyAttrib.Enabled = modifyAttributeToolStripMenuItem.Enabled = modify;
 		}
 
+		/* Activa o desactiva los botones de nuevo, eliminar y renombrar tabla */
 		public void ToggleTableButtons(bool newT, bool delete, bool rename) {
 			btnNewTable.Enabled = newTableToolStripMenuItem.Enabled = newT;
 			btnDeleteTable.Enabled = deleteTableToolStripMenuItem.Enabled = delete;
 			btnRenameTable.Enabled = renameTableToolStripMenuItem.Enabled = rename;
 		}
 		
+		/* Activa o desactiva los botones de agregar, eliminar y modificar entradas */
 		public void ToggleEntryButtons(bool add, bool delete, bool modify) {
 			btnAddEntry.Enabled = addNewEntryToolStripMenuItem.Enabled = add;
 			btnDeleteEntry.Enabled = deleteEntryToolStripMenuItem.Enabled = delete;
 			btnModifyEntry.Enabled = modifySelectedEntryToolStripMenuItem.Enabled = modify;
 		}
 
+		/* Activa o desactiva los botones de abrir, cerrar o renombrar base de datos */
 		public void ToggleDBButtons(bool enabled) {
 			deleteDBToolStripMenuItem.Enabled = enabled;
 			renameDBToolStripMenuItem.Enabled = enabled;
@@ -48,31 +52,33 @@ namespace Manager {
 		#endregion
 
 		#region File operations
-		/*Guarda una base de datos con todos sus valores utilizando serialización en XML*/
+
+		/* Guarda un archivo de una tabla en la dirección que es especificada. La tabla 
+		 * contiene los atributos y las entradas*/
 		private void SaveTable() {
 			Stream stream = null;
 			try {
 				IFormatter formatter = new BinaryFormatter();
 				stream = new FileStream(dataBase.Path + "\\" + currentTable.Name + ".bin", FileMode.Create, FileAccess.Write, FileShare.None);
-				formatter.Serialize(stream, currentTable);
+				formatter.Serialize(stream, currentTable); // Serializa la tabla
 			}
 			catch (Exception ex) {
 				MessageBox.Show(ex.ToString());
 			}
 			finally {
 				if (null != stream) {
-					stream.Close();
+					stream.Close(); // Cierra el archivo
 				}
 			}
 		}
 
-		/* Carga una tabla en la base de datos*/
+		/* Carga una tabla en la base de datos. Almacena la tabla en una variable de tabla. */
 		private Table LoadTable(string tableName) {
 			Stream stream = null;
 			try {
 				IFormatter formatter = new BinaryFormatter();
 				stream = new FileStream(dataBase.Path + "\\" + tableName + ".bin", FileMode.Open, FileAccess.Read, FileShare.None);
-				Table table = (Table)formatter.Deserialize(stream);
+				Table table = (Table)formatter.Deserialize(stream); // Desrializa
 				return table;
 			}
 			catch (Exception ex) {
@@ -80,7 +86,7 @@ namespace Manager {
 			}
 			finally {
 				if (null != stream) {
-					stream.Close();
+					stream.Close(); // Cierra el archivo
 				}
 			}
 			return null;
@@ -155,6 +161,7 @@ namespace Manager {
 				label1.Visible = true;
 				treeView1.Enabled = true;
 
+				// Activa algunos botones
 				ToggleTableButtons(true, false, false);
 				ToggleDBButtons(true);
 			}
@@ -200,6 +207,7 @@ namespace Manager {
 				treeView1.Nodes.Clear();
 				treeView1.Enabled = false;
 
+				// Desactiva todos los botones
 				ToggleTableButtons(false, false, false);
 				ToggleAttribButtons(false, false, false);
 				ToggleDBButtons(false);
@@ -217,7 +225,7 @@ namespace Manager {
 		#region Table menu operations
 
 		/*Crea una nueva tabla en la base de datos actual. Se inicializa la variable de tabla y se guarda en la 
-		base de datos.Se pide el nombre de la tabla*/
+		base de datos. Se pide el nombre de la tabla. Se guarda en el archivo binario*/
 		private void BtnNewTable_Click(object sender, EventArgs e) {
 			// Dialogo de nombre
 			NameDialog nt = new NameDialog("Create table", "");
@@ -281,8 +289,10 @@ namespace Manager {
 			currentTable = dataBase.FindTable(treeView1.SelectedNode.Text);
 			// se guarda la dirección de la tabla elegida
 			selectedTable = dataBase.Path + "\\" + treeView1.SelectedNode.Text;
+			groupBox2.Text = ""; //titulo del group box de atributos
 			ToggleTableButtons(true, true, true);
 
+			// Si hay atributos, se activa solamente el boton de agregar entrada
 			if (currentTable.Attributes.Count > 0) {
 				ToggleEntryButtons(true, false, false);
 			}
@@ -290,25 +300,30 @@ namespace Manager {
 				ToggleEntryButtons(false, false, false);
 			}
 
-			// Si la tabla tiene entradas, entonces no activa los controles
+			// Si la tabla no tiene entradas, solo activa el boton de agregar atributo
 			if (currentTable.Entries.Count > 0 && currentTable.Entries[0].Count > 0) {
 				btnAddAttrib.Enabled = addAttributeToolStripMenuItem.Enabled =  false;
 			}
-			else {
+			else { 
+				// Si tiene entradas, desactiva todos
 				ToggleAttribButtons(true, false, false);
 			}
 			
 			ShowTableInfo();
 		}
 
+		/* Cuando se deja el enfoque del treeview, desactiva los botones de eliminar y modificar tabla
+		 */
 		private void TreeView1_Leave(object sender, EventArgs e) {
 			ToggleTableButtons(true, false, false);
 		}
 
-		/* Muestra la tabla completa en el datagrid */
+		/* Muestra la tabla completa en el datagrid, Si no tiene datos, la tabla se queda vacía. Se
+		 * llama cada vez que se hace una modificación a las entradas o los atributos */
 		private void ShowTableInfo() {
 			dataGridView1.Columns.Clear();
-			//comboBox1.Items.Clear();
+
+			// Agrega las columnas de los atributos al datagrid
 			foreach (Attribute attribute in currentTable.Attributes) {
 				DataGridViewTextBoxColumn dgc = new DataGridViewTextBoxColumn {
 					Name = attribute.Name,
@@ -316,11 +331,10 @@ namespace Manager {
 					SortMode = DataGridViewColumnSortMode.Programmatic
 				};
 				dataGridView1.Columns.Add(dgc);
-				//comboBox1.Items.Add(dgc.Name);
 			}
 
+			// Agrefa las tuplas que contenga esa tabla, verificando que haya alguna
 			if (currentTable.Entries != null && currentTable.Entries.Count > 0 && currentTable.Entries[0].Count > 0) {
-
 				for (int k = 0; k < currentTable.Entries[0].Count; k++) { // Recorre las filas
 					dataGridView1.Rows.Add();
 					for (int i = 0; i < currentTable.Attributes.Count; i++) { // Recorre las coluumneas
@@ -337,7 +351,7 @@ namespace Manager {
 			AttributeDialog nd = new AttributeDialog("New attribute", dataBase.PKKeys, currentTable, null);
 			if (nd.ShowDialog() == DialogResult.OK) {
 				currentTable.AddAttribute(nd.Attr);
-				//comboBox1.Items.Add(nd.Attr.Name);
+				// Si es atributo primario, se agrega a la tabla
 				if (nd.Attr.Key == 1) {
 					dataBase.PKKeys.Add(nd.Attr);
 				}
@@ -351,10 +365,19 @@ namespace Manager {
 		private void BtnDeleteAttrib_Click(object sender, EventArgs e) {
 			Attribute at = currentTable.Attributes.Find(x => x.Name == groupBox2.Text);
 
-			currentTable.RemoveAttribute(at);
-			dataBase.PKKeys.Remove(at);
+			//Buscar en las otras tablas si no hay datos para no poder agregarlos
+			//...
+			//...
 
-			DataGridView1_ColumnHeaderMouseClick(this, null);
+			currentTable.RemoveAttribute(at);
+			// Elimina el atributo de la lista de claves primarias, si es que es primario
+
+			if (at.Key == 1) {
+				dataBase.PKKeys.Remove(at);
+			}
+			// Llama al evento de actualizar las columnas paara verificar
+			ToggleAttribButtons(true, false, false);
+			groupBox2.Text = "";
 			ShowTableInfo();
 			SaveTable();
 		}
@@ -364,17 +387,23 @@ namespace Manager {
 			Attribute at = currentTable.Attributes.Find(x => x.Name == groupBox2.Text);
 			AttributeDialog atrDlg = new AttributeDialog("Modify attribute", dataBase.PKKeys, currentTable, at);
 
+			// Buscar en las otras tablas si hay datos para no poder agregarlo
+			//...
+			//...
+
 			if (atrDlg.ShowDialog() == DialogResult.OK) {
 				currentTable.ModifyAttribute(at, atrDlg.Attr);
-
 			}
+
 			ShowTableInfo();
 			SaveTable();
 		}
 
-		/* Agrega una tupla en la tabla seleccionada. Desacva los botones de*/
+		/* Boton de agregar una tupla en la tabla seleccionada. Desacva los botones de agregar, 
+		 * modificar y eliminar atributos
+		 */
 		private void BtnAddEntry_Click(object sender, EventArgs e) {
-			RegisterDialog regDlg = new RegisterDialog(currentTable);
+			RegisterDialog regDlg = new RegisterDialog(currentTable, null);
 
 			if (regDlg.ShowDialog() == DialogResult.OK) {
 				currentTable.AddEntry(regDlg.Entry);
@@ -385,61 +414,70 @@ namespace Manager {
 
 		}
 
+		/* Llamado cuando se selecciona una columna atributo del datagridview. Hace las verificaciones 
+		 * que corresponden para poder acrivar los botones de agregar, eliminar y modificar.*/
 		private void DataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
-			if (e != null && e.ColumnIndex != -1) {
-				groupBox2.Text = dataGridView1.Columns[e.ColumnIndex].HeaderText;
+			groupBox2.Text = dataGridView1.Columns[e.ColumnIndex].HeaderText;
 
-				//Buscar en las otras tablas si no tienen atributos para poder modificar o eliminar
-				if (currentTable.Entries[0].Count == 0) {
-					ToggleAttribButtons(true, true, true);
-				}
-				else {
-					ToggleAttribButtons(false, false, false);
-				}
+			//Buscar en las otras tablas si no tienen atributos para poder modificar o eliminar
+			//...
+			//...
+
+			// Si las entradas están vacías, entonces activa los botones de modificar agregar y eliminar
+			if (currentTable.Entries[0].Count == 0) {
+				ToggleAttribButtons(true, true, true);
 			}
 			else {
 				ToggleAttribButtons(false, false, false);
-				groupBox2.Text = "nada";
 			}
 		}
 
+		/* Se activa cuando se selecciona yuna fila en el datagridview. Se realizan las verificaciones para
+		 * activar los botones de agregar, eliminar y modificar entrada.*/
 		private void DataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
-			if (e.RowIndex != -1) {
-				if (currentTable.Entries[0].Count > 0 && e.RowIndex != dataGridView1.Rows.Count - 1) {
-					ToggleEntryButtons(true, true, true);
-				}
-				else {
-					ToggleEntryButtons(true, false, false);
-				}
+			// Si hay entradas y no es la última fila del  datagrid view (la ultima siempre esta vacia)
+			if (currentTable.Entries[0].Count > 0 && e.RowIndex != dataGridView1.Rows.Count - 1) {
+				ToggleEntryButtons(true, true, true);
 			}
 			else {
 				ToggleEntryButtons(true, false, false);
 			}
 		}
 
+		/* Boton de eliminar entrada. Se tiene que seleccionar previamente una fila del datagridview. 
+		 * Muestra un dialogo de confirmacion y elimina la fila en OK */
 		private void BtnDeleteEntry_Click(object sender, EventArgs e) {
 
-			if (MessageBox.Show("Are you sure you want to delete the database?", "Delete database", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+			if (MessageBox.Show("Are you sure you want to delete entry?", "Delete entry", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+				// Obtiene el indice de la fila seleccionada, el cual es el mismo indice de
+				// la base de datos
 				int index = dataGridView1.CurrentCell.RowIndex;
 
 				currentTable.DeleteEntry(index);
 				ShowTableInfo();
 				SaveTable();
 
+				// Si no quedan mas entradas, se desactiva el boton de eliminar y modificar
 				if (currentTable.Entries[0].Count == 0) {
-					btnDeleteEntry.Enabled = false;
+					ToggleEntryButtons(true, false, false);
 				}
 			}
 		}
 
+		/* Boton de modificar. Se debe seleccionar previamente una fila en el datagridview, se obtienen los
+		 * datos de esa fila, y despues se realiza la operacion de eliminar y agregar en la tabla.*/
 		private void BtnModifyEntry_Click(object sender, EventArgs e) {
 			List<object> entry = currentTable.GetEntryAt(dataGridView1.CurrentCell.RowIndex);
 
-			RegisterDialog regDlg = new RegisterDialog(currentTable);
+			RegisterDialog regDlg = new RegisterDialog(currentTable, entry);
 
 			if (regDlg.ShowDialog() == DialogResult.OK) {
 
 			}
+		}
+
+		private void Form1_Load(object sender, EventArgs e) {
+
 		}
 	}
 }
