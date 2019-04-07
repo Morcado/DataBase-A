@@ -18,35 +18,50 @@ namespace Manager {
 
 			Table = table;
 			Entry = new List<object>();
-			int xPos = 20, yPos = 10;
+			int xPos = 20, yPos = 10, i = 0;
 
 			//for (int i = 0; i < 20; i++) {
 			foreach (Attribute attribute in table.Attributes) {
 
-				Label label = new Label();
-				label.Text = attribute.Name;
-				label.Width = 50;
-				label.Location = new Point(xPos, yPos + 5);
+				Label label = new Label {
+					Text = attribute.Name,
+					Width = 50,
+					Location = new Point(xPos, yPos + 5)
+				};
 				panel1.Controls.Add(label);
 
 
 				if (attribute.Type == "Int" || attribute.Type == "Float") {
-					NumericUpDown nBox = new NumericUpDown();
-					nBox.Location = new Point(xPos + 90, yPos);
-					nBox.Width = 100;
-					nBox.Name = attribute.Name;
-					nBox.Maximum = 2147483647;
+					NumericUpDown nBox = new NumericUpDown {
+						Location = new Point(xPos + 90, yPos),
+						Width = 100,
+						Name = attribute.Name,
+						Maximum = 2147483647
+					};
+					if (entry != null) {
+						if (attribute.Type == "Int") {
+							nBox.Value = Convert.ToInt32(entry[i++]);
+						}
+						else {
+							nBox.Value = Convert.ToDecimal(Convert.ToSingle(entry[i++]));
+						}
+					}
 					panel1.Controls.Add(nBox);
+
 				}
 				else {
 
-					TextBox tBox = new TextBox();
-					tBox.Width = 100;
-					tBox.MaxLength = attribute.Size;
-					tBox.Location = new Point(xPos + 90, yPos);
-					tBox.Name = attribute.Name;
+					TextBox tBox = new TextBox {
+						Width = 100,
+						MaxLength = attribute.Size,
+						Location = new Point(xPos + 90, yPos),
+						Name = attribute.Name
+					};
 					panel1.Controls.Add(tBox);
 
+					if (entry != null) {
+						tBox.Text = entry[i].ToString();
+					}
 				}
 
 				yPos += 26;
@@ -55,7 +70,7 @@ namespace Manager {
 
 		}
 
-		private void button1_Click(object sender, EventArgs e) {
+		private void Button1_Click(object sender, EventArgs e) {
 			for (int i = 0; i < Table.Attributes.Count; i++) {
 				Control ctrl = panel1.Controls[Table.Attributes[i].Name];
 				switch (Table.Attributes[i].Type) {

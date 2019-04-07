@@ -30,7 +30,6 @@
 			this.label3 = new System.Windows.Forms.Label();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.radioButton1 = new System.Windows.Forms.RadioButton();
-			this.radioButton2 = new System.Windows.Forms.RadioButton();
 			this.radioButton3 = new System.Windows.Forms.RadioButton();
 			this.label5 = new System.Windows.Forms.Label();
 			this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
@@ -47,7 +46,7 @@
 			this.button1.TabIndex = 10;
 			this.button1.Text = "OK";
 			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			this.button1.Click += new System.EventHandler(this.Button1_Click);
 			// 
 			// button2
 			// 
@@ -99,7 +98,7 @@
 			this.comboBox1.Name = "comboBox1";
 			this.comboBox1.Size = new System.Drawing.Size(175, 21);
 			this.comboBox1.TabIndex = 3;
-			this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+			this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
 			// 
 			// radioButton1
 			// 
@@ -112,21 +111,10 @@
 			this.radioButton1.Text = "Primary";
 			this.radioButton1.UseVisualStyleBackColor = true;
 			// 
-			// radioButton2
-			// 
-			this.radioButton2.AutoSize = true;
-			this.radioButton2.Location = new System.Drawing.Point(187, 67);
-			this.radioButton2.Name = "radioButton2";
-			this.radioButton2.Size = new System.Drawing.Size(60, 17);
-			this.radioButton2.TabIndex = 8;
-			this.radioButton2.TabStop = true;
-			this.radioButton2.Text = "Foreign";
-			this.radioButton2.UseVisualStyleBackColor = true;
-			// 
 			// radioButton3
 			// 
 			this.radioButton3.AutoSize = true;
-			this.radioButton3.Location = new System.Drawing.Point(252, 67);
+			this.radioButton3.Location = new System.Drawing.Point(187, 67);
 			this.radioButton3.Name = "radioButton3";
 			this.radioButton3.Size = new System.Drawing.Size(51, 17);
 			this.radioButton3.TabIndex = 9;
@@ -157,8 +145,8 @@
 			this.comboBox2.Name = "comboBox2";
 			this.comboBox2.Size = new System.Drawing.Size(273, 21);
 			this.comboBox2.TabIndex = 1;
-			this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
-			this.comboBox2.TextUpdate += new System.EventHandler(this.comboBox2_TextUpdate);
+			this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.ComboBox2_SelectedIndexChanged);
+			this.comboBox2.TextUpdate += new System.EventHandler(this.ComboBox2_TextUpdate);
 			// 
 			// AttributeDialog
 			// 
@@ -171,7 +159,6 @@
 			this.Controls.Add(this.numericUpDown1);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.radioButton3);
-			this.Controls.Add(this.radioButton2);
 			this.Controls.Add(this.radioButton1);
 			this.Controls.Add(this.comboBox1);
 			this.Controls.Add(this.label3);
@@ -202,7 +189,6 @@
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.ComboBox comboBox1;
 		private System.Windows.Forms.RadioButton radioButton1;
-		private System.Windows.Forms.RadioButton radioButton2;
 		private System.Windows.Forms.RadioButton radioButton3;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.NumericUpDown numericUpDown1;

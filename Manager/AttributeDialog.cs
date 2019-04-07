@@ -21,17 +21,17 @@ namespace Manager {
 			this.keys = keys;
 			this.table = table;
 
-			foreach (var attribute in keys) {
-				if (!table.Attributes.Contains(attribute)) {
-					comboBox2.Items.Add(attribute.Name);
-				}
-			}
-
-			if (table.HasPK) {
-				radioButton1.Enabled = false;
-			}
-
 			if (attr != null) {
+				foreach (var attribute in keys) {
+					if (!table.Attributes.Contains(attribute)) {
+						comboBox2.Items.Add(attribute.Name);
+					}
+				}
+
+				if (table.HasPK) {
+					radioButton1.Enabled = false;
+				}
+
 				modificable = true;
 				comboBox2.Text = attr.Name;
 				numericUpDown1.Value = attr.Size;
@@ -40,9 +40,6 @@ namespace Manager {
 				switch (attr.Key) {
 					case 1:
 						radioButton1.Checked = true;
-						break;
-					case 2:
-						radioButton2.Checked = true;
 						break;
 					case 3:
 						radioButton3.Checked = true;
@@ -63,15 +60,15 @@ namespace Manager {
 
 		}
 
-		private void button1_Click(object sender, EventArgs e) {
+		private void Button1_Click(object sender, EventArgs e) {
 
 			if (comboBox2.Text != "" && numericUpDown1.Value != 0 && comboBox1.SelectedIndex != -1 &&
-					(radioButton1.Checked || radioButton2.Checked || radioButton3.Checked)) {
+					(radioButton1.Checked || radioButton3.Checked)) {
 				Attr = new Attribute {
 					Name = comboBox2.Text,
 					Size = Convert.ToInt32(numericUpDown1.Value),
 					Type = comboBox1.Text,
-					Key = radioButton1.Checked ? 1 : (radioButton2.Checked ? 2 : (radioButton3.Checked ? 3 : 0))
+					Key = radioButton1.Checked ? 1 : 3
 				};
 
 
@@ -86,13 +83,11 @@ namespace Manager {
 			}
 		}
 
-		private void comboBox2_SelectedIndexChanged(object sender, EventArgs e) {
+		private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e) {
 			int index = comboBox2.SelectedIndex;
 
 			comboBox1.Enabled = false;
 			radioButton1.Enabled = false;
-			radioButton2.Checked = true;
-			radioButton2.Enabled = false;
 			radioButton3.Enabled = false;
 
 
@@ -101,8 +96,8 @@ namespace Manager {
 
 		}
 
-		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
-			switch (comboBox1.Text) {
+		private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e) {
+			switch (comboBox1.Text) { 
 				case "Int":
 				case "Float":
 					numericUpDown1.Enabled = false;
@@ -118,20 +113,16 @@ namespace Manager {
 
 		}
 
-		private void comboBox2_TextUpdate(object sender, EventArgs e) {
+		private void ComboBox2_TextUpdate(object sender, EventArgs e) {
 			if (!keys.Any(x => x.Name == comboBox2.Text)) {
 				comboBox1.Enabled = true;
 				radioButton1.Enabled = true;
-				radioButton2.Checked = false;
-				radioButton2.Enabled = true;
 				radioButton3.Enabled = true;
 
 			}
 			else {
 				comboBox1.Enabled = false;
 				radioButton1.Enabled = false;
-				radioButton2.Checked = true;
-				radioButton2.Enabled = false;
 				radioButton3.Enabled = false;
 
 			}

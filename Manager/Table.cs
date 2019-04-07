@@ -17,7 +17,6 @@ namespace Manager {
 			Name = newName;
 			Attributes = new List<Attribute>();
 			Entries = new List<IList>();
-
 		}
 
 		public void AddAttribute(Attribute attr) {
@@ -30,14 +29,29 @@ namespace Manager {
 			switch (attr.Type) {
 				case "Int":
 					List<int> ints = new List<int>();
+					if (Entries.Count > 0) {
+						for (int i = 0; i < Entries[0].Count; i++) {
+							ints.Add(0);
+						}
+					}
 					Entries.Add(ints);
 					break;
 				case "String":
 					List<string> strings = new List<string>();
+					if (Entries.Count > 0) {
+						for (int i = 0; i < Entries[0].Count; i++) {
+							strings.Add("");
+						}
+					}
 					Entries.Add(strings);
 					break;
 				case "Float":
 					List<float> floats = new List<float>();
+					if (Entries.Count > 0) {
+						for (int i = 0; i < Entries[0].Count; i++) {
+							floats.Add(0f);
+						}
+					}
 					Entries.Add(floats);
 					break;
 				default:

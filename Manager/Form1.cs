@@ -301,13 +301,9 @@ namespace Manager {
 			}
 
 			// Si la tabla no tiene entradas, solo activa el boton de agregar atributo
-			if (currentTable.Entries.Count > 0 && currentTable.Entries[0].Count > 0) {
-				btnAddAttrib.Enabled = addAttributeToolStripMenuItem.Enabled =  false;
-			}
-			else { 
-				// Si tiene entradas, desactiva todos
-				ToggleAttribButtons(true, false, false);
-			}
+			// Si tiene entradas, desactiva todos
+			ToggleAttribButtons(true, false, false);
+			
 			
 			ShowTableInfo();
 		}
@@ -409,7 +405,7 @@ namespace Manager {
 				currentTable.AddEntry(regDlg.Entry);
 				ShowTableInfo();
 				SaveTable();
-				ToggleAttribButtons(false, false, false);
+				ToggleAttribButtons(true, false, false);
 			}
 
 		}
@@ -428,7 +424,7 @@ namespace Manager {
 				ToggleAttribButtons(true, true, true);
 			}
 			else {
-				ToggleAttribButtons(false, false, false);
+				ToggleAttribButtons(true, false, false);
 			}
 		}
 
@@ -469,11 +465,15 @@ namespace Manager {
 		private void BtnModifyEntry_Click(object sender, EventArgs e) {
 			List<object> entry = currentTable.GetEntryAt(dataGridView1.CurrentCell.RowIndex);
 
+			// Carga el diálogo con los valores del registro
 			RegisterDialog regDlg = new RegisterDialog(currentTable, entry);
 
 			if (regDlg.ShowDialog() == DialogResult.OK) {
-
+				currentTable.DeleteEntry(dataGridView1.CurrentCell.RowIndex);
+				currentTable.AddEntry(regDlg.Entry);
 			}
+			ShowTableInfo();
+			SaveTable();
 		}
 
 		private void Form1_Load(object sender, EventArgs e) {

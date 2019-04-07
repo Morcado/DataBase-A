@@ -402,7 +402,7 @@
 			// 
 			this.btnDeleteEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btnDeleteEntry.Enabled = false;
-			this.btnDeleteEntry.Location = new System.Drawing.Point(400, 342);
+			this.btnDeleteEntry.Location = new System.Drawing.Point(393, 342);
 			this.btnDeleteEntry.Name = "btnDeleteEntry";
 			this.btnDeleteEntry.Size = new System.Drawing.Size(92, 23);
 			this.btnDeleteEntry.TabIndex = 17;
@@ -414,7 +414,7 @@
 			// 
 			this.btnModifyEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btnModifyEntry.Enabled = false;
-			this.btnModifyEntry.Location = new System.Drawing.Point(505, 342);
+			this.btnModifyEntry.Location = new System.Drawing.Point(491, 342);
 			this.btnModifyEntry.Name = "btnModifyEntry";
 			this.btnModifyEntry.Size = new System.Drawing.Size(92, 23);
 			this.btnModifyEntry.TabIndex = 18;
