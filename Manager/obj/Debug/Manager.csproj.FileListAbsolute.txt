@@ -67,3 +67,18 @@ C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.AttributeDialog
 C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.AttributeDialog.resources
 C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.RegisterDialog.resources
 C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.RegisterDialog.resources
+C:\Users\Oscar\Desktop\DataBase-A\Manager\bin\Debug\Manager.exe
+C:\Users\Oscar\Desktop\DataBase-A\Manager\bin\Debug\Manager.pdb
+C:\Users\Oscar\Desktop\DataBase-A\Manager\bin\Debug\Antlr4.Runtime.dll
+C:\Users\Oscar\Desktop\DataBase-A\Manager\bin\Debug\Antlr4.Runtime.xml
+C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.csprojAssemblyReference.cache
+C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.AttributeDialog.resources
+C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.Form1.resources
+C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.NameDialog.resources
+C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.Properties.Resources.resources
+C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.RegisterDialog.resources
+C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.csproj.GenerateResource.cache
+C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.csproj.CoreCompileInputs.cache
+C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.csproj.CopyComplete
+C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.exe
+C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.pdb
