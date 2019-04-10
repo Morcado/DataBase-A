@@ -60,7 +60,11 @@ namespace Manager {
         }
 
         public void RemoveAttribute(Attribute at) {
-            Attributes.Remove(at);
+            var att = Attributes.SingleOrDefault(x => x.Name == at.Name);
+            if (att != null) {
+                Attributes.Remove(att);
+
+            }
 
             if (at.Key == 1) {
                 HasPK = false;

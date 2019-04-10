@@ -55,12 +55,12 @@ namespace Manager {
 
         /* Guarda un archivo de una tabla en la dirección que es especificada. La tabla 
          * contiene los atributos y las entradas*/
-        private void SaveTable() {
+        private void SaveTable(Table table) {
             Stream stream = null;
             try {
                 IFormatter formatter = new BinaryFormatter();
-                stream = new FileStream(dataBase.Path + "\\" + currentTable.Name + ".bin", FileMode.Create, FileAccess.Write, FileShare.None);
-                formatter.Serialize(stream, currentTable); // Serializa la tabla
+                stream = new FileStream(dataBase.Path + "\\" + table.Name + ".bin", FileMode.Create, FileAccess.Write, FileShare.None);
+                formatter.Serialize(stream, table); // Serializa la tabla
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.ToString());
@@ -234,7 +234,7 @@ namespace Manager {
                 dataBase.AddTable(t);
                 currentTable = t;
                 treeView1.Nodes.Add(nt.NewName);// Agrega la tabla al treeview
-                SaveTable();
+                SaveTable(currentTable);
                 currentTable = null;
             }
         }
@@ -361,7 +361,7 @@ namespace Manager {
                 }
             }
             ShowTableInfo();
-            SaveTable();
+            SaveTable(currentTable);
         }
         
 
@@ -371,11 +371,11 @@ namespace Manager {
 
             currentTable.RemoveAttribute(at);
 
-            foreach (var table in dataBase.Tables) {
-                foreach (var attribute in table.Attributes) {
-                    if (attribute.Name == at.Name) {
-                        table.RemoveAttribute(at);
-
+            for (int i = 0; i < dataBase.Tables.Count; i++) {
+                for (int j = 0; j < dataBase.Tables[i].Attributes.Count; j++) {
+                    if (dataBase.Tables[i].Attributes[j].Name == at.Name) {
+                        dataBase.Tables[i].RemoveAttribute(at);
+                        SaveTable(dataBase.Tables[i]);
                     }
                 }
             }
@@ -389,7 +389,7 @@ namespace Manager {
             ToggleAttribButtons(true, false, false);
             groupBox2.Text = "";
             ShowTableInfo();
-            SaveTable();
+            SaveTable(currentTable);
         }
 
         /* Modifica un atributo mostrando los parámetros que ya tiene para modificar de una forma más fácil */
@@ -407,6 +407,7 @@ namespace Manager {
                     for (int j = 0; j < dataBase.Tables[i].Attributes.Count; j++) {
                         if (dataBase.Tables[i].Attributes[j].Name == at.Name) {
                             dataBase.Tables[i].ModifyAttribute(at, atrDlg.Attr);
+                            SaveTable(dataBase.Tables[i]);
                         }
                     }
                 }
@@ -422,7 +423,7 @@ namespace Manager {
             }
 
             ShowTableInfo();
-            SaveTable();
+            SaveTable(currentTable);
         }
 
         /* Boton de agregar una tupla en la tabla seleccionada. Desacva los botones de agregar, 
@@ -434,7 +435,7 @@ namespace Manager {
             if (regDlg.ShowDialog() == DialogResult.OK) {
                 currentTable.AddEntry(regDlg.Entry);
                 ShowTableInfo();
-                SaveTable();
+                SaveTable(currentTable);
                 ToggleAttribButtons(true, false, false);
             }
 
@@ -489,7 +490,7 @@ namespace Manager {
 
                 currentTable.DeleteEntry(index);
                 ShowTableInfo();
-                SaveTable();
+                SaveTable(currentTable);
 
                 // Si no quedan mas entradas, se desactiva el boton de eliminar y modificar
                 if (currentTable.Entries[0].Count == 0) {
@@ -511,7 +512,7 @@ namespace Manager {
                 currentTable.AddEntry(regDlg.Entry);
             }
             ShowTableInfo();
-            SaveTable();
+            SaveTable(currentTable);
         }
 
         private void Form1_Load(object sender, EventArgs e) {
