@@ -35,6 +35,18 @@ namespace Manager {
             return Tables.Find(x => x.Name == text);
         }
 
+
+        internal bool HasAttribAsFK(Attribute at) {
+            foreach (var table in Tables) {
+                foreach (var attrib in table.Attributes) {
+                    if (attrib.Name == at.Name && attrib.Key == 2) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         //internal bool CheckTables(Attribute at) {
         //	foreach (var table in tables) {
         //		if (table.Attributes.Contains(at)) {

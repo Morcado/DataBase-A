@@ -337,11 +337,11 @@ namespace Manager {
             }
 
             // Agrefa las tuplas que contenga esa tabla, verificando que haya alguna
-            if (currentTable.Entries != null && currentTable.Entries.Count > 0 && currentTable.Entries[0].Count > 0) {
-                for (int k = 0; k < currentTable.Entries[0].Count; k++) { // Recorre las filas
+            if (currentTable.Registers != null && currentTable.Registers.Count > 0 && currentTable.Registers[0].Count > 0) {
+                for (int k = 0; k < currentTable.Registers[0].Count; k++) { // Recorre las filas
                     dataGridView1.Rows.Add();
                     for (int i = 0; i < currentTable.Attributes.Count; i++) { // Recorre las coluumneas
-                        dataGridView1.Rows[k].Cells[i].Value = currentTable.Entries[i][k];
+                        dataGridView1.Rows[k].Cells[i].Value = currentTable.Registers[i][k];
                     }
                 }
             }
@@ -354,7 +354,7 @@ namespace Manager {
             AttributeDialog nd = new AttributeDialog("New attribute", dataBase.PKKeys, currentTable, null);
             if (nd.ShowDialog() == DialogResult.OK) {
                 currentTable.AddAttribute(nd.Attr);
-                nd.Attr.parentTable = currentTable;
+                nd.Attr.ParentTable = currentTable;
                 // Si es atributo primario, se agrega a la tabla
                 if (nd.Attr.Key == 1) {
                     dataBase.PKKeys.Add(nd.Attr);
@@ -371,14 +371,14 @@ namespace Manager {
 
             currentTable.RemoveAttribute(at);
 
-            for (int i = 0; i < dataBase.Tables.Count; i++) {
-                for (int j = 0; j < dataBase.Tables[i].Attributes.Count; j++) {
-                    if (dataBase.Tables[i].Attributes[j].Name == at.Name) {
-                        dataBase.Tables[i].RemoveAttribute(at);
-                        SaveTable(dataBase.Tables[i]);
-                    }
-                }
-            }
+            //for (int i = 0; i < dataBase.Tables.Count; i++) {
+            //    for (int j = 0; j < dataBase.Tables[i].Attributes.Count; j++) {
+            //        if (dataBase.Tables[i].Attributes[j].Name == at.Name) {
+            //            dataBase.Tables[i].RemoveAttribute(at);
+            //            SaveTable(dataBase.Tables[i]);
+            //        }
+            //    }
+            //}
 
             // Elimina el atributo de la lista de claves primarias, si es que es primario
 
@@ -403,23 +403,7 @@ namespace Manager {
 
             if (atrDlg.ShowDialog() == DialogResult.OK) {
                 currentTable.ModifyAttribute(at, atrDlg.Attr);
-                for (int i = 0; i < dataBase.Tables.Count; i++) {
-                    for (int j = 0; j < dataBase.Tables[i].Attributes.Count; j++) {
-                        if (dataBase.Tables[i].Attributes[j].Name == at.Name) {
-                            dataBase.Tables[i].ModifyAttribute(at, atrDlg.Attr);
-                            SaveTable(dataBase.Tables[i]);
-                        }
-                    }
-                }
-
-                //foreach (var table in dataBase.Tables) {
-                //    foreach (var attribute in table.Attributes) {
-                //        if (attribute.Name == at.Name) {
-                //            table.ModifyAttribute(at, atrDlg.Attr);
-
-                //        }
-                //    }
-                //}
+                
             }
 
             ShowTableInfo();
@@ -433,7 +417,7 @@ namespace Manager {
             RegisterDialog regDlg = new RegisterDialog(currentTable, null);
 
             if (regDlg.ShowDialog() == DialogResult.OK) {
-                currentTable.AddEntry(regDlg.Entry);
+                currentTable.AddRegister(regDlg.Entry);
                 ShowTableInfo();
                 SaveTable(currentTable);
                 ToggleAttribButtons(true, false, false);
@@ -448,21 +432,26 @@ namespace Manager {
             Attribute at = currentTable.FindAttribute(groupBox2.Text);
 
             if (at.Key == 2) {
-                if (!at.CheckTables()) {
-                    ToggleAttribButtons(true, false, false);
-                }     
-            }
-            else {
-                if (currentTable.Entries[0].Count == 0) {
-                    ToggleAttribButtons(true, true, true);
+                if (currentTable.HasRegisters()) {
+                    ToggleAttribButtons(false, true, false);
                 }
                 else {
-                    ToggleAttribButtons(true, false, false);
+                    ToggleAttribButtons(true, true, false);
+                }  
+            }
+            else {
+                if (dataBase.HasAttribAsFK(at)) {
+                    ToggleAttribButtons(false, false, false);
+                }
+                else {
+                    if (!currentTable.HasRegisters()) {
+                        ToggleAttribButtons(true, true, true);
+                    }
+                    else {
+                        ToggleAttribButtons(false, false, false);
+                    }
                 }
             }
-            //bool isUsed = dataBase.CheckTables(at);
-
-
             // Si las entradas están vacías, entonces activa los botones de modificar agregar y eliminar
 
         }
@@ -471,7 +460,7 @@ namespace Manager {
          * activar los botones de agregar, eliminar y modificar entrada.*/
         private void DataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
             // Si hay entradas y no es la última fila del  datagrid view (la ultima siempre esta vacia)
-            if (currentTable.Entries[0].Count > 0 && e.RowIndex != dataGridView1.Rows.Count - 1) {
+            if (currentTable.HasRegisters() && e.RowIndex != dataGridView1.Rows.Count - 1) {
                 ToggleEntryButtons(true, true, true);
             }
             else {
@@ -488,12 +477,12 @@ namespace Manager {
                 // la base de datos
                 int index = dataGridView1.CurrentCell.RowIndex;
 
-                currentTable.DeleteEntry(index);
+                currentTable.DeleteRegister(index);
                 ShowTableInfo();
                 SaveTable(currentTable);
 
                 // Si no quedan mas entradas, se desactiva el boton de eliminar y modificar
-                if (currentTable.Entries[0].Count == 0) {
+                if (!currentTable.HasRegisters()) {
                     ToggleEntryButtons(true, false, false);
                 }
             }
@@ -502,14 +491,14 @@ namespace Manager {
         /* Boton de modificar. Se debe seleccionar previamente una fila en el datagridview, se obtienen los
          * datos de esa fila, y despues se realiza la operacion de eliminar y agregar en la tabla.*/
         private void BtnModifyEntry_Click(object sender, EventArgs e) {
-            List<object> entry = currentTable.GetEntryAt(dataGridView1.CurrentCell.RowIndex);
+            List<object> entry = currentTable.GetRegisterAt(dataGridView1.CurrentCell.RowIndex);
 
             // Carga el diálogo con los valores del registro
             RegisterDialog regDlg = new RegisterDialog(currentTable, entry);
 
             if (regDlg.ShowDialog() == DialogResult.OK) {
-                currentTable.DeleteEntry(dataGridView1.CurrentCell.RowIndex);
-                currentTable.AddEntry(regDlg.Entry);
+                currentTable.DeleteRegister(dataGridView1.CurrentCell.RowIndex);
+                currentTable.AddRegister(regDlg.Entry);
             }
             ShowTableInfo();
             SaveTable(currentTable);

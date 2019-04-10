@@ -10,13 +10,13 @@ namespace Manager {
         public List<Attribute> Attributes { get; set; }
         public string Name { get; set; }
         public bool HasPK { get; set; }
-        public List<IList> Entries;
+        public List<IList> Registers;
         
 
         public Table(string newName) {
             Name = newName;
             Attributes = new List<Attribute>();
-            Entries = new List<IList>();
+            Registers = new List<IList>();
         }
 
         public void AddAttribute(Attribute attr) {
@@ -28,31 +28,33 @@ namespace Manager {
 
             switch (attr.Type) {
                 case "Int":
+                  
+
                     List<int> ints = new List<int>();
-                    if (Entries.Count > 0) {
-                        for (int i = 0; i < Entries[0].Count; i++) {
+                    if (Registers.Count > 0) {
+                        for (int i = 0; i < Registers[0].Count; i++) {
                             ints.Add(0);
                         }
                     }
-                    Entries.Add(ints);
+                    Registers.Add(ints);
                     break;
                 case "String":
                     List<string> strings = new List<string>();
-                    if (Entries.Count > 0) {
-                        for (int i = 0; i < Entries[0].Count; i++) {
+                    if (Registers.Count > 0) {
+                        for (int i = 0; i < Registers[0].Count; i++) {
                             strings.Add("");
                         }
                     }
-                    Entries.Add(strings);
+                    Registers.Add(strings);
                     break;
                 case "Float":
                     List<float> floats = new List<float>();
-                    if (Entries.Count > 0) {
-                        for (int i = 0; i < Entries[0].Count; i++) {
+                    if (Registers.Count > 0) {
+                        for (int i = 0; i < Registers[0].Count; i++) {
                             floats.Add(0f);
                         }
                     }
-                    Entries.Add(floats);
+                    Registers.Add(floats);
                     break;
                 default:
                     break;
@@ -69,21 +71,21 @@ namespace Manager {
             if (at.Key == 1) {
                 HasPK = false;
             }
-            Entries.Clear();
+            Registers.Clear();
 
             foreach (Attribute attribute in Attributes) {
                 switch (attribute.Type) {
                     case "Int":
                         List<int> ints = new List<int>();
-                        Entries.Add(ints);
+                        Registers.Add(ints);
                         break;
                     case "String":
                         List<string> strings = new List<string>();
-                        Entries.Add(strings);
+                        Registers.Add(strings);
                         break;
                     case "Float":
                         List<float> floats = new List<float>();
-                        Entries.Add(floats);
+                        Registers.Add(floats);
                         break;
                     default:
                         break;
@@ -102,27 +104,28 @@ namespace Manager {
 
         }
 
-        public void AddEntry(List<object> newEntry) {
+        public void AddRegister(List<object> newEntry) {
             //modificar le tipo en la lista, causa excepcion
-            for (int i = 0; i < Entries.Count; i++) {
-                Entries[i].Add(newEntry[i]);
+            for (int i = 0; i < Registers.Count; i++) {
+                Registers[i].Add(newEntry[i]);
             }
         }
 
-        public void DeleteEntry(int index) {
-            for (int i = 0; i < Entries.Count; i++) {
-                Entries[i].RemoveAt(index);
+        public void DeleteRegister(int index) {
+            for (int i = 0; i < Registers.Count; i++) {
+                Registers[i].RemoveAt(index);
             }
         }
 
-        internal List<object> GetEntryAt(int rowIndex) {
+        internal List<object> GetRegisterAt(int rowIndex) {
             List<object> entry = new List<object>();
-            for (int i = 0; i < Entries.Count; i++) {
-                entry.Add(Entries[i][rowIndex]);
+            for (int i = 0; i < Registers.Count; i++) {
+                entry.Add(Registers[i][rowIndex]);
             }
             return entry;
         }
 
+        /* Busca un atributo por el nombre, regresa el objdeto atributo*/
         internal Attribute FindAttribute(string name) {
             foreach (var attribute in Attributes) {
                 if (attribute.Name == name) {
@@ -130,6 +133,15 @@ namespace Manager {
                 }
             }
             return null;
+        }
+
+        public bool HasRegisters() {
+            if (Registers != null && Registers.Count > 0) {
+                if (Registers[0].Count > 0) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

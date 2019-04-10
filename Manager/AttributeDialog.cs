@@ -24,7 +24,7 @@ namespace Manager {
 
             foreach (var attribute in keys) {
                 if (!currentTable.Attributes.Contains(attribute)) {
-                    comboBox2.Items.Add(attribute.parentTable.Name + "------>" + attribute.Name);
+                    comboBox2.Items.Add(attribute.ParentTable.Name + "------>" + attribute.Name);
                 }
             }
 
@@ -64,7 +64,7 @@ namespace Manager {
         private void Button1_Click(object sender, EventArgs e) {
             string parent = "";
             if (comboBox2.SelectedIndex != -1) {
-                parent = keys[comboBox2.SelectedIndex].parentTable.Name;
+                parent = keys[comboBox2.SelectedIndex].ParentTable.Name;
             }
 
             if (comboBox2.Text != "" && numericUpDown1.Value != 0 && comboBox1.SelectedIndex != -1 &&
@@ -79,12 +79,12 @@ namespace Manager {
 
                 if (radioButton1.Enabled) {
                     Attr.Key = 1;
-                    Attr.parentTable = currentTable;
+                    Attr.ParentTable = currentTable;
                 }
                 else {
                     if (radioButton3.Enabled) {
                         Attr.Key = 3;
-                        Attr.parentTable = currentTable;
+                        Attr.ParentTable = currentTable;
                     }
                     else {
                         Attr.Key = 2;
