@@ -372,7 +372,7 @@
             this.btnAddEntry.TabIndex = 14;
             this.btnAddEntry.Text = "Add register";
             this.btnAddEntry.UseVisualStyleBackColor = true;
-            this.btnAddEntry.Click += new System.EventHandler(this.BtnAddEntry_Click);
+            this.btnAddEntry.Click += new System.EventHandler(this.BtnAddRegister_Click);
             // 
             // groupBox1
             // 
@@ -408,7 +408,7 @@
             this.btnDeleteEntry.TabIndex = 17;
             this.btnDeleteEntry.Text = "Delete register";
             this.btnDeleteEntry.UseVisualStyleBackColor = true;
-            this.btnDeleteEntry.Click += new System.EventHandler(this.BtnDeleteEntry_Click);
+            this.btnDeleteEntry.Click += new System.EventHandler(this.BtnDeleteRegister_Click);
             // 
             // btnModifyEntry
             // 
@@ -420,7 +420,7 @@
             this.btnModifyEntry.TabIndex = 18;
             this.btnModifyEntry.Text = "Modify register";
             this.btnModifyEntry.UseVisualStyleBackColor = true;
-            this.btnModifyEntry.Click += new System.EventHandler(this.BtnModifyEntry_Click);
+            this.btnModifyEntry.Click += new System.EventHandler(this.BtnModifyRegister_Click);
             // 
             // Form1
             // 

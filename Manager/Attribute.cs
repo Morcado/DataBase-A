@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Manager {
         public int Size { get; set; }					// Si es entero, son 4 bytes, si es cadena es que elija el usuario
         public int Key { get; set; }                    // El tipo de llave que tiene
         public Table ParentTable { get; set; }			// La tabla a la que pertenece el atributo
-        public List<object> Register;
+        public IList Register;
 
         public Attribute() {
             Name = "";
@@ -19,6 +20,8 @@ namespace Manager {
             Size = 0;
             Key = 0;
         }
+
+
 
     }
 }

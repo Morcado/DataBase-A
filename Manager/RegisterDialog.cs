@@ -6,9 +6,9 @@ using System.Windows.Forms;
 namespace Manager {
 	public partial class RegisterDialog : Form {
 		public Table Table { get; set; }
-		public List<object> Entry { get; set; }
+		public List<object> Register { get; set; }
 
-		public RegisterDialog(Table table, List<object> entry) {
+		public RegisterDialog(Table table, List<object> register) {
 			InitializeComponent();
 			panel1.AutoScroll = false;
 			panel1.HorizontalScroll.Enabled = false;
@@ -17,7 +17,7 @@ namespace Manager {
 			panel1.AutoScroll = true;
 
 			Table = table;
-			Entry = new List<object>();
+			Register = new List<object>();
 			int xPos = 20, yPos = 10, i = 0;
 
 			//for (int i = 0; i < 20; i++) {
@@ -38,12 +38,12 @@ namespace Manager {
 						Name = attribute.Name,
 						Maximum = 2147483647
 					};
-					if (entry != null) {
+					if (register != null) {
 						if (attribute.Type == "Int") {
-							nBox.Value = Convert.ToInt32(entry[i++]);
+							nBox.Value = Convert.ToInt32(register[i++]);
 						}
 						else {
-							nBox.Value = Convert.ToDecimal(Convert.ToSingle(entry[i++]));
+							nBox.Value = Convert.ToDecimal(Convert.ToSingle(register[i++]));
 						}
 					}
 					panel1.Controls.Add(nBox);
@@ -59,8 +59,8 @@ namespace Manager {
 					};
 					panel1.Controls.Add(tBox);
 
-					if (entry != null) {
-						tBox.Text = entry[i].ToString();
+					if (register != null) {
+						tBox.Text = register[i].ToString();
 					}
 				}
 
@@ -76,15 +76,15 @@ namespace Manager {
 				switch (Table.Attributes[i].Type) {
 					case "Int":
 						NumericUpDown nCtrl = (NumericUpDown)ctrl;
-						Entry.Add(Convert.ToInt32(nCtrl.Value));
+						Register.Add(Convert.ToInt32(nCtrl.Value));
 						break;
 					case "Float":
 						NumericUpDown fCtrl = (NumericUpDown)ctrl;
-						Entry.Add((float)Convert.ToDouble(fCtrl.Value));
+						Register.Add((float)Convert.ToDouble(fCtrl.Value));
 						break;
 					case "String":
 						TextBox tBox = (TextBox)ctrl;
-						Entry.Add(tBox.Text);
+						Register.Add(tBox.Text);
 						break;
 					default:
 						break;
