@@ -6,6 +6,8 @@ using System.Windows.Forms;
 namespace Manager {
 	public partial class RegisterDialog : Form {
 		public Table Table { get; set; }
+        public Attribute FKAtribute;
+        public object FKValue;
 		public List<object> Register { get; set; }
 
 		public RegisterDialog(Table table, List<object> register) {
@@ -15,7 +17,7 @@ namespace Manager {
 			panel1.HorizontalScroll.Visible = false;
 			panel1.HorizontalScroll.Maximum = 0;
 			panel1.AutoScroll = true;
-
+            FKAtribute = null;
 			Table = table;
 			Register = new List<object>();
 			int xPos = 20, yPos = 10, i = 0;
@@ -23,11 +25,16 @@ namespace Manager {
 			//for (int i = 0; i < 20; i++) {
 			foreach (Attribute attribute in table.Attributes) {
 
-				Label label = new Label {
-					Text = attribute.Name,
-					Width = 50,
-					Location = new Point(xPos, yPos + 5)
+                Label label = new Label {
+                    Text = attribute.Name,
+                    Width = 50,
+                    Location = new Point(xPos, yPos + 5),
+                    Name = "_" + attribute.Name
 				};
+                if (attribute.Key == 2) {
+                    label.BorderStyle = BorderStyle.FixedSingle;
+                    FKAtribute = attribute;
+                }
 				panel1.Controls.Add(label);
 
 
@@ -36,14 +43,14 @@ namespace Manager {
 						Location = new Point(xPos + 90, yPos),
 						Width = 100,
 						Name = attribute.Name,
-						Maximum = 2147483647
+						Maximum = 2147483647,
 					};
 					if (register != null) {
 						if (attribute.Type == "Int") {
-							nBox.Value = Convert.ToInt32(register[i++]);
+							nBox.Value = Convert.ToInt32(register[i]);
 						}
 						else {
-							nBox.Value = Convert.ToDecimal(Convert.ToSingle(register[i++]));
+							nBox.Value = Convert.ToDecimal(Convert.ToSingle(register[i]));
 						}
 					}
 					panel1.Controls.Add(nBox);
@@ -65,7 +72,7 @@ namespace Manager {
 				}
 
 				yPos += 26;
-
+                i++;
 			}
 
 		}
@@ -87,8 +94,11 @@ namespace Manager {
 						Register.Add(tBox.Text);
 						break;
 					default:
-						break;
+                        break;
 				}
+                if (Table.Attributes[i].Key == 2) {
+                    FKValue = Register[i];
+                }
 			}
 
 			DialogResult = DialogResult.OK;

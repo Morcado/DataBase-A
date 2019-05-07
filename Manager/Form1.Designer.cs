@@ -62,10 +62,15 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnDeleteEntry = new System.Windows.Forms.Button();
             this.btnModifyEntry = new System.Windows.Forms.Button();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxQuery = new System.Windows.Forms.TextBox();
+            this.btnExecute = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -77,7 +82,7 @@
             this.registersToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(979, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1078, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -292,13 +297,10 @@
             // 
             // dataGridView1
             // 
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(295, 51);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(539, 285);
+            this.dataGridView1.Size = new System.Drawing.Size(384, 285);
             this.dataGridView1.TabIndex = 7;
             this.dataGridView1.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_ColumnHeaderMouseClick);
             this.dataGridView1.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_RowHeaderMouseClick);
@@ -314,7 +316,7 @@
             // btnAddAttrib
             // 
             this.btnAddAttrib.Enabled = false;
-            this.btnAddAttrib.Location = new System.Drawing.Point(17, 87);
+            this.btnAddAttrib.Location = new System.Drawing.Point(24, 27);
             this.btnAddAttrib.Name = "btnAddAttrib";
             this.btnAddAttrib.Size = new System.Drawing.Size(92, 23);
             this.btnAddAttrib.TabIndex = 9;
@@ -325,7 +327,7 @@
             // btnDeleteAttrib
             // 
             this.btnDeleteAttrib.Enabled = false;
-            this.btnDeleteAttrib.Location = new System.Drawing.Point(17, 58);
+            this.btnDeleteAttrib.Location = new System.Drawing.Point(24, 85);
             this.btnDeleteAttrib.Name = "btnDeleteAttrib";
             this.btnDeleteAttrib.Size = new System.Drawing.Size(92, 23);
             this.btnDeleteAttrib.TabIndex = 9;
@@ -346,7 +348,7 @@
             // btnModifyAttrib
             // 
             this.btnModifyAttrib.Enabled = false;
-            this.btnModifyAttrib.Location = new System.Drawing.Point(17, 29);
+            this.btnModifyAttrib.Location = new System.Drawing.Point(24, 56);
             this.btnModifyAttrib.Name = "btnModifyAttrib";
             this.btnModifyAttrib.Size = new System.Drawing.Size(92, 23);
             this.btnModifyAttrib.TabIndex = 9;
@@ -358,7 +360,7 @@
             // 
             this.statusStrip1.Location = new System.Drawing.Point(0, 394);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(979, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1078, 22);
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -388,13 +390,12 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.btnModifyAttrib);
-            this.groupBox2.Controls.Add(this.btnAddAttrib);
             this.groupBox2.Controls.Add(this.btnDeleteAttrib);
-            this.groupBox2.Location = new System.Drawing.Point(840, 51);
+            this.groupBox2.Controls.Add(this.btnAddAttrib);
+            this.groupBox2.Location = new System.Drawing.Point(151, 189);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(127, 125);
+            this.groupBox2.Size = new System.Drawing.Size(138, 129);
             this.groupBox2.TabIndex = 16;
             this.groupBox2.TabStop = false;
             // 
@@ -422,11 +423,50 @@
             this.btnModifyEntry.UseVisualStyleBackColor = true;
             this.btnModifyEntry.Click += new System.EventHandler(this.BtnModifyRegister_Click);
             // 
+            // dataGridView2
+            // 
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Location = new System.Drawing.Point(685, 51);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.Size = new System.Drawing.Size(384, 285);
+            this.dataGridView2.TabIndex = 7;
+            this.dataGridView2.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_ColumnHeaderMouseClick);
+            this.dataGridView2.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_RowHeaderMouseClick);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(685, 36);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.TabIndex = 19;
+            this.label3.Text = "Query";
+            // 
+            // textBoxQuery
+            // 
+            this.textBoxQuery.Location = new System.Drawing.Point(685, 342);
+            this.textBoxQuery.Name = "textBoxQuery";
+            this.textBoxQuery.Size = new System.Drawing.Size(300, 20);
+            this.textBoxQuery.TabIndex = 20;
+            // 
+            // btnExecute
+            // 
+            this.btnExecute.Location = new System.Drawing.Point(991, 341);
+            this.btnExecute.Name = "btnExecute";
+            this.btnExecute.Size = new System.Drawing.Size(75, 23);
+            this.btnExecute.TabIndex = 21;
+            this.btnExecute.Text = "Execute";
+            this.btnExecute.UseVisualStyleBackColor = true;
+            this.btnExecute.Click += new System.EventHandler(this.BtnExecute_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(979, 416);
+            this.ClientSize = new System.Drawing.Size(1078, 416);
+            this.Controls.Add(this.btnExecute);
+            this.Controls.Add(this.textBoxQuery);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.btnModifyEntry);
             this.Controls.Add(this.btnDeleteEntry);
             this.Controls.Add(this.groupBox2);
@@ -434,6 +474,7 @@
             this.Controls.Add(this.btnAddEntry);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.label2);
+            this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label1);
@@ -443,12 +484,12 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Data Base Management System";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -495,6 +536,10 @@
 		private System.Windows.Forms.ToolStripMenuItem addNewEntryToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem deleteEntryToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem modifySelectedEntryToolStripMenuItem;
-	}
+        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBoxQuery;
+        private System.Windows.Forms.Button btnExecute;
+    }
 }
 

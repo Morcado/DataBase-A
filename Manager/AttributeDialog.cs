@@ -21,6 +21,7 @@ namespace Manager {
             this.keys = keys;
             this.currentTable = currentTable;
             Attr = attr;
+            comboBox2.SelectedIndex = 0;
 
             foreach (var attribute in keys) {
                 if (!currentTable.Attributes.Contains(attribute)) {
@@ -63,16 +64,12 @@ namespace Manager {
 
         private void Button1_Click(object sender, EventArgs e) {
             string parent = "";
-            if (comboBox2.SelectedIndex != -1) {
-                parent = keys[comboBox2.SelectedIndex].ParentTable.Name;
-            }
 
-            if (comboBox2.Text != "" && numericUpDown1.Value != 0 && comboBox1.SelectedIndex != -1 &&
+            if (textBox1.Text != "" && numericUpDown1.Value != 0 && comboBox1.SelectedIndex != -1 &&
                     (radioButton1.Checked || radioButton3.Checked || (!radioButton1.Enabled && !radioButton3.Enabled))) {
 
-                
                 Attr = new Attribute();
-                Attr.Name = comboBox2.Text.Replace(parent + "------>", "");
+                Attr.Name = textBox1.Text;
                 Attr.Size = Convert.ToInt32(numericUpDown1.Value);
                 Attr.Type = comboBox1.Text;
                 
@@ -92,7 +89,7 @@ namespace Manager {
                 }
 
                 
-                if (!currentTable.Attributes.Any(att => att.Name == comboBox2.Text.Replace(parent + "------>", "")) || modificable) {
+                if (!currentTable.Attributes.Any(att => att.Name == textBox1.Text) || modificable) {
                     DialogResult = DialogResult.OK;
                     Close();
                 }
@@ -103,19 +100,33 @@ namespace Manager {
         }
 
         private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e) {
-            int index = comboBox2.SelectedIndex;
-            Attr = keys[index];
-
-            comboBox1.Enabled = false;
-            radioButton1.Enabled = false;
-            radioButton3.Enabled = false;
-            radioButton1.Checked = false;
-            radioButton3.Checked = false;
+            if (comboBox2.SelectedIndex == 0) {
+                textBox1.Clear();
+                comboBox1.SelectedIndex = -1;
 
 
-            comboBox1.Text = keys[index].Type;
-            numericUpDown1.Value = Convert.ToInt32(keys[index].Size);
+                textBox1.Enabled = true;
+                comboBox1.Enabled = true;
+                radioButton1.Enabled = true;
+                radioButton3.Enabled = true;
+                radioButton1.Checked = false;
+                radioButton3.Checked = false;
+            }
+            else {
+                int index = comboBox2.SelectedIndex - 1;
+                Attr = keys[index];
 
+                textBox1.Enabled = false;
+                comboBox1.Enabled = false;
+                radioButton1.Enabled = false;
+                radioButton3.Enabled = false;
+                radioButton1.Checked = false;
+                radioButton3.Checked = false;
+
+                textBox1.Text = keys[index].Name;
+                comboBox1.Text = keys[index].Type;
+                numericUpDown1.Value = Convert.ToInt32(keys[index].Size);
+            }
         }
 
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e) {
@@ -136,18 +147,7 @@ namespace Manager {
         }
 
         private void ComboBox2_TextUpdate(object sender, EventArgs e) {
-            //if (!keys.Any(x => x.Name == comboBox2.Text)) {
-            //	comboBox1.Enabled = true;
-            //	radioButton1.Enabled = true;
-            //	radioButton3.Enabled = true;
 
-            //}
-            //else {
-            //	comboBox1.Enabled = false;
-            //	radioButton1.Enabled = false;
-            //	radioButton3.Enabled = false;
-
-            //}
         }
     }
 }

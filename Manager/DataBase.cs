@@ -47,6 +47,40 @@ namespace Manager {
             return false;
         }
 
+        /* Busca un registro en todas las tablas, del atributo seleccionado como llave primaria
+         El registro se inserto como llave secundaria*/
+        public bool RegisterExists(object register, Attribute pKAtribute) {
+            //string sval;
+            //int ival;
+            //float fval;
+
+            //switch (pKAtribute.Type) {
+            //    case "Int":
+            //        ival = (int)register; 
+            //        break;
+            //    case "Float":
+            //        fval = (float)register;
+            //        break;
+            //    case "String":
+            //        sval = (float)
+            //        break;
+            //    default:
+            //        break;
+            //}
+            foreach (var table in Tables) {
+                foreach (var attrib in table.Attributes) {
+                    if (attrib.Name == pKAtribute.Name && attrib.Key == 1) {
+                        foreach (var reg in attrib.Register) {
+                            if (register.Equals(reg)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         //internal bool CheckTables(Attribute at) {
         //	foreach (var table in tables) {
         //		if (table.Attributes.Contains(at)) {

@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Serialization;
+using TSQL;
+using TSQL.Statements;
+using TSQL.Tokens;
 
 namespace Manager {
     public partial class Form1 : Form {
@@ -36,7 +38,7 @@ namespace Manager {
         }
         
         /* Activa o desactiva los botones de agregar, eliminar y modificar entradas */
-        public void ToggleEntryButtons(bool add, bool delete, bool modify) {
+        public void ToggleRegisterButtons(bool add, bool delete, bool modify) {
             btnAddEntry.Enabled = addNewEntryToolStripMenuItem.Enabled = add;
             btnDeleteEntry.Enabled = deleteEntryToolStripMenuItem.Enabled = delete;
             btnModifyEntry.Enabled = modifySelectedEntryToolStripMenuItem.Enabled = modify;
@@ -192,7 +194,7 @@ namespace Manager {
             ToggleTableButtons(false, false, false);
             ToggleAttribButtons(false, false, false);
             ToggleDBButtons(false);
-            ToggleEntryButtons(false, false, false);
+            ToggleRegisterButtons(false, false, false);
         }
 
         /* Elimina la base de datos elegida. Se comporta de la misma manera que cerrar, pero las variables
@@ -303,10 +305,10 @@ namespace Manager {
 
             // Si hay atributos, se activa solamente el boton de agregar entrada
             if (currentTable.Attributes.Count > 0) {
-                ToggleEntryButtons(true, false, false);
+                ToggleRegisterButtons(true, false, false);
             }
             else {
-                ToggleEntryButtons(false, false, false);
+                ToggleRegisterButtons(false, false, false);
             }
 
             // Busca si la PK de la tabla no es referencaida
@@ -375,6 +377,7 @@ namespace Manager {
             List<string> keys = new List<string>();
             AttributeDialog nd = new AttributeDialog("New attribute", dataBase.PKKeys, currentTable, null);
             if (nd.ShowDialog() == DialogResult.OK) {
+                
                 currentTable.AddAttribute(nd.Attr);
                 nd.Attr.ParentTable = currentTable;
                 // Si es atributo primario, se agrega a la tabla
@@ -384,6 +387,7 @@ namespace Manager {
             }
             ShowTableInfo();
             SaveTable(currentTable);
+            ToggleRegisterButtons(true, true, true);
         }
         
 
@@ -425,20 +429,35 @@ namespace Manager {
             SaveTable(currentTable);
         }
 
-        /* Boton de agregar una tupla en la tabla seleccionada. Desacva los botones de agregar, 
+        /* Boton de agregar una tupla en la tabla seleccionada. Desactiva los botones de agregar, 
          * modificar y eliminar atributos
          */
         private void BtnAddRegister_Click(object sender, EventArgs e) {
+
             RegisterDialog regDlg = new RegisterDialog(currentTable, null);
 
             if (regDlg.ShowDialog() == DialogResult.OK) {
-                currentTable.AddRegister(regDlg.Register);
-                ShowTableInfo();
-                SaveTable(currentTable);
-                ToggleEntryButtons(true, false, false);
-                ToggleAttribButtons(false, false, false);
-            }
+                if (currentTable.HasFK()) {
+                    if (dataBase.RegisterExists(regDlg.FKValue, regDlg.FKAtribute)) {
 
+                        currentTable.AddRegister(regDlg.Register);
+                        ShowTableInfo();
+                        SaveTable(currentTable);
+                        ToggleRegisterButtons(true, false, false);
+                        ToggleAttribButtons(false, false, false);
+                    }
+                    else {
+                        MessageBox.Show("Couldn't insert register. PK value doesn't exists");
+                    }
+                }
+                else {
+                    currentTable.AddRegister(regDlg.Register);
+                    ShowTableInfo();
+                    SaveTable(currentTable);
+                    ToggleRegisterButtons(true, false, false);
+                    ToggleAttribButtons(false, false, false);
+                }
+            }
         }
 
         /* Llamado cuando se selecciona una columna atributo del datagridview. Hace las verificaciones 
@@ -464,7 +483,7 @@ namespace Manager {
                         ToggleAttribButtons(true, true, true);
                     }
                     else {
-                        ToggleAttribButtons(false, false, false);
+                        ToggleAttribButtons(false, true, false);
                     }
                 }
             }
@@ -477,12 +496,36 @@ namespace Manager {
         private void DataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
             // Si hay entradas y no es la última fila del  datagrid view (la ultima siempre esta vacia)
             if (currentTable.HasRegisters() && e.RowIndex != dataGridView1.Rows.Count - 1) {
+                // Mover al boton de eliminar y/o modificar
 
-
-                ToggleEntryButtons(true, true, true);
+                bool used = false;
+                /* Busca en todas las tablas los atributos FK en las PK, si no encuentra ninguno se puede eliminar*/
+                
+                foreach (var table in dataBase.Tables) {
+                    if (table.Name == currentTable.Name) {
+                        continue;
+                    }
+                    foreach (var attri in table.Attributes) {
+                        if (attri.Name == currentTable.PK.Name) {
+                            foreach (var reg in attri.Register) {
+                                if (reg.Equals(currentTable.PK.Register[e.RowIndex])) {
+                                    used = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (!used) {
+                    ToggleRegisterButtons(true, true, true);
+                }
+                else {
+                    ToggleRegisterButtons(true, false, false);
+                }
             }
             else {
-                ToggleEntryButtons(true, false, false);
+                ToggleRegisterButtons(true, false, false);
             }
             
         }
@@ -491,7 +534,7 @@ namespace Manager {
          * Muestra un dialogo de confirmacion y elimina la fila en OK */
         private void BtnDeleteRegister_Click(object sender, EventArgs e) {
 
-            if (MessageBox.Show("Are you sure you want to delete entry?", "Delete entry", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+            if (MessageBox.Show("Are you sure you want to delete register?", "Delete register", MessageBoxButtons.OKCancel) == DialogResult.OK) {
                 // Obtiene el indice de la fila seleccionada, el cual es el mismo indice de
                 // la base de datos
                 int index = dataGridView1.CurrentCell.RowIndex;
@@ -502,7 +545,7 @@ namespace Manager {
 
                 // Si no quedan mas entradas, se desactiva el boton de eliminar y modificar
                 if (!currentTable.HasRegisters()) {
-                    ToggleEntryButtons(true, false, false);
+                    ToggleRegisterButtons(true, false, false);
                 }
             }
         }
@@ -523,7 +566,62 @@ namespace Manager {
             SaveTable(currentTable);
         }
 
-        private void Form1_Load(object sender, EventArgs e) {
+        private void BtnExecute_Click(object sender, EventArgs e) {
+            TSQLSelectStatement query = TSQLStatementReader.ParseStatements(@textBoxQuery.Text)[0] as TSQLSelectStatement;
+            if (query != null) {
+                List<string> columns = new List<string>();
+            
+                Table t = dataBase.FindTable(query.From.Tokens[1].Text);
+                string leftSide = "";
+                string righttSide = "";
+                string oper = "";
+
+                if (query.Select.Tokens[1].Type == TSQLTokenType.Operator) {
+                    
+                    foreach (var attribu in t.Attributes) {
+                        columns.Add(attribu.Name);
+                        dataGridView2.Columns.Add(attribu.Name, attribu.Name);
+                    }
+                }
+                else {
+                    foreach (var token in query.Select.Tokens) {
+                        if (token.Type == TSQLTokenType.Identifier) {
+                            columns.Add(token.Text);
+                            dataGridView2.Columns.Add(token.Text, token.Text);
+                        }
+                    }
+                }
+
+                if (query.Where != null) {
+                    leftSide = query.Where.Tokens[1].Text;
+                    righttSide = query.Where.Tokens[3].Text;
+                    oper = query.Where.Tokens[2].Text;
+                }
+
+                //for (int i = 0; i < t.Attributes[0].Register.Count; i++) {
+                //    if (query.Where != null) {
+
+                //    }
+                //    else {
+                //        dataGridView2.Rows.Add();
+                //        for (int j = 0; j < columns.Count; j++) {
+                //            dataGridView2.Rows[i].Cells[j].Value = t.Attributes[i].Register[j];
+                //        }
+                //    }
+                //}
+
+                MessageBox.Show("Query executed");
+            }
+            else {
+                MessageBox.Show("Incorrect query syntaxis");
+            }
+            //Regex r = new Regex(@"\b(SELECT|select)\b\s+^(\w+,)*\w+$\s+\b(FROM|from)\b\s+^\w+$(\b(WHERE|where)\b\s+^\w+$\s*(=|<|>|<=|>=|!=)\s*^\w+$)?");
+            //if (r.Match(query).Success) {
+            //    MessageBox.Show("Sentencia correcta");
+            //}
+            //else {
+            //    MessageBox.Show("Incorrect sentence syntaxis");
+            //}
 
         }
     }

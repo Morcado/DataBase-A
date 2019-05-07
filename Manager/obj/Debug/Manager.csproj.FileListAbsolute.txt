@@ -20,8 +20,6 @@ C:\Users\Morcado\Desktop\DataBase-A\Manager\obj\Debug\Manager.exe
 C:\Users\Morcado\Desktop\DataBase-A\Manager\obj\Debug\Manager.pdb
 C:\Users\Morcado\Desktop\DataBase-A\Manager\bin\Debug\Manager.exe
 C:\Users\Morcado\Desktop\DataBase-A\Manager\bin\Debug\Manager.pdb
-C:\Users\Morcado\Desktop\DataBase-A\Manager\bin\Debug\Antlr4.Runtime.dll
-C:\Users\Morcado\Desktop\DataBase-A\Manager\bin\Debug\Antlr4.Runtime.xml
 C:\Users\Morcado\Desktop\DataBase-A\Manager\obj\Debug\Manager.csproj.CopyComplete
 C:\Users\Morcado\Desktop\DataBase-A\Manager\obj\Debug\Manager.NameDialog.resources
 C:\Users\Morcado\Desktop\DataBase A\Manager\bin\Debug\Manager.exe
@@ -82,3 +80,8 @@ C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.csproj.CoreCompileIn
 C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.csproj.CopyComplete
 C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.exe
 C:\Users\Oscar\Desktop\DataBase-A\Manager\obj\Debug\Manager.pdb
+C:\Users\Morcado\Desktop\DataBase-A\Manager\obj\Debug\Manager.AttributeDialog.resources
+C:\Users\Morcado\Desktop\DataBase-A\Manager\obj\Debug\Manager.RegisterDialog.resources
+C:\Users\Morcado\Desktop\DataBase-A\Manager\bin\Debug\Manager.exe.config
+C:\Users\Morcado\Desktop\DataBase-A\Manager\bin\Debug\TSQL_Parser.dll
+C:\Users\Morcado\Desktop\DataBase-A\Manager\bin\Debug\TSQL_Parser.xml

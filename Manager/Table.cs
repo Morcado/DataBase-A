@@ -10,6 +10,7 @@ namespace Manager {
         public List<Attribute> Attributes { get; set; }
         public string Name { get; set; }
         public bool HasPK { get; set; }
+        public bool PKIsUsed { get; set; }
         public Attribute PK { get; set; }
 
         public Table(string newName) {
@@ -28,12 +29,30 @@ namespace Manager {
             switch (attr.Type) {
                 case "Int":
                     attr.Register = new List<int>();
+
+                    if (Attributes.Count > 0) {
+                        for (int i = 0; i < Attributes[0].Register.Count; i++) {
+                            attr.Register.Add(0);
+                        }
+                    }
                     break;
                 case "String":
                     attr.Register = new List<string>();
+
+                    if (Attributes.Count > 0) {
+                        for (int i = 0; i < Attributes[0].Register.Count; i++) {
+                            attr.Register.Add("");
+                        }
+                    }
                     break;
                 case "Float":
                     attr.Register = new List<float>();
+
+                    if (Attributes.Count > 0) {
+                        for (int i = 0; i < Attributes[0].Register.Count; i++) {
+                            attr.Register.Add(0f);
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -51,7 +70,6 @@ namespace Manager {
                 HasPK = false;
                 PK = null;
             }
-
         }
 
         public void ModifyAttribute(Attribute oldAttr, Attribute newAttr) {
@@ -61,7 +79,6 @@ namespace Manager {
             RemoveAttribute(oldAttr);
             AddAttribute(newAttr);
 
-            //modificar atributo en la lista
 
         }
 
@@ -115,6 +132,15 @@ namespace Manager {
                 }
             }
             return null;
+        }
+
+        internal bool HasFK() {
+            foreach (Attribute attribute in Attributes) {
+                if (attribute.Key == 2) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
