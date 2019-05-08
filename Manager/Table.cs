@@ -142,5 +142,13 @@ namespace Manager {
             }
             return false;
         }
+
+        public List<object> GetRegisterAsList(int index) {
+            List<object> reg = new List<object>();
+            foreach (var attrib in Attributes) {
+                reg.Add(attrib.Register[index]);
+            }
+            return reg;
+        }
     }
 }

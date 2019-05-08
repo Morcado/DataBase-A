@@ -31,10 +31,12 @@ namespace Manager {
         }
 
         /* Activa o desactiva los botones de nuevo, eliminar y renombrar tabla */
-        public void ToggleTableButtons(bool newT, bool delete, bool rename) {
+        public void ToggleTableButtons(bool newT, bool delete, bool rename, bool query) {
             btnNewTable.Enabled = newTableToolStripMenuItem.Enabled = newT;
             btnDeleteTable.Enabled = deleteTableToolStripMenuItem.Enabled = delete;
             btnRenameTable.Enabled = renameTableToolStripMenuItem.Enabled = rename;
+
+            textBoxQuery.Enabled = btnExecute.Enabled = query;
         }
         
         /* Activa o desactiva los botones de agregar, eliminar y modificar entradas */
@@ -117,7 +119,7 @@ namespace Manager {
                     label1.Text = dataBase.Name;
                     label1.Visible = true;
                     btnNewTable.Enabled = true;
-                    ToggleTableButtons(true, false, false);
+                    ToggleTableButtons(true, false, false, true);
                     ToggleDBButtons(true);
                 }
             }
@@ -164,7 +166,7 @@ namespace Manager {
                 treeView1.Enabled = true;
 
                 // Activa algunos botones
-                ToggleTableButtons(true, false, false);
+                ToggleTableButtons(true, false, false, true);
                 ToggleDBButtons(true);
             }
         }
@@ -191,7 +193,7 @@ namespace Manager {
             treeView1.Enabled = false;
             dataGridView1.Columns.Clear();
 
-            ToggleTableButtons(false, false, false);
+            ToggleTableButtons(false, false, false, false);
             ToggleAttribButtons(false, false, false);
             ToggleDBButtons(false);
             ToggleRegisterButtons(false, false, false);
@@ -210,7 +212,7 @@ namespace Manager {
                 treeView1.Enabled = false;
 
                 // Desactiva todos los botones
-                ToggleTableButtons(false, false, false);
+                ToggleTableButtons(false, false, false, false);
                 ToggleAttribButtons(false, false, false);
                 ToggleDBButtons(false);
             }
@@ -254,7 +256,7 @@ namespace Manager {
                 treeView1.Nodes.Remove(treeView1.SelectedNode);
 
                 // Actualizar los controles
-                ToggleTableButtons(true, false, false);
+                ToggleTableButtons(true, false, false, true);
                 ToggleAttribButtons(false, false, false);
                 treeView1.SelectedNode = null;
 
@@ -277,7 +279,7 @@ namespace Manager {
                 treeView1.SelectedNode.Text = nt.NewName;
 
                 // Se actualizan los controles
-                ToggleTableButtons(true, false, false);
+                ToggleTableButtons(true, false, false, true);
                 ToggleAttribButtons(false, false, false);
 
                 treeView1.SelectedNode = null; // Se deselecciona de la tabla para desactivar los controles
@@ -294,7 +296,7 @@ namespace Manager {
             // se guarda la dirección de la tabla elegida
             selectedTable = dataBase.Path + "\\" + treeView1.SelectedNode.Text;
             groupBox2.Text = ""; //titulo del group box de atributos
-            ToggleTableButtons(true, true, true);
+            ToggleTableButtons(true, true, true, true);
 
             if (currentTable.HasRegisters()) {
                 ToggleAttribButtons(false, false, false);
@@ -325,10 +327,10 @@ namespace Manager {
             }
 
             if (isUsed) {
-                ToggleTableButtons(true, false, false);
+                ToggleTableButtons(true, false, false, true);
             }
             else {
-                ToggleTableButtons(true, true, true);
+                ToggleTableButtons(true, true, true, true);
             }
 
             ShowTableInfo();
@@ -338,10 +340,10 @@ namespace Manager {
          */
         private void TreeView1_Leave(object sender, EventArgs e) {
             if (treeView1.SelectedNode == null) {
-                ToggleTableButtons(true, false, false);
+                ToggleTableButtons(true, false, false, true);
             }
             else {
-                ToggleTableButtons(true, true, true);
+                ToggleTableButtons(true, true, true, true           );
             }
         }
 
@@ -437,25 +439,30 @@ namespace Manager {
             RegisterDialog regDlg = new RegisterDialog(currentTable, null);
 
             if (regDlg.ShowDialog() == DialogResult.OK) {
-                if (currentTable.HasFK()) {
-                    if (dataBase.RegisterExists(regDlg.FKValue, regDlg.FKAtribute)) {
+                if (!currentTable.PK.Register.Contains(regDlg.PKValue)) {
+                    if (currentTable.HasFK()) {
+                        if (dataBase.RegisterExists(regDlg.FKValue, regDlg.FKAtribute)) {
 
+                            currentTable.AddRegister(regDlg.Register);
+                            ShowTableInfo();
+                            SaveTable(currentTable);
+                            ToggleRegisterButtons(true, false, false);
+                            ToggleAttribButtons(false, false, false);
+                        }
+                        else {
+                            MessageBox.Show("Couldn't insert register. PK value doesn't exists");
+                        }
+                    }
+                    else {
                         currentTable.AddRegister(regDlg.Register);
                         ShowTableInfo();
                         SaveTable(currentTable);
                         ToggleRegisterButtons(true, false, false);
                         ToggleAttribButtons(false, false, false);
                     }
-                    else {
-                        MessageBox.Show("Couldn't insert register. PK value doesn't exists");
-                    }
                 }
                 else {
-                    currentTable.AddRegister(regDlg.Register);
-                    ShowTableInfo();
-                    SaveTable(currentTable);
-                    ToggleRegisterButtons(true, false, false);
-                    ToggleAttribButtons(false, false, false);
+                    MessageBox.Show("Couldn't add register. PK already exists");
                 }
             }
         }
@@ -496,74 +503,82 @@ namespace Manager {
         private void DataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
             // Si hay entradas y no es la última fila del  datagrid view (la ultima siempre esta vacia)
             if (currentTable.HasRegisters() && e.RowIndex != dataGridView1.Rows.Count - 1) {
-                // Mover al boton de eliminar y/o modificar
-
-                bool used = false;
-                /* Busca en todas las tablas los atributos FK en las PK, si no encuentra ninguno se puede eliminar*/
-                
-                foreach (var table in dataBase.Tables) {
-                    if (table.Name == currentTable.Name) {
-                        continue;
-                    }
-                    foreach (var attri in table.Attributes) {
-                        if (attri.Name == currentTable.PK.Name) {
-                            foreach (var reg in attri.Register) {
-                                if (reg.Equals(currentTable.PK.Register[e.RowIndex])) {
-                                    used = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                if (!used) {
-                    ToggleRegisterButtons(true, true, true);
-                }
-                else {
-                    ToggleRegisterButtons(true, false, false);
-                }
+                ToggleRegisterButtons(true, true, true);
             }
             else {
                 ToggleRegisterButtons(true, false, false);
             }
-            
+        }
+
+        public bool CheckTablesForRegistry(int index) {
+            bool used = false;
+            /* Busca en todas las tablas los atributos FK en las PK, si no encuentra ninguno se puede eliminar*/
+
+            foreach (var table in dataBase.Tables) {
+                if (table.Name == currentTable.Name) {
+                    continue;
+                }
+                foreach (var attri in table.Attributes) {
+                    if (attri.Name == currentTable.PK.Name) {
+                        foreach (var reg in attri.Register) {
+                            if (reg.Equals(currentTable.PK.Register[index])) {
+                                used = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return used;
         }
 
         /* Boton de eliminar entrada. Se tiene que seleccionar previamente una fila del datagridview. 
          * Muestra un dialogo de confirmacion y elimina la fila en OK */
         private void BtnDeleteRegister_Click(object sender, EventArgs e) {
 
-            if (MessageBox.Show("Are you sure you want to delete register?", "Delete register", MessageBoxButtons.OKCancel) == DialogResult.OK) {
-                // Obtiene el indice de la fila seleccionada, el cual es el mismo indice de
-                // la base de datos
-                int index = dataGridView1.CurrentCell.RowIndex;
+            bool resp = CheckTablesForRegistry(dataGridView1.CurrentCell.RowIndex);
+            if (resp) {
+                if (MessageBox.Show("Are you sure you want to delete register?", "Delete register", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+                    // Obtiene el indice de la fila seleccionada, el cual es el mismo indice de
+                    // la base de datos
+                    int index = dataGridView1.CurrentCell.RowIndex;
 
-                currentTable.DeleteRegister(index);
-                ShowTableInfo();
-                SaveTable(currentTable);
+                    currentTable.DeleteRegister(index);
+                    ShowTableInfo();
+                    SaveTable(currentTable);
 
-                // Si no quedan mas entradas, se desactiva el boton de eliminar y modificar
-                if (!currentTable.HasRegisters()) {
-                    ToggleRegisterButtons(true, false, false);
+                    // Si no quedan mas entradas, se desactiva el boton de eliminar y modificar
+                    if (!currentTable.HasRegisters()) {
+                        ToggleRegisterButtons(true, false, false);
+                    }
                 }
             }
+            else {
+                MessageBox.Show("Cannot delete, registry is used in another table as PK");
+            }
+
         }
 
         /* Boton de modificar. Se debe seleccionar previamente una fila en el datagridview, se obtienen los
          * datos de esa fila, y despues se realiza la operacion de eliminar y agregar en la tabla.*/
         private void BtnModifyRegister_Click(object sender, EventArgs e) {
-            List<object> entry = currentTable.GetRegisterAt(dataGridView1.CurrentCell.RowIndex);
+            bool resp = CheckTablesForRegistry(dataGridView1.CurrentCell.RowIndex);
+            if (resp) {
+                List<object> entry = currentTable.GetRegisterAt(dataGridView1.CurrentCell.RowIndex);
 
-            // Carga el diálogo con los valores del registro
-            RegisterDialog regDlg = new RegisterDialog(currentTable, entry);
+                // Carga el diálogo con los valores del registro
+                RegisterDialog regDlg = new RegisterDialog(currentTable, entry);
 
-            if (regDlg.ShowDialog() == DialogResult.OK) {
-                currentTable.DeleteRegister(dataGridView1.CurrentCell.RowIndex);
-                currentTable.AddRegister(regDlg.Register);
+                if (regDlg.ShowDialog() == DialogResult.OK) {
+                    currentTable.DeleteRegister(dataGridView1.CurrentCell.RowIndex);
+                    currentTable.AddRegister(regDlg.Register);
+                }
+                ShowTableInfo();
+                SaveTable(currentTable);
             }
-            ShowTableInfo();
-            SaveTable(currentTable);
+            else {
+                MessageBox.Show("Cannot modify, registry is used in another table as PK");
+            }
         }
 
         private void BtnExecute_Click(object sender, EventArgs e) {
@@ -572,6 +587,11 @@ namespace Manager {
                 List<string> columns = new List<string>();
             
                 Table t = dataBase.FindTable(query.From.Tokens[1].Text);
+                if (t == null) {
+                    MessageBox.Show("Table not found");
+                    return;
+                }
+
                 string leftSide = "";
                 string righttSide = "";
                 string oper = "";
@@ -597,6 +617,8 @@ namespace Manager {
                     righttSide = query.Where.Tokens[3].Text;
                     oper = query.Where.Tokens[2].Text;
                 }
+
+
 
                 //for (int i = 0; i < t.Attributes[0].Register.Count; i++) {
                 //    if (query.Where != null) {

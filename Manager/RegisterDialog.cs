@@ -8,9 +8,11 @@ namespace Manager {
 		public Table Table { get; set; }
         public Attribute FKAtribute;
         public object FKValue;
-		public List<object> Register { get; set; }
+        public object PKVALUE { get; set; }
+        public List<object> Register { get; set; }
+        public object PKValue { get; internal set; }
 
-		public RegisterDialog(Table table, List<object> register) {
+        public RegisterDialog(Table table, List<object> register) {
 			InitializeComponent();
 			panel1.AutoScroll = false;
 			panel1.HorizontalScroll.Enabled = false;
@@ -99,7 +101,10 @@ namespace Manager {
                 if (Table.Attributes[i].Key == 2) {
                     FKValue = Register[i];
                 }
-			}
+                if (Table.Attributes[i].Key == 1) {
+                    PKValue = Register[i];
+                }
+            }
 
 			DialogResult = DialogResult.OK;
 			Close();
