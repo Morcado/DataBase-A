@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Manager {
@@ -14,7 +10,6 @@ namespace Manager {
         private Table currentTable;
         private bool modificable = false;
 
-        //public AttributeDialog(string title, List<Tuple<Attribute, Table>> keys, Table table, Attribute attr) {
         public AttributeDialog(string title, List<Attribute> keys, Table currentTable, Attribute attr) {
             InitializeComponent();
             Name = title;
@@ -63,8 +58,7 @@ namespace Manager {
         }
 
         private void Button1_Click(object sender, EventArgs e) {
-            string parent = "";
-
+ 
             if (textBox1.Text != "" && numericUpDown1.Value != 0 && comboBox1.SelectedIndex != -1 &&
                     (radioButton1.Checked || radioButton3.Checked || (!radioButton1.Enabled && !radioButton3.Enabled))) {
 
@@ -143,10 +137,6 @@ namespace Manager {
                 default:
                     break;
             }
-
-        }
-
-        private void ComboBox2_TextUpdate(object sender, EventArgs e) {
 
         }
     }

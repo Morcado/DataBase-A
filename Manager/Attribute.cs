@@ -21,7 +21,13 @@ namespace Manager {
             Key = 0;
         }
 
-
+        /* Crea una copia del atributo, pero solo con las caracterisicas */
+        public Attribute(Attribute at) {
+            Name = at.Name;
+            Type = at.Type;
+            Size = at.Size;
+            Key = at.Key;
+        }
 
     }
 }

@@ -296,6 +296,7 @@ namespace Manager {
             // se guarda la dirección de la tabla elegida
             selectedTable = dataBase.Path + "\\" + treeView1.SelectedNode.Text;
             groupBox2.Text = ""; //titulo del group box de atributos
+            label4.Text = currentTable.Name;
             ToggleTableButtons(true, true, true, true);
 
             if (currentTable.HasRegisters()) {
@@ -333,7 +334,7 @@ namespace Manager {
                 ToggleTableButtons(true, true, true, true);
             }
 
-            ShowTableInfo();
+            ShowTableInfo(currentTable, dataGridView1);
         }
 
         /* Cuando se deja el enfoque del treeview, desactiva los botones de eliminar y modificar tabla
@@ -349,24 +350,23 @@ namespace Manager {
 
         /* Muestra la tabla completa en el datagrid, Si no tiene datos, la tabla se queda vacía. Se
          * llama cada vez que se hace una modificación a las entradas o los atributos */
-        private void ShowTableInfo() {
-            dataGridView1.Columns.Clear();
-
+        private void ShowTableInfo(Table table, DataGridView data) {
+            data.Columns.Clear();
             // Agrega las columnas de los atributos al datagrid
-            foreach (Attribute attribute in currentTable.Attributes) {
+            foreach (Attribute attribute in table.Attributes) {
                 DataGridViewTextBoxColumn dgc = new DataGridViewTextBoxColumn {
                     Name = attribute.Name,
                     HeaderText = attribute.Name,
                     SortMode = DataGridViewColumnSortMode.Programmatic
                 };
-                dataGridView1.Columns.Add(dgc);
+                data.Columns.Add(dgc);
             }
 
-            if (currentTable.HasRegisters()) {
-                for (int k = 0; k < currentTable.Attributes[0].Register.Count; k++) { 
-                    dataGridView1.Rows.Add();
-                    for (int i = 0; i < currentTable.Attributes.Count; i++) {
-                        dataGridView1[i, k].Value = currentTable.Attributes[i].Register[k];
+            if (table.HasRegisters()) {
+                for (int k = 0; k < table.Attributes[0].Register.Count; k++) {
+                    data.Rows.Add();
+                    for (int i = 0; i < table.Attributes.Count; i++) {
+                        data[i, k].Value = table.Attributes[i].Register[k];
                     }
                 }
             }
@@ -387,7 +387,7 @@ namespace Manager {
                     dataBase.PKKeys.Add(nd.Attr);
                 }
             }
-            ShowTableInfo();
+            ShowTableInfo(currentTable, dataGridView1);
             SaveTable(currentTable);
             ToggleRegisterButtons(true, true, true);
         }
@@ -407,7 +407,7 @@ namespace Manager {
             // Llama al evento de actualizar las columnas paara verificar
             ToggleAttribButtons(true, false, false);
             groupBox2.Text = "";
-            ShowTableInfo();
+            ShowTableInfo(currentTable, dataGridView1);
             SaveTable(currentTable);
         }
 
@@ -427,7 +427,7 @@ namespace Manager {
                 dataBase.PKKeys.Add(atrDlg.Attr);
             }
 
-            ShowTableInfo();
+            ShowTableInfo(currentTable, dataGridView1);
             SaveTable(currentTable);
         }
 
@@ -444,7 +444,7 @@ namespace Manager {
                         if (dataBase.RegisterExists(regDlg.FKValue, regDlg.FKAtribute)) {
 
                             currentTable.AddRegister(regDlg.Register);
-                            ShowTableInfo();
+                            ShowTableInfo(currentTable, dataGridView1);
                             SaveTable(currentTable);
                             ToggleRegisterButtons(true, false, false);
                             ToggleAttribButtons(false, false, false);
@@ -455,7 +455,7 @@ namespace Manager {
                     }
                     else {
                         currentTable.AddRegister(regDlg.Register);
-                        ShowTableInfo();
+                        ShowTableInfo(currentTable, dataGridView1);
                         SaveTable(currentTable);
                         ToggleRegisterButtons(true, false, false);
                         ToggleAttribButtons(false, false, false);
@@ -544,7 +544,7 @@ namespace Manager {
                     int index = dataGridView1.CurrentCell.RowIndex;
 
                     currentTable.DeleteRegister(index);
-                    ShowTableInfo();
+                    ShowTableInfo(currentTable, dataGridView1);
                     SaveTable(currentTable);
 
                     // Si no quedan mas entradas, se desactiva el boton de eliminar y modificar
@@ -573,7 +573,7 @@ namespace Manager {
                     currentTable.DeleteRegister(dataGridView1.CurrentCell.RowIndex);
                     currentTable.AddRegister(regDlg.Register);
                 }
-                ShowTableInfo();
+                ShowTableInfo(currentTable, dataGridView1);
                 SaveTable(currentTable);
             }
             else {
@@ -587,64 +587,154 @@ namespace Manager {
                 List<string> columns = new List<string>();
             
                 Table t = dataBase.FindTable(query.From.Tokens[1].Text);
+                Table queryTable = new Table("query1");
+
                 if (t == null) {
                     MessageBox.Show("Table not found");
                     return;
                 }
 
                 string leftSide = "";
-                string righttSide = "";
+                object rightSide = null;
                 string oper = "";
 
                 if (query.Select.Tokens[1].Type == TSQLTokenType.Operator) {
                     
                     foreach (var attribu in t.Attributes) {
                         columns.Add(attribu.Name);
-                        dataGridView2.Columns.Add(attribu.Name, attribu.Name);
+                        queryTable.AddAttribute(new Attribute(attribu));
+                        //dataGridView2.Columns.Add(attribu.Name, attribu.Name);
                     }
                 }
                 else {
                     foreach (var token in query.Select.Tokens) {
                         if (token.Type == TSQLTokenType.Identifier) {
                             columns.Add(token.Text);
-                            dataGridView2.Columns.Add(token.Text, token.Text);
+                            queryTable.AddAttribute(new Attribute(t.FindAttribute(token.Text)));
+                            //dataGridView2.Columns.Add(token.Text, token.Text);
                         }
                     }
                 }
 
                 if (query.Where != null) {
                     leftSide = query.Where.Tokens[1].Text;
-                    righttSide = query.Where.Tokens[3].Text;
+                    rightSide = query.Where.Tokens[3].Text;
                     oper = query.Where.Tokens[2].Text;
+
                 }
 
+                for (int i = 0; i < t.PK.Register.Count; i++) {
+                    List<object> r = t.GetRegisterAt(i);
+                    List<object> nr = new List<object>();
+                    bool valid = false;
+                    foreach (var atDst in queryTable.Attributes) {
+                        
+                        for (int k = 0; k < t.Attributes.Count; k++) {
+                          
 
+                            if (t.Attributes[k].Name == atDst.Name) {
 
-                //for (int i = 0; i < t.Attributes[0].Register.Count; i++) {
-                //    if (query.Where != null) {
+                                if (query.Where != null && atDst.Name == leftSide) {
+                                    object tReg = t.Attributes[k].Register[i];
+                                    switch (oper) {
+                                        case "=":
+                                            if (atDst.Type == "Int") {
+                                                if ((int)tReg == Convert.ToInt32(rightSide)) {
+                                                    valid = true;
+                                                }
+                                            }
+                                            else {
+                                                if ((float)tReg == Convert.ToSingle(rightSide)) {
+                                                    valid = true;
+                                                }
+                                            }
+                                            break;
+                                        case "<":
+                                            if (atDst.Type == "Int") {
+                                                if ((int)tReg > Convert.ToInt32(rightSide)) {
+                                                    valid = true;
+                                                }
+                                            }
+                                            else {
+                                                if ((float)tReg < Convert.ToSingle(rightSide)) {
+                                                    valid = true;
+                                                }
+                                            }
+                                            break;
+                                        case ">":
+                                            if (atDst.Type == "Int") {
+                                                if ((int)tReg > Convert.ToInt32(rightSide)) {
+                                                    valid = true;
+                                                }
+                                            }
+                                            else {
+                                                if ((float)tReg > Convert.ToSingle(rightSide)) {
+                                                    valid = true;
+                                                }
+                                            }
+                                            break;
+                                        case ">=":
+                                            if (atDst.Type == "Int") {
+                                                if ((int)tReg >= Convert.ToInt32(rightSide)) {
+                                                    valid = true;
+                                                }
+                                            }
+                                            else {
+                                                if ((float)tReg >= Convert.ToSingle(rightSide)) {
+                                                    valid = true;
+                                                }
+                                            }
+                                            break;
+                                        case "<=":
+                                            if (atDst.Type == "Int") {
+                                                if ((int)tReg <= Convert.ToInt32(rightSide)) {
+                                                    valid = true;
+                                                }
+                                            }
+                                            else {
+                                                if ((float)tReg <= Convert.ToSingle(rightSide)) {
+                                                    valid = true;
+                                                }
+                                            }
+                                            break;
+                                        case "!=":
+                                            if (atDst.Type == "Int") {
+                                                if ((int)tReg != Convert.ToInt32(rightSide)) {
+                                                    valid = true;
+                                                }
+                                            }
+                                            else {
+                                                if ((float)tReg != Convert.ToSingle(rightSide)) {
+                                                    valid = true;
+                                                }
+                                            }
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                                else {
+                                    nr.Add(t.Attributes[k].Register[i]);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    if (query.Where != null) {
+                        if (valid) {
+                            queryTable.AddRegister(nr);
+                        }
+                    }
+                    else {
+                        queryTable.AddRegister(nr);
+                    }
+                }
 
-                //    }
-                //    else {
-                //        dataGridView2.Rows.Add();
-                //        for (int j = 0; j < columns.Count; j++) {
-                //            dataGridView2.Rows[i].Cells[j].Value = t.Attributes[i].Register[j];
-                //        }
-                //    }
-                //}
-
-                MessageBox.Show("Query executed");
+                ShowTableInfo(queryTable, dataGridView2);
             }
             else {
                 MessageBox.Show("Incorrect query syntaxis");
             }
-            //Regex r = new Regex(@"\b(SELECT|select)\b\s+^(\w+,)*\w+$\s+\b(FROM|from)\b\s+^\w+$(\b(WHERE|where)\b\s+^\w+$\s*(=|<|>|<=|>=|!=)\s*^\w+$)?");
-            //if (r.Match(query).Success) {
-            //    MessageBox.Show("Sentencia correcta");
-            //}
-            //else {
-            //    MessageBox.Show("Incorrect sentence syntaxis");
-            //}
-
         }
     }
 }
