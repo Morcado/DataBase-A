@@ -582,16 +582,20 @@ namespace Manager {
         }
 
         private void BtnExecute_Click(object sender, EventArgs e) {
+            string res = ExecuteQuery();
+            MessageBox.Show(res);
+        }
+
+        private string ExecuteQuery() {
             TSQLSelectStatement query = TSQLStatementReader.ParseStatements(@textBoxQuery.Text)[0] as TSQLSelectStatement;
             if (query != null) {
                 List<string> columns = new List<string>();
-            
+
                 Table t = dataBase.FindTable(query.From.Tokens[1].Text);
                 Table queryTable = new Table("query1");
 
-                if (t == null) {
-                    MessageBox.Show("Table not found");
-                    return;
+                if (t == null) { 
+                    return "Error: Table \"" + query.From.Tokens[1].Text + "\" not found";
                 }
 
                 string leftSide = "";
@@ -599,7 +603,7 @@ namespace Manager {
                 string oper = "";
 
                 if (query.Select.Tokens[1].Type == TSQLTokenType.Operator) {
-                    
+
                     foreach (var attribu in t.Attributes) {
                         columns.Add(attribu.Name);
                         queryTable.AddAttribute(new Attribute(attribu));
@@ -610,7 +614,11 @@ namespace Manager {
                     foreach (var token in query.Select.Tokens) {
                         if (token.Type == TSQLTokenType.Identifier) {
                             columns.Add(token.Text);
-                            queryTable.AddAttribute(new Attribute(t.FindAttribute(token.Text)));
+                            Attribute at = t.FindAttribute(token.Text);
+                            if (at == null) {
+                                return "Error: Attribute \"" + token.Text + "\" not found";
+                            }
+                            queryTable.AddAttribute(new Attribute(at));
                             //dataGridView2.Columns.Add(token.Text, token.Text);
                         }
                     }
@@ -621,6 +629,10 @@ namespace Manager {
                     rightSide = query.Where.Tokens[3].Text;
                     oper = query.Where.Tokens[2].Text;
 
+                    if (leftSide == "" || rightSide == null || oper == "") {
+                        return "Error: Incorrect query syntaxis on WHERE";
+                    }
+
                 }
 
                 for (int i = 0; i < t.PK.Register.Count; i++) {
@@ -628,94 +640,21 @@ namespace Manager {
                     List<object> nr = new List<object>();
                     bool valid = false;
                     foreach (var atDst in queryTable.Attributes) {
-                        
                         for (int k = 0; k < t.Attributes.Count; k++) {
-                          
-
                             if (t.Attributes[k].Name == atDst.Name) {
 
-                                if (query.Where != null && atDst.Name == leftSide) {
-                                    object tReg = t.Attributes[k].Register[i];
-                                    switch (oper) {
-                                        case "=":
-                                            if (atDst.Type == "Int") {
-                                                if ((int)tReg == Convert.ToInt32(rightSide)) {
-                                                    valid = true;
-                                                }
-                                            }
-                                            else {
-                                                if ((float)tReg == Convert.ToSingle(rightSide)) {
-                                                    valid = true;
-                                                }
-                                            }
+                                if (query.Where != null) {
+                                    foreach (var comp in t.Attributes) {
+                                        if (comp.Name == leftSide) {
+                                            object tReg = comp.Register[i];
+                                            valid = VerifyWhere(comp.Type, oper, rightSide, tReg);
                                             break;
-                                        case "<":
-                                            if (atDst.Type == "Int") {
-                                                if ((int)tReg > Convert.ToInt32(rightSide)) {
-                                                    valid = true;
-                                                }
-                                            }
-                                            else {
-                                                if ((float)tReg < Convert.ToSingle(rightSide)) {
-                                                    valid = true;
-                                                }
-                                            }
-                                            break;
-                                        case ">":
-                                            if (atDst.Type == "Int") {
-                                                if ((int)tReg > Convert.ToInt32(rightSide)) {
-                                                    valid = true;
-                                                }
-                                            }
-                                            else {
-                                                if ((float)tReg > Convert.ToSingle(rightSide)) {
-                                                    valid = true;
-                                                }
-                                            }
-                                            break;
-                                        case ">=":
-                                            if (atDst.Type == "Int") {
-                                                if ((int)tReg >= Convert.ToInt32(rightSide)) {
-                                                    valid = true;
-                                                }
-                                            }
-                                            else {
-                                                if ((float)tReg >= Convert.ToSingle(rightSide)) {
-                                                    valid = true;
-                                                }
-                                            }
-                                            break;
-                                        case "<=":
-                                            if (atDst.Type == "Int") {
-                                                if ((int)tReg <= Convert.ToInt32(rightSide)) {
-                                                    valid = true;
-                                                }
-                                            }
-                                            else {
-                                                if ((float)tReg <= Convert.ToSingle(rightSide)) {
-                                                    valid = true;
-                                                }
-                                            }
-                                            break;
-                                        case "!=":
-                                            if (atDst.Type == "Int") {
-                                                if ((int)tReg != Convert.ToInt32(rightSide)) {
-                                                    valid = true;
-                                                }
-                                            }
-                                            else {
-                                                if ((float)tReg != Convert.ToSingle(rightSide)) {
-                                                    valid = true;
-                                                }
-                                            }
-                                            break;
-                                        default:
-                                            break;
+                                        }
+                                        return "Error: Attribute \"" + leftSide + "\" not found";
                                     }
                                 }
-                                else {
-                                    nr.Add(t.Attributes[k].Register[i]);
-                                }
+
+                                nr.Add(t.Attributes[k].Register[i]);
                                 break;
                             }
                         }
@@ -729,11 +668,98 @@ namespace Manager {
                         queryTable.AddRegister(nr);
                     }
                 }
-
                 ShowTableInfo(queryTable, dataGridView2);
+                return "Query executed";
             }
             else {
-                MessageBox.Show("Incorrect query syntaxis");
+                return "Error: Incorrect query syntaxis";
+            }
+            
+        }
+
+        private bool VerifyWhere(string type, string oper, object rightSide, object tReg) {
+            switch (oper) {
+                case "=":
+                    if (type == "Int") {
+                        if ((int)tReg == Convert.ToInt32(rightSide)) {
+                            return true;
+                        }
+                    }
+                    else {
+                        if ((float)tReg == Convert.ToSingle(rightSide)) {
+                            return true;
+                        }
+                    }
+                    break;
+                case "<":
+                    if (type == "Int") {
+                        if ((int)tReg > Convert.ToInt32(rightSide)) {
+                            return true;
+                        }
+                    }
+                    else {
+                        if ((float)tReg < Convert.ToSingle(rightSide)) {
+                            return true;
+                        }
+                    }
+                    break;
+                case ">":
+                    if (type == "Int") {
+                        if ((int)tReg > Convert.ToInt32(rightSide)) {
+                            return true;
+                        }
+                    }
+                    else {
+                        if ((float)tReg > Convert.ToSingle(rightSide)) {
+                            return true;
+                        }
+                    }
+                    break;
+                case ">=":
+                    if (type == "Int") {
+                        if ((int)tReg >= Convert.ToInt32(rightSide)) {
+                            return true;
+                        }
+                    }
+                    else {
+                        if ((float)tReg >= Convert.ToSingle(rightSide)) {
+                            return true;
+                        }
+                    }
+                    break;
+                case "<=":
+                    if (type == "Int") {
+                        if ((int)tReg <= Convert.ToInt32(rightSide)) {
+                            return true;
+                        }
+                    }
+                    else {
+                        if ((float)tReg <= Convert.ToSingle(rightSide)) {
+                            return true;
+                        }
+                    }
+                    break;
+                case "!=":
+                    if (type == "Int") {
+                        if ((int)tReg != Convert.ToInt32(rightSide)) {
+                            return true;
+                        }
+                    }
+                    else {
+                        if ((float)tReg != Convert.ToSingle(rightSide)) {
+                            return true;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        }
+
+        private void TextBoxQuery_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) {
+                BtnExecute_Click(this, null);
             }
         }
     }
