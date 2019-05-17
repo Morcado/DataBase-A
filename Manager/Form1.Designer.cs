@@ -64,15 +64,15 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnDeleteEntry = new System.Windows.Forms.Button();
             this.btnModifyEntry = new System.Windows.Forms.Button();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxQuery = new System.Windows.Forms.TextBox();
             this.btnExecute = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -85,7 +85,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1078, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(956, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -99,6 +99,7 @@
             this.renameDBToolStripMenuItem,
             this.deleteDBToolStripMenuItem,
             this.toolStripSeparator2,
+            this.exportToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -107,14 +108,14 @@
             // newDBToolStripMenuItem
             // 
             this.newDBToolStripMenuItem.Name = "newDBToolStripMenuItem";
-            this.newDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.newDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newDBToolStripMenuItem.Text = "New DB";
             this.newDBToolStripMenuItem.Click += new System.EventHandler(this.NewDBToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open DB";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
@@ -122,20 +123,20 @@
             // 
             this.closeDBToolStripMenuItem.Enabled = false;
             this.closeDBToolStripMenuItem.Name = "closeDBToolStripMenuItem";
-            this.closeDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.closeDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeDBToolStripMenuItem.Text = "Close DB";
             this.closeDBToolStripMenuItem.Click += new System.EventHandler(this.CloseDBToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(132, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // renameDBToolStripMenuItem
             // 
             this.renameDBToolStripMenuItem.Enabled = false;
             this.renameDBToolStripMenuItem.Name = "renameDBToolStripMenuItem";
-            this.renameDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.renameDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.renameDBToolStripMenuItem.Text = "Rename DB";
             this.renameDBToolStripMenuItem.Click += new System.EventHandler(this.RenameDBToolStripMenuItem_Click);
             // 
@@ -143,19 +144,19 @@
             // 
             this.deleteDBToolStripMenuItem.Enabled = false;
             this.deleteDBToolStripMenuItem.Name = "deleteDBToolStripMenuItem";
-            this.deleteDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.deleteDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.deleteDBToolStripMenuItem.Text = "Delete DB";
             this.deleteDBToolStripMenuItem.Click += new System.EventHandler(this.DeleteDBToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(132, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -204,21 +205,21 @@
             // 
             this.addAttributeToolStripMenuItem.Enabled = false;
             this.addAttributeToolStripMenuItem.Name = "addAttributeToolStripMenuItem";
-            this.addAttributeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addAttributeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.addAttributeToolStripMenuItem.Text = "Add Attribute";
             // 
             // modifyAttributeToolStripMenuItem
             // 
             this.modifyAttributeToolStripMenuItem.Enabled = false;
             this.modifyAttributeToolStripMenuItem.Name = "modifyAttributeToolStripMenuItem";
-            this.modifyAttributeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.modifyAttributeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.modifyAttributeToolStripMenuItem.Text = "Modify Attribute";
             // 
             // deleteAttributeToolStripMenuItem
             // 
             this.deleteAttributeToolStripMenuItem.Enabled = false;
             this.deleteAttributeToolStripMenuItem.Name = "deleteAttributeToolStripMenuItem";
-            this.deleteAttributeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteAttributeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.deleteAttributeToolStripMenuItem.Text = "Delete Attribute";
             // 
             // registersToolStripMenuItem
@@ -265,6 +266,7 @@
             this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
             this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem1.Text = "About";
+            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.AboutToolStripMenuItem1_Click);
             // 
             // treeView1
             // 
@@ -278,7 +280,7 @@
             // btnNewTable
             // 
             this.btnNewTable.Enabled = false;
-            this.btnNewTable.Location = new System.Drawing.Point(20, 29);
+            this.btnNewTable.Location = new System.Drawing.Point(13, 29);
             this.btnNewTable.Name = "btnNewTable";
             this.btnNewTable.Size = new System.Drawing.Size(96, 23);
             this.btnNewTable.TabIndex = 2;
@@ -289,7 +291,7 @@
             // btnDeleteTable
             // 
             this.btnDeleteTable.Enabled = false;
-            this.btnDeleteTable.Location = new System.Drawing.Point(20, 58);
+            this.btnDeleteTable.Location = new System.Drawing.Point(13, 58);
             this.btnDeleteTable.Name = "btnDeleteTable";
             this.btnDeleteTable.Size = new System.Drawing.Size(96, 23);
             this.btnDeleteTable.TabIndex = 3;
@@ -300,7 +302,7 @@
             // btnRenameTable
             // 
             this.btnRenameTable.Enabled = false;
-            this.btnRenameTable.Location = new System.Drawing.Point(20, 88);
+            this.btnRenameTable.Location = new System.Drawing.Point(13, 88);
             this.btnRenameTable.Name = "btnRenameTable";
             this.btnRenameTable.Size = new System.Drawing.Size(96, 23);
             this.btnRenameTable.TabIndex = 4;
@@ -320,10 +322,13 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(295, 51);
+            this.dataGridView1.Location = new System.Drawing.Point(280, 51);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(384, 285);
+            this.dataGridView1.Size = new System.Drawing.Size(664, 296);
             this.dataGridView1.TabIndex = 7;
             this.dataGridView1.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_ColumnHeaderMouseClick);
             this.dataGridView1.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_RowHeaderMouseClick);
@@ -331,7 +336,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(289, 37);
+            this.label2.Location = new System.Drawing.Point(274, 37);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(0, 13);
             this.label2.TabIndex = 8;
@@ -339,9 +344,9 @@
             // btnAddAttrib
             // 
             this.btnAddAttrib.Enabled = false;
-            this.btnAddAttrib.Location = new System.Drawing.Point(24, 27);
+            this.btnAddAttrib.Location = new System.Drawing.Point(13, 29);
             this.btnAddAttrib.Name = "btnAddAttrib";
-            this.btnAddAttrib.Size = new System.Drawing.Size(92, 23);
+            this.btnAddAttrib.Size = new System.Drawing.Size(96, 23);
             this.btnAddAttrib.TabIndex = 9;
             this.btnAddAttrib.Text = "New attribute";
             this.btnAddAttrib.UseVisualStyleBackColor = true;
@@ -350,9 +355,9 @@
             // btnDeleteAttrib
             // 
             this.btnDeleteAttrib.Enabled = false;
-            this.btnDeleteAttrib.Location = new System.Drawing.Point(24, 85);
+            this.btnDeleteAttrib.Location = new System.Drawing.Point(13, 87);
             this.btnDeleteAttrib.Name = "btnDeleteAttrib";
-            this.btnDeleteAttrib.Size = new System.Drawing.Size(92, 23);
+            this.btnDeleteAttrib.Size = new System.Drawing.Size(96, 23);
             this.btnDeleteAttrib.TabIndex = 9;
             this.btnDeleteAttrib.Text = "Delete attribute";
             this.btnDeleteAttrib.UseVisualStyleBackColor = true;
@@ -360,18 +365,18 @@
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(292, 35);
+            this.label4.Location = new System.Drawing.Point(277, 36);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(39, 13);
+            this.label4.Size = new System.Drawing.Size(258, 12);
             this.label4.TabIndex = 6;
             this.label4.Text = "Tables";
             // 
             // btnModifyAttrib
             // 
             this.btnModifyAttrib.Enabled = false;
-            this.btnModifyAttrib.Location = new System.Drawing.Point(24, 56);
+            this.btnModifyAttrib.Location = new System.Drawing.Point(13, 58);
             this.btnModifyAttrib.Name = "btnModifyAttrib";
-            this.btnModifyAttrib.Size = new System.Drawing.Size(92, 23);
+            this.btnModifyAttrib.Size = new System.Drawing.Size(96, 23);
             this.btnModifyAttrib.TabIndex = 9;
             this.btnModifyAttrib.Text = "Modify attribute";
             this.btnModifyAttrib.UseVisualStyleBackColor = true;
@@ -379,9 +384,9 @@
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 394);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 421);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1078, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(956, 22);
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -389,7 +394,7 @@
             // 
             this.btnAddEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnAddEntry.Enabled = false;
-            this.btnAddEntry.Location = new System.Drawing.Point(295, 342);
+            this.btnAddEntry.Location = new System.Drawing.Point(279, 353);
             this.btnAddEntry.Name = "btnAddEntry";
             this.btnAddEntry.Size = new System.Drawing.Size(92, 23);
             this.btnAddEntry.TabIndex = 14;
@@ -402,9 +407,9 @@
             this.groupBox1.Controls.Add(this.btnRenameTable);
             this.groupBox1.Controls.Add(this.btnNewTable);
             this.groupBox1.Controls.Add(this.btnDeleteTable);
-            this.groupBox1.Location = new System.Drawing.Point(151, 51);
+            this.groupBox1.Location = new System.Drawing.Point(151, 37);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(138, 132);
+            this.groupBox1.Size = new System.Drawing.Size(123, 132);
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Tables";
@@ -416,7 +421,7 @@
             this.groupBox2.Controls.Add(this.btnAddAttrib);
             this.groupBox2.Location = new System.Drawing.Point(151, 189);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(138, 129);
+            this.groupBox2.Size = new System.Drawing.Size(123, 129);
             this.groupBox2.TabIndex = 16;
             this.groupBox2.TabStop = false;
             // 
@@ -424,7 +429,7 @@
             // 
             this.btnDeleteEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDeleteEntry.Enabled = false;
-            this.btnDeleteEntry.Location = new System.Drawing.Point(393, 342);
+            this.btnDeleteEntry.Location = new System.Drawing.Point(377, 353);
             this.btnDeleteEntry.Name = "btnDeleteEntry";
             this.btnDeleteEntry.Size = new System.Drawing.Size(92, 23);
             this.btnDeleteEntry.TabIndex = 17;
@@ -436,7 +441,7 @@
             // 
             this.btnModifyEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnModifyEntry.Enabled = false;
-            this.btnModifyEntry.Location = new System.Drawing.Point(491, 342);
+            this.btnModifyEntry.Location = new System.Drawing.Point(475, 353);
             this.btnModifyEntry.Name = "btnModifyEntry";
             this.btnModifyEntry.Size = new System.Drawing.Size(92, 23);
             this.btnModifyEntry.TabIndex = 18;
@@ -444,20 +449,11 @@
             this.btnModifyEntry.UseVisualStyleBackColor = true;
             this.btnModifyEntry.Click += new System.EventHandler(this.BtnModifyRegister_Click);
             // 
-            // dataGridView2
-            // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(685, 51);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(384, 285);
-            this.dataGridView2.TabIndex = 7;
-            this.dataGridView2.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_ColumnHeaderMouseClick);
-            this.dataGridView2.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_RowHeaderMouseClick);
-            // 
             // label3
             // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(685, 36);
+            this.label3.Location = new System.Drawing.Point(277, 385);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 19;
@@ -465,17 +461,19 @@
             // 
             // textBoxQuery
             // 
+            this.textBoxQuery.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBoxQuery.Enabled = false;
-            this.textBoxQuery.Location = new System.Drawing.Point(685, 342);
+            this.textBoxQuery.Location = new System.Drawing.Point(318, 385);
             this.textBoxQuery.Name = "textBoxQuery";
-            this.textBoxQuery.Size = new System.Drawing.Size(300, 20);
+            this.textBoxQuery.Size = new System.Drawing.Size(252, 20);
             this.textBoxQuery.TabIndex = 20;
             this.textBoxQuery.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxQuery_KeyDown);
             // 
             // btnExecute
             // 
+            this.btnExecute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnExecute.Enabled = false;
-            this.btnExecute.Location = new System.Drawing.Point(991, 341);
+            this.btnExecute.Location = new System.Drawing.Point(576, 385);
             this.btnExecute.Name = "btnExecute";
             this.btnExecute.Size = new System.Drawing.Size(75, 23);
             this.btnExecute.TabIndex = 21;
@@ -483,11 +481,30 @@
             this.btnExecute.UseVisualStyleBackColor = true;
             this.btnExecute.Click += new System.EventHandler(this.BtnExecute_Click);
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button1.Location = new System.Drawing.Point(657, 385);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 22;
+            this.button1.Text = "Clear";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Text = "Export..";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.ExportToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1078, 416);
+            this.ClientSize = new System.Drawing.Size(956, 443);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnExecute);
             this.Controls.Add(this.textBoxQuery);
             this.Controls.Add(this.label3);
@@ -498,7 +515,6 @@
             this.Controls.Add(this.btnAddEntry);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label1);
@@ -513,7 +529,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -560,12 +575,13 @@
 		private System.Windows.Forms.ToolStripMenuItem addNewEntryToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem deleteEntryToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem modifySelectedEntryToolStripMenuItem;
-        private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxQuery;
         private System.Windows.Forms.Button btnExecute;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
     }
 }
 

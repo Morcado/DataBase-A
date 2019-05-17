@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TSQL;
@@ -15,7 +16,7 @@ namespace Manager {
         private string selectedTable = "";
         private DataBase dataBase;
         private Table currentTable;
-
+        private Table queryTable;
         public Form1() {
             dataBase = null;
             InitializeComponent();
@@ -583,6 +584,8 @@ namespace Manager {
 
         private void BtnExecute_Click(object sender, EventArgs e) {
             string res = ExecuteQuery();
+            QueryData queryData = new QueryData(queryTable);
+            queryData.Show();
             MessageBox.Show(res);
         }
 
@@ -592,7 +595,7 @@ namespace Manager {
                 List<string> columns = new List<string>();
 
                 Table t = dataBase.FindTable(query.From.Tokens[1].Text);
-                Table queryTable = new Table("query1");
+                queryTable = new Table("query1");
 
                 if (t == null) { 
                     return "Error: Table \"" + query.From.Tokens[1].Text + "\" not found";
@@ -602,12 +605,12 @@ namespace Manager {
                 object rightSide = null;
                 string oper = "";
 
+                // cuando hace select from * 
                 if (query.Select.Tokens[1].Type == TSQLTokenType.Operator) {
 
                     foreach (var attribu in t.Attributes) {
                         columns.Add(attribu.Name);
                         queryTable.AddAttribute(new Attribute(attribu));
-                        //dataGridView2.Columns.Add(attribu.Name, attribu.Name);
                     }
                 }
                 else {
@@ -619,7 +622,6 @@ namespace Manager {
                                 return "Error: Attribute \"" + token.Text + "\" not found";
                             }
                             queryTable.AddAttribute(new Attribute(at));
-                            //dataGridView2.Columns.Add(token.Text, token.Text);
                         }
                     }
                 }
@@ -633,6 +635,9 @@ namespace Manager {
                         return "Error: Incorrect query syntaxis on WHERE";
                     }
 
+                    if (!t.Attributes.Any(x => x.Name == leftSide)) {
+                        return "Attribute " + leftSide + " not found";
+                    }
                 }
 
                 for (int i = 0; i < t.PK.Register.Count; i++) {
@@ -644,16 +649,17 @@ namespace Manager {
                             if (t.Attributes[k].Name == atDst.Name) {
 
                                 if (query.Where != null) {
-                                    foreach (var comp in t.Attributes) {
-                                        if (comp.Name == leftSide) {
-                                            object tReg = comp.Register[i];
-                                            valid = VerifyWhere(comp.Type, oper, rightSide, tReg);
+                                    int h;
+                                    for (h = 0; h < t.Attributes.Count; k++) { 
+                                    //foreach (var comp in t.Attributes) {
+                                        if (t.Attributes[h].Name == leftSide) {
+                                            object tReg = t.Attributes[h].Register[i];
+                                            valid = VerifyWhere(t.Attributes[h].Type, oper, rightSide, tReg);
+                                            //query.Where = null;
                                             break;
                                         }
-                                        return "Error: Attribute \"" + leftSide + "\" not found";
                                     }
                                 }
-
                                 nr.Add(t.Attributes[k].Register[i]);
                                 break;
                             }
@@ -668,7 +674,7 @@ namespace Manager {
                         queryTable.AddRegister(nr);
                     }
                 }
-                ShowTableInfo(queryTable, dataGridView2);
+                //ShowTableInfo(queryTable, dataGridView2);
                 return "Query executed";
             }
             else {
@@ -761,6 +767,20 @@ namespace Manager {
             if (e.KeyCode == Keys.Enter) {
                 BtnExecute_Click(this, null);
             }
+        }
+
+        private void Button1_Click(object sender, EventArgs e) {
+            textBoxQuery.Clear();
+         
+        }
+
+        private void AboutToolStripMenuItem1_Click(object sender, EventArgs e) {
+            AboutBox1 about = new AboutBox1();
+            about.ShowDialog();
+        }
+
+        private void ExportToolStripMenuItem_Click(object sender, EventArgs e) {
+            var cvs = new StringBuilder();
         }
     }
 }
