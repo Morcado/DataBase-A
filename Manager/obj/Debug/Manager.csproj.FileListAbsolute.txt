@@ -50,8 +50,6 @@ C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.exe
 C:\Users\Morcado\Desktop\Data Base MS\Manager\obj\Debug\Manager.pdb
 C:\Users\Becarios\Documents\DataBase-A\Manager\bin\Debug\Manager.exe
 C:\Users\Becarios\Documents\DataBase-A\Manager\bin\Debug\Manager.pdb
-C:\Users\Becarios\Documents\DataBase-A\Manager\bin\Debug\Antlr4.Runtime.dll
-C:\Users\Becarios\Documents\DataBase-A\Manager\bin\Debug\Antlr4.Runtime.xml
 C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.csprojAssemblyReference.cache
 C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.Form1.resources
 C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.NameDialog.resources
@@ -87,3 +85,8 @@ C:\Users\Morcado\Desktop\DataBase-A\Manager\bin\Debug\TSQL_Parser.dll
 C:\Users\Morcado\Desktop\DataBase-A\Manager\bin\Debug\TSQL_Parser.xml
 C:\Users\Morcado\Desktop\DataBase-A\Manager\obj\Debug\Manager.QueryData.resources
 C:\Users\Morcado\Desktop\DataBase-A\Manager\obj\Debug\Manager.AboutBox1.resources
+C:\Users\Becarios\Documents\DataBase-A\Manager\bin\Debug\Manager.exe.config
+C:\Users\Becarios\Documents\DataBase-A\Manager\bin\Debug\TSQL_Parser.dll
+C:\Users\Becarios\Documents\DataBase-A\Manager\bin\Debug\TSQL_Parser.xml
+C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.AboutBox1.resources
+C:\Users\Becarios\Documents\DataBase-A\Manager\obj\Debug\Manager.QueryData.resources

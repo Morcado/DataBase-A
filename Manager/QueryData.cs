@@ -16,7 +16,7 @@ namespace Manager {
             foreach (Attribute attribute in table.Attributes) {
                 DataGridViewTextBoxColumn dgc = new DataGridViewTextBoxColumn {
                     Name = attribute.Name,
-                    HeaderText = attribute.Name,
+                    HeaderText = attribute.ParentTable.Name + "." + attribute.Name,
                     SortMode = DataGridViewColumnSortMode.Programmatic
                 };
                 dataGridView1.Columns.Add(dgc);

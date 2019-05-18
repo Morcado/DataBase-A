@@ -589,78 +589,135 @@ namespace Manager {
             MessageBox.Show(res);
         }
 
+        /* Ejecuta una sentencia en el manejador. Los datos en la sentencia tienen que ser válidos y regresa los errores que pueda tener*/
         private string ExecuteQuery() {
+            /* Guarda la sentencia en un arbol TSQL, despues se separa en las partes de select y from*/
             TSQLSelectStatement query = TSQLStatementReader.ParseStatements(@textBoxQuery.Text)[0] as TSQLSelectStatement;
+            var select = query.Select.Tokens;
+            var from = query.From.Tokens;
+
             if (query != null) {
                 List<string> columns = new List<string>();
-
-                Table t = dataBase.FindTable(query.From.Tokens[1].Text);
-                queryTable = new Table("query1");
-
-                if (t == null) { 
-                    return "Error: Table \"" + query.From.Tokens[1].Text + "\" not found";
-                }
+                Table t1 = dataBase.FindTable(from[1].Text);
+                Table t2 = null;
 
                 string leftSide = "";
                 object rightSide = null;
                 string oper = "";
+                queryTable = new Table("query1");
 
-                // cuando hace select from * 
-                if (query.Select.Tokens[1].Type == TSQLTokenType.Operator) {
+                /* Si la tabla indicada no se encuentra, se sale*/
 
-                    foreach (var attribu in t.Attributes) {
-                        columns.Add(attribu.Name);
-                        queryTable.AddAttribute(new Attribute(attribu));
-                    }
+                if (query.From == null) {
+                    return "Incorrect sintaxis";
                 }
-                else {
-                    foreach (var token in query.Select.Tokens) {
-                        if (token.Type == TSQLTokenType.Identifier) {
-                            columns.Add(token.Text);
-                            Attribute at = t.FindAttribute(token.Text);
-                            if (at == null) {
-                                return "Error: Attribute \"" + token.Text + "\" not found";
-                            }
-                            queryTable.AddAttribute(new Attribute(at));
+                if (t1 == null) {
+                    return "Error: Table \"" + from[1].Text + "\" not found";
+                }
+                /* Si hay 13 tokens entonces es posible que haya una sentencia de inner join*/
+                if (from.Count == 13) {
+                    if (from[2].Type == TSQLTokenType.Keyword && from[3].Type == TSQLTokenType.Keyword && from[5].Type == TSQLTokenType.Keyword) {
+                        t2 = dataBase.FindTable(from[4].Text);
+                        if (t2 == null) {
+                            return "Error: Table \"" + from[1].Text + "\" not found";
                         }
                     }
                 }
 
+                /* SELECT: 
+                 * Agrega todos los atribuutos de la tabla */
+                if (select[1].Type == TSQLTokenType.Operator) {
+
+                    foreach (var attribu in t1.Attributes) {
+                        columns.Add(attribu.Name);
+                        Attribute att = new Attribute(attribu);
+                        att.ParentTable = t1;
+                        //att.Name = t1.Name + "." + att.Name;
+                        queryTable.AddAttribute(att);
+                    }
+
+                    if (t2 != null) {
+                        foreach (var attribu in t2.Attributes) {
+                            columns.Add(attribu.Name);
+                            Attribute att = new Attribute(attribu);
+                            att.ParentTable = t2;
+                            //att.Name = t1.Name + "." + att.Name;
+                            queryTable.AddAttribute(att);
+                        }
+                    }
+                }
+                else {
+                    /*Agrega los atributos indicados, si uno no se encuentra, se sale*/
+                    //foreach (var token in select) {
+                    for (int i = 0; i < select.Count; i++) {
+                        if (select[i].Type == TSQLTokenType.Identifier && select[i + 1] != null && select[i + 1].Text != ".") {
+                            columns.Add(select[i].Text);
+                            Attribute at = t1.FindAttribute(select[i].Text);
+                            if (at == null) {
+                                return "Error: Attribute \"" + select[i].Text + "\" not found";
+                            }
+                            Attribute att = new Attribute(at);
+                            att.ParentTable = t1;
+                            //att.Name = t1.Name + "." + att.Name;
+                            queryTable.AddAttribute(att);
+                        }
+                    }
+                    if (t2 != null) {
+                        for (int i = 0; i < select.Count; i++) {
+                            if (select[i].Type == TSQLTokenType.Identifier && select[i + 1] != null && select[i + 1].Text != ".") {
+                                columns.Add(select[i].Text);
+                                Attribute at = t2.FindAttribute(select[i].Text);
+                                if (at == null) {
+                                    return "Error: Attribute \"" + select[i].Text + "\" not found";
+                                }
+                                Attribute att = new Attribute(at);
+                                att.ParentTable = t2;
+                                //att.Name = t1.Name + "." + att.Name;
+                                queryTable.AddAttribute(att);
+                            }
+                        }
+                    }
+                }
+
+                /* Verifica que la oracion tenga un where, si lo tiene, generaliza la condicion y 
+                 la separa en el lado izquierdo, derecho y operador*/
                 if (query.Where != null) {
-                    leftSide = query.Where.Tokens[1].Text;
-                    rightSide = query.Where.Tokens[3].Text;
-                    oper = query.Where.Tokens[2].Text;
+                    leftSide = from[1].Text;
+                    rightSide = from[3].Text;
+                    oper = from[2].Text;
 
                     if (leftSide == "" || rightSide == null || oper == "") {
                         return "Error: Incorrect query syntaxis on WHERE";
                     }
 
-                    if (!t.Attributes.Any(x => x.Name == leftSide)) {
+                    if (!t1.Attributes.Any(x => x.Name == leftSide)) {
                         return "Attribute " + leftSide + " not found";
                     }
                 }
 
-                for (int i = 0; i < t.PK.Register.Count; i++) {
-                    List<object> r = t.GetRegisterAt(i);
+                /* Llena la tabla de la sentencia con los valores de los registros de la otrea  tabla, si tiene where, checa la condicion*/
+                for (int i = 0; i < t1.PK.Register.Count; i++) {
+                    List<object> r = t1.GetRegisterAt(i);
                     List<object> nr = new List<object>();
                     bool valid = false;
+                    /* Agrega */
                     foreach (var atDst in queryTable.Attributes) {
-                        for (int k = 0; k < t.Attributes.Count; k++) {
-                            if (t.Attributes[k].Name == atDst.Name) {
+                        for (int k = 0; k < t1.Attributes.Count; k++) {
+                            if (t1.Attributes[k].Name == atDst.Name) {
 
+                                /* Si tiene where abntes verifica que el registro cumpla la condicion para insertarlo*/
                                 if (query.Where != null) {
                                     int h;
-                                    for (h = 0; h < t.Attributes.Count; k++) { 
-                                    //foreach (var comp in t.Attributes) {
-                                        if (t.Attributes[h].Name == leftSide) {
-                                            object tReg = t.Attributes[h].Register[i];
-                                            valid = VerifyWhere(t.Attributes[h].Type, oper, rightSide, tReg);
-                                            //query.Where = null;
+                                    for (h = 0; h < t1.Attributes.Count; k++) { 
+                                        if (t1.Attributes[h].Name == leftSide) {
+                                            object tReg = t1.Attributes[h].Register[i];
+                                            valid = VerifyWhere(t1.Attributes[h].Type, oper, rightSide, tReg);
                                             break;
                                         }
                                     }
                                 }
-                                nr.Add(t.Attributes[k].Register[i]);
+
+                                nr.Add(t1.Attributes[k].Register[i]);
                                 break;
                             }
                         }
@@ -674,7 +731,6 @@ namespace Manager {
                         queryTable.AddRegister(nr);
                     }
                 }
-                //ShowTableInfo(queryTable, dataGridView2);
                 return "Query executed";
             }
             else {
@@ -682,14 +738,16 @@ namespace Manager {
             }
             
         }
+        
 
+
+        /* Verifica la condición en el where, recibe los datos del lado derecho y el registro, y hace
+         el cast de acuerdo al tipo de elemento */
         private bool VerifyWhere(string type, string oper, object rightSide, object tReg) {
             switch (oper) {
                 case "=":
-                    if (type == "Int") {
-                        if ((int)tReg == Convert.ToInt32(rightSide)) {
-                            return true;
-                        }
+                    if (type == "Int" && (int)tReg == Convert.ToInt32(rightSide)) {
+                        return true;
                     }
                     else {
                         if ((float)tReg == Convert.ToSingle(rightSide)) {
@@ -698,10 +756,8 @@ namespace Manager {
                     }
                     break;
                 case "<":
-                    if (type == "Int") {
-                        if ((int)tReg > Convert.ToInt32(rightSide)) {
-                            return true;
-                        }
+                    if (type == "Int" && (int)tReg > Convert.ToInt32(rightSide)) {
+                        return true;
                     }
                     else {
                         if ((float)tReg < Convert.ToSingle(rightSide)) {
@@ -710,10 +766,8 @@ namespace Manager {
                     }
                     break;
                 case ">":
-                    if (type == "Int") {
-                        if ((int)tReg > Convert.ToInt32(rightSide)) {
-                            return true;
-                        }
+                    if (type == "Int" && (int)tReg > Convert.ToInt32(rightSide)) {
+                        return true;
                     }
                     else {
                         if ((float)tReg > Convert.ToSingle(rightSide)) {
@@ -722,10 +776,8 @@ namespace Manager {
                     }
                     break;
                 case ">=":
-                    if (type == "Int") {
-                        if ((int)tReg >= Convert.ToInt32(rightSide)) {
-                            return true;
-                        }
+                    if (type == "Int" && (int)tReg >= Convert.ToInt32(rightSide)) {
+                        return true;
                     }
                     else {
                         if ((float)tReg >= Convert.ToSingle(rightSide)) {
@@ -734,10 +786,8 @@ namespace Manager {
                     }
                     break;
                 case "<=":
-                    if (type == "Int") {
-                        if ((int)tReg <= Convert.ToInt32(rightSide)) {
-                            return true;
-                        }
+                    if (type == "Int" && (int)tReg <= Convert.ToInt32(rightSide)) {
+                        return true;
                     }
                     else {
                         if ((float)tReg <= Convert.ToSingle(rightSide)) {
@@ -746,10 +796,8 @@ namespace Manager {
                     }
                     break;
                 case "!=":
-                    if (type == "Int") {
-                        if ((int)tReg != Convert.ToInt32(rightSide)) {
-                            return true;
-                        }
+                    if (type == "Int" && (int)tReg != Convert.ToInt32(rightSide)) {
+                        return true;
                     }
                     else {
                         if ((float)tReg != Convert.ToSingle(rightSide)) {

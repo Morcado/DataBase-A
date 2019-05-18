@@ -32,6 +32,7 @@
             this.renameDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,7 +69,6 @@
             this.textBoxQuery = new System.Windows.Forms.TextBox();
             this.btnExecute = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -108,14 +108,14 @@
             // newDBToolStripMenuItem
             // 
             this.newDBToolStripMenuItem.Name = "newDBToolStripMenuItem";
-            this.newDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.newDBToolStripMenuItem.Text = "New DB";
             this.newDBToolStripMenuItem.Click += new System.EventHandler(this.NewDBToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.openToolStripMenuItem.Text = "Open DB";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
@@ -123,20 +123,20 @@
             // 
             this.closeDBToolStripMenuItem.Enabled = false;
             this.closeDBToolStripMenuItem.Name = "closeDBToolStripMenuItem";
-            this.closeDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.closeDBToolStripMenuItem.Text = "Close DB";
             this.closeDBToolStripMenuItem.Click += new System.EventHandler(this.CloseDBToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(132, 6);
             // 
             // renameDBToolStripMenuItem
             // 
             this.renameDBToolStripMenuItem.Enabled = false;
             this.renameDBToolStripMenuItem.Name = "renameDBToolStripMenuItem";
-            this.renameDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.renameDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.renameDBToolStripMenuItem.Text = "Rename DB";
             this.renameDBToolStripMenuItem.Click += new System.EventHandler(this.RenameDBToolStripMenuItem_Click);
             // 
@@ -144,19 +144,26 @@
             // 
             this.deleteDBToolStripMenuItem.Enabled = false;
             this.deleteDBToolStripMenuItem.Name = "deleteDBToolStripMenuItem";
-            this.deleteDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteDBToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.deleteDBToolStripMenuItem.Text = "Delete DB";
             this.deleteDBToolStripMenuItem.Click += new System.EventHandler(this.DeleteDBToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(132, 6);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.exportToolStripMenuItem.Text = "Export..";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.ExportToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -465,7 +472,7 @@
             this.textBoxQuery.Enabled = false;
             this.textBoxQuery.Location = new System.Drawing.Point(318, 385);
             this.textBoxQuery.Name = "textBoxQuery";
-            this.textBoxQuery.Size = new System.Drawing.Size(252, 20);
+            this.textBoxQuery.Size = new System.Drawing.Size(438, 20);
             this.textBoxQuery.TabIndex = 20;
             this.textBoxQuery.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxQuery_KeyDown);
             // 
@@ -473,7 +480,7 @@
             // 
             this.btnExecute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnExecute.Enabled = false;
-            this.btnExecute.Location = new System.Drawing.Point(576, 385);
+            this.btnExecute.Location = new System.Drawing.Point(762, 385);
             this.btnExecute.Name = "btnExecute";
             this.btnExecute.Size = new System.Drawing.Size(75, 23);
             this.btnExecute.TabIndex = 21;
@@ -484,20 +491,13 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(657, 385);
+            this.button1.Location = new System.Drawing.Point(843, 385);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 22;
             this.button1.Text = "Clear";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.Button1_Click);
-            // 
-            // exportToolStripMenuItem
-            // 
-            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exportToolStripMenuItem.Text = "Export..";
-            this.exportToolStripMenuItem.Click += new System.EventHandler(this.ExportToolStripMenuItem_Click);
             // 
             // Form1
             // 
