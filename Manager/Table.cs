@@ -84,7 +84,9 @@ namespace Manager {
 
         public void AddRegister(List<object> newEntry) {
             //modificar le tipo en la lista, causa excepcion
-
+            if (newEntry.Count == 0) {
+                return;
+            }
 
             for (int i = 0; i < Attributes.Count; i++) {
                 Attributes[i].Register.Add(newEntry[i]);

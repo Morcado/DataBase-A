@@ -584,26 +584,32 @@ namespace Manager {
 
         private void BtnExecute_Click(object sender, EventArgs e) {
             string res = ExecuteQuery();
-            QueryData queryData = new QueryData(queryTable);
-            queryData.Show();
-            MessageBox.Show(res);
+            if (res == "") {
+                QueryData queryData = new QueryData(queryTable);
+                queryData.Show();
+            }
+            else {
+                MessageBox.Show(res);
+            }
         }
 
         /* Ejecuta una sentencia en el manejador. Los datos en la sentencia tienen que ser válidos y regresa los errores que pueda tener*/
         private string ExecuteQuery() {
             /* Guarda la sentencia en un arbol TSQL, despues se separa en las partes de select y from*/
-            TSQLSelectStatement query = TSQLStatementReader.ParseStatements(@textBoxQuery.Text)[0] as TSQLSelectStatement;
-            var select = query.Select.Tokens;
-            var from = query.From.Tokens;
+            var query = TSQLStatementReader.ParseStatements(@textBoxQuery.Text)[0] as TSQLSelectStatement;
 
             if (query != null) {
+                var select = query.Select.Tokens;
+                var from = query.From.Tokens;
                 List<string> columns = new List<string>();
                 Table t1 = dataBase.FindTable(from[1].Text);
                 Table t2 = null;
-
+                Attribute innerAt1 = null;
+                Attribute innerAt2 = null;
                 string leftSide = "";
                 object rightSide = null;
                 string oper = "";
+                int min = 0, max = 0;
                 queryTable = new Table("query1");
 
                 /* Si la tabla indicada no se encuentra, se sale*/
@@ -621,6 +627,15 @@ namespace Manager {
                         if (t2 == null) {
                             return "Error: Table \"" + from[1].Text + "\" not found";
                         }
+
+                        innerAt1 = t1.FindAttribute(from[8].Text);
+                        innerAt2 = t2.FindAttribute(from[12].Text);
+                        if (innerAt1 == null || innerAt2 == null) {
+                            return "Attribute \"" + from[8].Text + "/" + from[12].Text + "\" not found";
+                        }
+                        if (innerAt1.Type != innerAt2.Type) {
+                            return "Error: can not join on diferent types";
+                        }
                     }
                 }
 
@@ -632,17 +647,18 @@ namespace Manager {
                         columns.Add(attribu.Name);
                         Attribute att = new Attribute(attribu);
                         att.ParentTable = t1;
-                        //att.Name = t1.Name + "." + att.Name;
                         queryTable.AddAttribute(att);
                     }
-
+                    /* Si tiene inner join, agrega los demás atributos, excepto la lalve primaria que ya se encuentra*/
                     if (t2 != null) {
                         foreach (var attribu in t2.Attributes) {
-                            columns.Add(attribu.Name);
                             Attribute att = new Attribute(attribu);
                             att.ParentTable = t2;
-                            //att.Name = t1.Name + "." + att.Name;
-                            queryTable.AddAttribute(att);
+
+                            if (att.Name != innerAt2.Name) {
+                                columns.Add(attribu.Name);
+                                queryTable.AddAttribute(att);
+                            }
                         }
                     }
                 }
@@ -658,7 +674,6 @@ namespace Manager {
                             }
                             Attribute att = new Attribute(at);
                             att.ParentTable = t1;
-                            //att.Name = t1.Name + "." + att.Name;
                             queryTable.AddAttribute(att);
                         }
                     }
@@ -672,7 +687,6 @@ namespace Manager {
                                 }
                                 Attribute att = new Attribute(at);
                                 att.ParentTable = t2;
-                                //att.Name = t1.Name + "." + att.Name;
                                 queryTable.AddAttribute(att);
                             }
                         }
@@ -693,120 +707,168 @@ namespace Manager {
                     if (!t1.Attributes.Any(x => x.Name == leftSide)) {
                         return "Attribute " + leftSide + " not found";
                     }
+
+                    
                 }
 
-                /* Llena la tabla de la sentencia con los valores de los registros de la otrea  tabla, si tiene where, checa la condicion*/
-                for (int i = 0; i < t1.PK.Register.Count; i++) {
-                    List<object> r = t1.GetRegisterAt(i);
-                    List<object> nr = new List<object>();
-                    bool valid = false;
-                    /* Agrega */
-                    foreach (var atDst in queryTable.Attributes) {
-                        for (int k = 0; k < t1.Attributes.Count; k++) {
-                            if (t1.Attributes[k].Name == atDst.Name) {
+                min = t2 != null ? Math.Min(t1.PK.Register.Count, t2.PK.Register.Count) : t1.PK.Register.Count;
+                max = t2 != null ? Math.Max(t1.PK.Register.Count, t2.PK.Register.Count) : t1.PK.Register.Count;
 
-                                /* Si tiene where abntes verifica que el registro cumpla la condicion para insertarlo*/
-                                if (query.Where != null) {
-                                    int h;
-                                    for (h = 0; h < t1.Attributes.Count; k++) { 
-                                        if (t1.Attributes[h].Name == leftSide) {
-                                            object tReg = t1.Attributes[h].Register[i];
-                                            valid = VerifyWhere(t1.Attributes[h].Type, oper, rightSide, tReg);
-                                            break;
+
+                /* Llena la tabla de la sentencia con los valores de los registros de la otra tabla, si tiene where, checa la condicion*/
+                if (t2 == null) {
+                    for (int i = 0; i < min; i++) {
+                        List<object> r = t1.GetRegisterAt(i);
+                        List<object> nr = new List<object>();
+                        bool valid = false;
+                        /* Agrega */
+                        foreach (var atDst in queryTable.Attributes) {
+                            for (int k = 0; k < t1.Attributes.Count; k++) {
+                                if (t1.Attributes[k].Name == atDst.Name) {
+
+                                    /* Si tiene where abntes verifica que el registro cumpla la condicion para insertarlo*/
+                                    if (query.Where != null) {
+                                        int h;
+                                        for (h = 0; h < t1.Attributes.Count; k++) {
+                                            if (t1.Attributes[h].Name == leftSide) {
+                                                object tReg = t1.Attributes[h].Register[i];
+                                                valid = VerifyWhere(t1.Attributes[h].Type, oper, rightSide, tReg);
+                                                break;
+                                            }
                                         }
                                     }
-                                }
 
-                                nr.Add(t1.Attributes[k].Register[i]);
-                                break;
+                                    nr.Add(t1.Attributes[k].Register[i]);
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (query.Where != null) {
+                            if (valid) {
+                                queryTable.AddRegister(nr);
                             }
                         }
                     }
-                    if (query.Where != null) {
-                        if (valid) {
-                            queryTable.AddRegister(nr);
+                }
+                else {
+                    List<object> nr = new List<object>();
+                    for (int h = 0; h < innerAt1.Register.Count; h++) {
+                        for (int g = 0; g < innerAt2.Register.Count; g++) {
+                            if (VerifyWhere(innerAt1.Type, "=", innerAt2.Register[g], innerAt1.Register[h])) {
+                                foreach (var attribute in queryTable.Attributes) {
+                                    bool found = false;
+                                    foreach (var att in t1.Attributes) {
+                                        if (attribute.Name == att.Name) {
+                                            nr.Add(att.Register[g]);
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (found) {
+                                        continue;
+                                    }
+                                    foreach (var att in t2.Attributes) {
+                                        if (attribute.Name == att.Name) {
+                                            nr.Add(att.Register[g]);
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (found) {
+                                        continue;
+                                    }
+                                }
+                                queryTable.AddRegister(nr);
+                            }
                         }
                     }
-                    else {
-                        queryTable.AddRegister(nr);
-                    }
                 }
-                return "Query executed";
+                return "";
             }
             else {
                 return "Error: Incorrect query syntaxis";
             }
-            
         }
         
-
-
         /* Verifica la condición en el where, recibe los datos del lado derecho y el registro, y hace
          el cast de acuerdo al tipo de elemento */
-        private bool VerifyWhere(string type, string oper, object rightSide, object tReg) {
-            switch (oper) {
-                case "=":
-                    if (type == "Int" && (int)tReg == Convert.ToInt32(rightSide)) {
-                        return true;
-                    }
-                    else {
-                        if ((float)tReg == Convert.ToSingle(rightSide)) {
+        private bool VerifyWhere(string type, string oper, object a, object b) {
+            if (type == "Int") {
+                int n1 = Convert.ToInt32(b), n2 = Convert.ToInt32(a);
+                
+                switch (oper) {
+                    case "=":
+                        if (n1 == n2) {
                             return true;
                         }
-                    }
-                    break;
-                case "<":
-                    if (type == "Int" && (int)tReg > Convert.ToInt32(rightSide)) {
-                        return true;
-                    }
-                    else {
-                        if ((float)tReg < Convert.ToSingle(rightSide)) {
+                        break;
+                    case "<":
+                        if (n1 > n2) {
                             return true;
                         }
-                    }
-                    break;
-                case ">":
-                    if (type == "Int" && (int)tReg > Convert.ToInt32(rightSide)) {
-                        return true;
-                    }
-                    else {
-                        if ((float)tReg > Convert.ToSingle(rightSide)) {
+                        break;
+                    case ">":
+                        if (n1 > n2) {
                             return true;
                         }
-                    }
-                    break;
-                case ">=":
-                    if (type == "Int" && (int)tReg >= Convert.ToInt32(rightSide)) {
-                        return true;
-                    }
-                    else {
-                        if ((float)tReg >= Convert.ToSingle(rightSide)) {
+                        break;
+                    case ">=":
+                        if (n1 >= n2) {
                             return true;
                         }
-                    }
-                    break;
-                case "<=":
-                    if (type == "Int" && (int)tReg <= Convert.ToInt32(rightSide)) {
-                        return true;
-                    }
-                    else {
-                        if ((float)tReg <= Convert.ToSingle(rightSide)) {
+                        break;
+                    case "<=":
+                        if (n1 <= n2) {
                             return true;
                         }
-                    }
-                    break;
-                case "!=":
-                    if (type == "Int" && (int)tReg != Convert.ToInt32(rightSide)) {
-                        return true;
-                    }
-                    else {
-                        if ((float)tReg != Convert.ToSingle(rightSide)) {
+                        break;
+                    case "!=":
+                        if (n1 != n2) {
                             return true;
                         }
-                    }
-                    break;
-                default:
-                    break;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else {
+                float n1 = Convert.ToSingle(b), n2 = Convert.ToSingle(a);
+                switch (oper) {
+                    case "=":
+                        if (n1 == n2) {
+                            return true;
+                        }
+                        break;
+                    case "<":
+                        if (n1 < n2) {
+                            return true;
+                        }
+                        break;
+                    case ">":
+                        
+                        if (n1 > n2) {
+                            return true;
+                        }
+                        break;
+                    case ">=":
+                        if (n1 >= n2) {
+                            return true;
+                        }
+                        break;
+                    case "<=":
+                        if (n1 <= n2) {
+                            return true;
+                        }
+                        break;
+                    case "!=":
+                        if (n1 != n2) {
+                            return true;
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
             return false;
         }
