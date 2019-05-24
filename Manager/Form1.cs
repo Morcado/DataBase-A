@@ -596,11 +596,14 @@ namespace Manager {
         /* Ejecuta una sentencia en el manejador. Los datos en la sentencia tienen que ser válidos y regresa los errores que pueda tener*/
         private string ExecuteQuery() {
             /* Guarda la sentencia en un arbol TSQL, despues se separa en las partes de select y from*/
+            if (textBoxQuery.Text == "") {
+                return "Error: no query entered";
+            }
             var query = TSQLStatementReader.ParseStatements(@textBoxQuery.Text)[0] as TSQLSelectStatement;
-
             if (query != null) {
                 var select = query.Select.Tokens;
                 var from = query.From.Tokens;
+                
                 List<string> columns = new List<string>();
                 Table t1 = dataBase.FindTable(from[1].Text);
                 Table t2 = null;
@@ -615,11 +618,12 @@ namespace Manager {
                 /* Si la tabla indicada no se encuentra, se sale*/
 
                 if (query.From == null) {
-                    return "Incorrect sintaxis";
+                    return "Error: Incorrect sintaxis";
                 }
                 if (t1 == null) {
                     return "Error: Table \"" + from[1].Text + "\" not found";
                 }
+
                 /* Si hay 13 tokens entonces es posible que haya una sentencia de inner join*/
                 if (from.Count == 13) {
                     if (from[2].Type == TSQLTokenType.Keyword && from[3].Type == TSQLTokenType.Keyword && from[5].Type == TSQLTokenType.Keyword) {
@@ -627,15 +631,34 @@ namespace Manager {
                         if (t2 == null) {
                             return "Error: Table \"" + from[1].Text + "\" not found";
                         }
-
                         innerAt1 = t1.FindAttribute(from[8].Text);
                         innerAt2 = t2.FindAttribute(from[12].Text);
                         if (innerAt1 == null || innerAt2 == null) {
-                            return "Attribute \"" + from[8].Text + "/" + from[12].Text + "\" not found";
+                            return "Error: Attribute \"" + from[8].Text + "/" + from[12].Text + "\" not found";
                         }
                         if (innerAt1.Type != innerAt2.Type) {
                             return "Error: can not join on diferent types";
                         }
+                        if (!innerAt1.Name.Equals(innerAt2.Name)) {
+                            return "Error: must compare between same keys";
+                        }
+                        if (dataBase.FindTable(from[6].Text) == null) {
+                            return "Error: table not found";
+                        }
+                        if (dataBase.FindTable(from[10].Text) == null) {
+                            return "Error: table not found";
+                        }
+                        if (select[1].Text == "*") {
+                            return "Error: Can't make inner join with *";
+                        }
+                    }
+                    else {
+                        return "Error: Incorrect sintaxis";
+                    }
+                }
+                else {
+                    if (from.Count != 2) {
+                        return "Error: Incorrect sintaxis";
                     }
                 }
 
@@ -665,28 +688,30 @@ namespace Manager {
                 else {
                     /*Agrega los atributos indicados, si uno no se encuentra, se sale*/
                     //foreach (var token in select) {
-                    for (int i = 0; i < select.Count; i++) {
-                        if (select[i].Type == TSQLTokenType.Identifier && select[i + 1] != null && select[i + 1].Text != ".") {
-                            columns.Add(select[i].Text);
+                    for (int i = 1; i < select.Count; i++) {
+                        if (select[i].Type == TSQLTokenType.Identifier && dataBase.FindTable(select[i].Text) == null) {
                             Attribute at = t1.FindAttribute(select[i].Text);
                             if (at == null) {
-                                return "Error: Attribute \"" + select[i].Text + "\" not found";
-                            }
-                            Attribute att = new Attribute(at);
-                            att.ParentTable = t1;
-                            queryTable.AddAttribute(att);
-                        }
-                    }
-                    if (t2 != null) {
-                        for (int i = 0; i < select.Count; i++) {
-                            if (select[i].Type == TSQLTokenType.Identifier && select[i + 1] != null && select[i + 1].Text != ".") {
-                                columns.Add(select[i].Text);
-                                Attribute at = t2.FindAttribute(select[i].Text);
-                                if (at == null) {
+                                if (t2 != null) {
+                                    at = t2.FindAttribute(select[i].Text);
+                                    if (at == null) {
+                                        return "Error: Attribute \"" + select[i].Text + "\" not found";
+                                    }
+                                    else {
+                                        columns.Add(select[i].Text);
+                                        Attribute att = new Attribute(at);
+                                        att.ParentTable = t2;
+                                        queryTable.AddAttribute(att);
+                                    }
+                                }
+                                else {
                                     return "Error: Attribute \"" + select[i].Text + "\" not found";
                                 }
+                            }
+                            else {
+                                columns.Add(select[i].Text);
                                 Attribute att = new Attribute(at);
-                                att.ParentTable = t2;
+                                att.ParentTable = t1;
                                 queryTable.AddAttribute(att);
                             }
                         }
@@ -705,10 +730,8 @@ namespace Manager {
                     }
 
                     if (!t1.Attributes.Any(x => x.Name == leftSide)) {
-                        return "Attribute " + leftSide + " not found";
+                        return "Error: Attribute " + leftSide + " not found";
                     }
-
-                    
                 }
 
                 min = t2 != null ? Math.Min(t1.PK.Register.Count, t2.PK.Register.Count) : t1.PK.Register.Count;
@@ -749,18 +772,23 @@ namespace Manager {
                                 queryTable.AddRegister(nr);
                             }
                         }
+                        else {
+                            queryTable.AddRegister(nr);
+                        }
                     }
                 }
                 else {
-                    List<object> nr = new List<object>();
                     for (int h = 0; h < innerAt1.Register.Count; h++) {
                         for (int g = 0; g < innerAt2.Register.Count; g++) {
+                            bool valid = false;
                             if (VerifyWhere(innerAt1.Type, "=", innerAt2.Register[g], innerAt1.Register[h])) {
+                                List<object> nr = new List<object>();
                                 foreach (var attribute in queryTable.Attributes) {
                                     bool found = false;
+
                                     foreach (var att in t1.Attributes) {
                                         if (attribute.Name == att.Name) {
-                                            nr.Add(att.Register[g]);
+                                            nr.Add(att.Register[h]);
                                             found = true;
                                             break;
                                         }
@@ -779,7 +807,14 @@ namespace Manager {
                                         continue;
                                     }
                                 }
-                                queryTable.AddRegister(nr);
+                                if (query.Where != null) {
+                                    if (valid) {
+                                        queryTable.AddRegister(nr);
+                                    }
+                                }
+                                else {
+                                    queryTable.AddRegister(nr);
+                                }
                             }
                         }
                     }
@@ -832,7 +867,7 @@ namespace Manager {
                         break;
                 }
             }
-            else {
+            if (type == "Float") {
                 float n1 = Convert.ToSingle(b), n2 = Convert.ToSingle(a);
                 switch (oper) {
                     case "=":
@@ -863,6 +898,18 @@ namespace Manager {
                         break;
                     case "!=":
                         if (n1 != n2) {
+                            return true;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (type == "String") {
+                string s1 = Convert.ToString(b), s2 = Convert.ToString(a);
+                switch (oper) {
+                    case "=":
+                        if (s1.Equals(s2)) {
                             return true;
                         }
                         break;
