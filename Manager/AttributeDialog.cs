@@ -8,6 +8,7 @@ namespace Manager {
         public Attribute Attr { get; set; }
         private List<Attribute> keys;
         private Table currentTable;
+        private int index;
         private bool modificable = false;
 
         public AttributeDialog(string title, List<Attribute> keys, Table currentTable, Attribute attr) {
@@ -57,7 +58,7 @@ namespace Manager {
 
         }
 
-        private void Button1_Click(object sender, EventArgs e) {
+        private void BtnOk_Click(object sender, EventArgs e) {
  
             if (textBox1.Text != "" && numericUpDown1.Value != 0 && comboBox1.SelectedIndex != -1 &&
                     (radioButton1.Checked || radioButton3.Checked || (!radioButton1.Enabled && !radioButton3.Enabled))) {
@@ -79,6 +80,7 @@ namespace Manager {
                     }
                     else {
                         Attr.Key = 2;
+                        Attr.ParentTable = keys[index].ParentTable;
                     }
                 }
 
@@ -107,10 +109,10 @@ namespace Manager {
                 radioButton3.Checked = false;
             }
             else {
-                int index = comboBox2.SelectedIndex - 1;
-                Attr = keys[index];
+                index = comboBox2.SelectedIndex - 1;
+                //Attr = keys[index];
 
-                textBox1.Enabled = false;
+                //textBox1.Enabled = false;
                 comboBox1.Enabled = false;
                 radioButton1.Enabled = false;
                 radioButton3.Enabled = false;

@@ -382,7 +382,6 @@ namespace Manager {
             if (nd.ShowDialog() == DialogResult.OK) {
                 
                 currentTable.AddAttribute(nd.Attr);
-                nd.Attr.ParentTable = currentTable;
                 // Si es atributo primario, se agrega a la tabla
                 if (nd.Attr.Key == 1) {
                     dataBase.PKKeys.Add(nd.Attr);
@@ -436,7 +435,7 @@ namespace Manager {
          * modificar y eliminar atributos
          */
         private void BtnAddRegister_Click(object sender, EventArgs e) {
-
+            ToggleAttribButtons(false, false, false);
             RegisterDialog regDlg = new RegisterDialog(currentTable, null);
 
             if (regDlg.ShowDialog() == DialogResult.OK) {
@@ -520,7 +519,7 @@ namespace Manager {
                     continue;
                 }
                 foreach (var attri in table.Attributes) {
-                    if (attri.Name == currentTable.PK.Name) {
+                    if (attri.ParentTable.Equals(currentTable.PK.ParentTable)) {
                         foreach (var reg in attri.Register) {
                             if (reg.Equals(currentTable.PK.Register[index])) {
                                 used = true;
@@ -639,7 +638,10 @@ namespace Manager {
                         if (innerAt1.Type != innerAt2.Type) {
                             return "Error: can not join on diferent types";
                         }
-                        if (!innerAt1.Name.Equals(innerAt2.Name)) {
+                        //if (!innerAt1.Name.Equals(innerAt2.Name)) {
+                        //    return "Error: must compare between same keys";
+                        //}
+                        if (!innerAt1.ParentTable.Name.Equals(innerAt2.ParentTable.Name)) {
                             return "Error: must compare between same keys";
                         }
                         if (dataBase.FindTable(from[6].Text) == null) {
@@ -665,24 +667,11 @@ namespace Manager {
                 /* SELECT: 
                  * Agrega todos los atribuutos de la tabla */
                 if (select[1].Type == TSQLTokenType.Operator) {
-
                     foreach (var attribu in t1.Attributes) {
                         columns.Add(attribu.Name);
                         Attribute att = new Attribute(attribu);
                         att.ParentTable = t1;
                         queryTable.AddAttribute(att);
-                    }
-                    /* Si tiene inner join, agrega los demás atributos, excepto la lalve primaria que ya se encuentra*/
-                    if (t2 != null) {
-                        foreach (var attribu in t2.Attributes) {
-                            Attribute att = new Attribute(attribu);
-                            att.ParentTable = t2;
-
-                            if (att.Name != innerAt2.Name) {
-                                columns.Add(attribu.Name);
-                                queryTable.AddAttribute(att);
-                            }
-                        }
                     }
                 }
                 else {
@@ -721,29 +710,34 @@ namespace Manager {
                 /* Verifica que la oracion tenga un where, si lo tiene, generaliza la condicion y 
                  la separa en el lado izquierdo, derecho y operador*/
                 if (query.Where != null) {
-                    leftSide = from[1].Text;
-                    rightSide = from[3].Text;
-                    oper = from[2].Text;
+                    leftSide = query.Where.Tokens[1].Text;
+                    rightSide = query.Where.Tokens[3].Text;
+                    oper = query.Where.Tokens[2].Text;
 
+                    //Attribute at = t1.Attributes.Any(x => x.Name == leftSide);
+                    Attribute at = t1.Attributes.Find(x => x.Name == leftSide);
                     if (leftSide == "" || rightSide == null || oper == "") {
                         return "Error: Incorrect query syntaxis on WHERE";
                     }
 
-                    if (!t1.Attributes.Any(x => x.Name == leftSide)) {
+                    if (at == null) {
                         return "Error: Attribute " + leftSide + " not found";
+                    }
+
+                    if (at.Type == "String") {
+                        return "Error: can't do WHERE on string type";
                     }
                 }
 
                 min = t2 != null ? Math.Min(t1.PK.Register.Count, t2.PK.Register.Count) : t1.PK.Register.Count;
                 max = t2 != null ? Math.Max(t1.PK.Register.Count, t2.PK.Register.Count) : t1.PK.Register.Count;
 
-
                 /* Llena la tabla de la sentencia con los valores de los registros de la otra tabla, si tiene where, checa la condicion*/
                 if (t2 == null) {
                     for (int i = 0; i < min; i++) {
                         List<object> r = t1.GetRegisterAt(i);
                         List<object> nr = new List<object>();
-                        bool valid = false;
+                        int valid = 0;
                         /* Agrega */
                         foreach (var atDst in queryTable.Attributes) {
                             for (int k = 0; k < t1.Attributes.Count; k++) {
@@ -752,7 +746,7 @@ namespace Manager {
                                     /* Si tiene where abntes verifica que el registro cumpla la condicion para insertarlo*/
                                     if (query.Where != null) {
                                         int h;
-                                        for (h = 0; h < t1.Attributes.Count; k++) {
+                                        for (h = 0; h < t1.Attributes.Count; h++) {
                                             if (t1.Attributes[h].Name == leftSide) {
                                                 object tReg = t1.Attributes[h].Register[i];
                                                 valid = VerifyWhere(t1.Attributes[h].Type, oper, rightSide, tReg);
@@ -768,7 +762,7 @@ namespace Manager {
                         }
 
                         if (query.Where != null) {
-                            if (valid) {
+                            if (valid == 1) {
                                 queryTable.AddRegister(nr);
                             }
                         }
@@ -781,7 +775,8 @@ namespace Manager {
                     for (int h = 0; h < innerAt1.Register.Count; h++) {
                         for (int g = 0; g < innerAt2.Register.Count; g++) {
                             bool valid = false;
-                            if (VerifyWhere(innerAt1.Type, "=", innerAt2.Register[g], innerAt1.Register[h])) {
+                            int resul = VerifyWhere(innerAt1.Type, "=", innerAt2.Register[g], innerAt1.Register[h]);
+                            if (resul == 1) {
                                 List<object> nr = new List<object>();
                                 foreach (var attribute in queryTable.Attributes) {
                                     bool found = false;
@@ -816,6 +811,11 @@ namespace Manager {
                                     queryTable.AddRegister(nr);
                                 }
                             }
+                            else {
+                                if (resul == -1) {
+                                    return "Error: can't compare with string";
+                                }
+                            }
                         }
                     }
                 }
@@ -828,39 +828,45 @@ namespace Manager {
         
         /* Verifica la condición en el where, recibe los datos del lado derecho y el registro, y hace
          el cast de acuerdo al tipo de elemento */
-        private bool VerifyWhere(string type, string oper, object a, object b) {
+        private int VerifyWhere(string type, string oper, object a, object b) {
             if (type == "Int") {
-                int n1 = Convert.ToInt32(b), n2 = Convert.ToInt32(a);
-                
+                int n1, n2;
+                try {
+                    n1 = Convert.ToInt32(b);
+                    n2 = Convert.ToInt32(a);
+                }
+                catch {
+                    return -1;
+                }
                 switch (oper) {
                     case "=":
                         if (n1 == n2) {
-                            return true;
+                            return 1;
                         }
                         break;
                     case "<":
                         if (n1 > n2) {
-                            return true;
+                            return 1;
                         }
                         break;
                     case ">":
                         if (n1 > n2) {
-                            return true;
+                            return 1;
                         }
                         break;
                     case ">=":
                         if (n1 >= n2) {
-                            return true;
+                            return 1;
                         }
                         break;
                     case "<=":
                         if (n1 <= n2) {
-                            return true;
+                            return 1;
                         }
                         break;
                     case "!=":
                         if (n1 != n2) {
-                            return true;
+                            return 1;
                         }
                         break;
                     default:
@@ -872,33 +878,33 @@ namespace Manager {
                 switch (oper) {
                     case "=":
                         if (n1 == n2) {
-                            return true;
+                            return 1;
                         }
                         break;
                     case "<":
                         if (n1 < n2) {
-                            return true;
+                            return 1;
                         }
                         break;
                     case ">":
                         
                         if (n1 > n2) {
-                            return true;
+                            return 1;
                         }
                         break;
                     case ">=":
                         if (n1 >= n2) {
-                            return true;
+                            return 1;
                         }
                         break;
                     case "<=":
                         if (n1 <= n2) {
-                            return true;
+                            return 1;
                         }
                         break;
                     case "!=":
                         if (n1 != n2) {
-                            return true;
+                            return 1;
                         }
                         break;
                     default:
@@ -910,14 +916,14 @@ namespace Manager {
                 switch (oper) {
                     case "=":
                         if (s1.Equals(s2)) {
-                            return true;
+                            return 1;
                         }
                         break;
                     default:
                         break;
                 }
             }
-            return false;
+            return 0;
         }
 
         private void TextBoxQuery_KeyDown(object sender, KeyEventArgs e) {

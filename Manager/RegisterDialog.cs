@@ -41,12 +41,14 @@ namespace Manager {
 
 
 				if (attribute.Type == "Int" || attribute.Type == "Float") {
-					NumericUpDown nBox = new NumericUpDown {
-						Location = new Point(xPos + 90, yPos),
-						Width = 100,
-						Name = attribute.Name,
-						Maximum = 2147483647,
+                    NumericUpDown nBox = new NumericUpDown {
+                        Location = new Point(xPos + 90, yPos),
+                        Width = 100,
+                        Name = attribute.Name,
+                        Maximum = 2147483647,
+                        
 					};
+                    nBox.Controls[1].Text = "";
 					if (register != null) {
 						if (attribute.Type == "Int") {
 							nBox.Value = Convert.ToInt32(register[i]);
@@ -79,7 +81,7 @@ namespace Manager {
 
 		}
 
-		private void Button1_Click(object sender, EventArgs e) {
+		private void BtnOk_Click(object sender, EventArgs e) {
 			for (int i = 0; i < Table.Attributes.Count; i++) {
 				Control ctrl = panel1.Controls[Table.Attributes[i].Name];
 				switch (Table.Attributes[i].Type) {
@@ -105,6 +107,7 @@ namespace Manager {
                     PKValue = Register[i];
                 }
             }
+
 
 			DialogResult = DialogResult.OK;
 			Close();

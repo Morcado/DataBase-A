@@ -69,7 +69,7 @@ namespace Manager {
             //}
             foreach (var table in Tables) {
                 foreach (var attrib in table.Attributes) {
-                    if (attrib.Name == pKAtribute.Name && attrib.Key == 1) {
+                    if (attrib.ParentTable.Name.Equals(pKAtribute.ParentTable.Name) && attrib.Key == 1) {
                         foreach (var reg in attrib.Register) {
                             if (register.Equals(reg)) {
                                 return true;
