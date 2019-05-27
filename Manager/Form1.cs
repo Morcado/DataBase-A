@@ -211,11 +211,14 @@ namespace Manager {
 
                 treeView1.Nodes.Clear();
                 treeView1.Enabled = false;
+                currentTable = null;
+                dataBase = null;
 
                 // Desactiva todos los botones
                 ToggleTableButtons(false, false, false, false);
                 ToggleAttribButtons(false, false, false);
                 ToggleDBButtons(false);
+                dataGridView1.Columns.Clear();
             }
         }
 
@@ -441,8 +444,14 @@ namespace Manager {
             if (regDlg.ShowDialog() == DialogResult.OK) {
                 if (!currentTable.PK.Register.Contains(regDlg.PKValue)) {
                     if (currentTable.HasFK()) {
-                        if (dataBase.RegisterExists(regDlg.FKValue, regDlg.FKAtribute)) {
-
+                        bool insert = true;
+                        for (int i  = 0; i < regDlg.FKAtribute.Count; i++) { 
+                        //foreach (var fkattr in regDlg.FKAtribute) {
+                            if (!dataBase.RegisterExists(regDlg.FKValue[i], regDlg.FKAtribute[i])) {
+                                insert = false;
+                            }
+                        }
+                        if (insert) {
                             currentTable.AddRegister(regDlg.Register);
                             ShowTableInfo(currentTable, dataGridView1);
                             SaveTable(currentTable);
@@ -452,6 +461,8 @@ namespace Manager {
                         else {
                             MessageBox.Show("Couldn't insert register. PK value doesn't exists");
                         }
+                       
+                        
                     }
                     else {
                         currentTable.AddRegister(regDlg.Register);
@@ -478,7 +489,7 @@ namespace Manager {
                     ToggleAttribButtons(false, true, false);
                 }
                 else {
-                    ToggleAttribButtons(true, true, false);
+                    ToggleAttribButtons(true, true, true);
                 }  
             }
             else {
@@ -502,7 +513,7 @@ namespace Manager {
          * activar los botones de agregar, eliminar y modificar entrada.*/
         private void DataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
             // Si hay entradas y no es la última fila del  datagrid view (la ultima siempre esta vacia)
-            if (currentTable.HasRegisters() && e.RowIndex != dataGridView1.Rows.Count - 1) {
+            if (currentTable.HasRegisters() && e.RowIndex != dataGridView1.Rows.Count) {
                 ToggleRegisterButtons(true, true, true);
             }
             else {
@@ -519,7 +530,7 @@ namespace Manager {
                     continue;
                 }
                 foreach (var attri in table.Attributes) {
-                    if (attri.ParentTable.Equals(currentTable.PK.ParentTable)) {
+                    if (attri.ParentTable.Name.Equals(currentTable.PK.ParentTable.Name)) {
                         foreach (var reg in attri.Register) {
                             if (reg.Equals(currentTable.PK.Register[index])) {
                                 used = true;
@@ -537,7 +548,7 @@ namespace Manager {
         private void BtnDeleteRegister_Click(object sender, EventArgs e) {
 
             bool resp = CheckTablesForRegistry(dataGridView1.CurrentCell.RowIndex);
-            if (resp) {
+            if (!resp) {
                 if (MessageBox.Show("Are you sure you want to delete register?", "Delete register", MessageBoxButtons.OKCancel) == DialogResult.OK) {
                     // Obtiene el indice de la fila seleccionada, el cual es el mismo indice de
                     // la base de datos
@@ -563,15 +574,30 @@ namespace Manager {
          * datos de esa fila, y despues se realiza la operacion de eliminar y agregar en la tabla.*/
         private void BtnModifyRegister_Click(object sender, EventArgs e) {
             bool resp = CheckTablesForRegistry(dataGridView1.CurrentCell.RowIndex);
-            if (resp) {
+            if (!resp) {
                 List<object> entry = currentTable.GetRegisterAt(dataGridView1.CurrentCell.RowIndex);
 
                 // Carga el diálogo con los valores del registro
                 RegisterDialog regDlg = new RegisterDialog(currentTable, entry);
 
                 if (regDlg.ShowDialog() == DialogResult.OK) {
-                    currentTable.DeleteRegister(dataGridView1.CurrentCell.RowIndex);
-                    currentTable.AddRegister(regDlg.Register);
+                    if (currentTable.HasFK()) {
+                        foreach (var fkattr in regDlg.FKAtribute) {
+                            if (dataBase.RegisterExists(regDlg.FKValue, fkattr)) {
+
+                                currentTable.DeleteRegister(dataGridView1.CurrentCell.RowIndex);
+                                currentTable.AddRegister(regDlg.Register);
+                            }
+                            else {
+                                MessageBox.Show("Cannot modify, PK value doesn't exist");
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        currentTable.DeleteRegister(dataGridView1.CurrentCell.RowIndex);
+                        currentTable.AddRegister(regDlg.Register);
+                    }
                 }
                 ShowTableInfo(currentTable, dataGridView1);
                 SaveTable(currentTable);
@@ -638,9 +664,6 @@ namespace Manager {
                         if (innerAt1.Type != innerAt2.Type) {
                             return "Error: can not join on diferent types";
                         }
-                        //if (!innerAt1.Name.Equals(innerAt2.Name)) {
-                        //    return "Error: must compare between same keys";
-                        //}
                         if (!innerAt1.ParentTable.Name.Equals(innerAt2.ParentTable.Name)) {
                             return "Error: must compare between same keys";
                         }
@@ -710,10 +733,20 @@ namespace Manager {
                 /* Verifica que la oracion tenga un where, si lo tiene, generaliza la condicion y 
                  la separa en el lado izquierdo, derecho y operador*/
                 if (query.Where != null) {
+                    if (query.Where.Tokens[3].Type == TSQLTokenType.StringLiteral) {
+                        return "Error: can't compare with string";
+                    }
+
                     leftSide = query.Where.Tokens[1].Text;
                     rightSide = query.Where.Tokens[3].Text;
                     oper = query.Where.Tokens[2].Text;
 
+                    try {
+                        int dumm = Convert.ToInt32(rightSide);
+                    }
+                    catch {
+                        return "Error: string compared";
+                    }
                     //Attribute at = t1.Attributes.Any(x => x.Name == leftSide);
                     Attribute at = t1.Attributes.Find(x => x.Name == leftSide);
                     if (leftSide == "" || rightSide == null || oper == "") {

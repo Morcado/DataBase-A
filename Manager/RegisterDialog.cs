@@ -6,8 +6,8 @@ using System.Windows.Forms;
 namespace Manager {
 	public partial class RegisterDialog : Form {
 		public Table Table { get; set; }
-        public Attribute FKAtribute;
-        public object FKValue;
+        public List<Attribute> FKAtribute;
+        public List<object> FKValue;
         public object PKVALUE { get; set; }
         public List<object> Register { get; set; }
         public object PKValue { get; internal set; }
@@ -19,23 +19,23 @@ namespace Manager {
 			panel1.HorizontalScroll.Visible = false;
 			panel1.HorizontalScroll.Maximum = 0;
 			panel1.AutoScroll = true;
-            FKAtribute = null;
+            FKValue = new List<object>();
+            FKAtribute = new List<Attribute>();
 			Table = table;
 			Register = new List<object>();
-			int xPos = 20, yPos = 10, i = 0;
+			int xPos = 10, yPos = 10, i = 0;
 
-			//for (int i = 0; i < 20; i++) {
 			foreach (Attribute attribute in table.Attributes) {
 
                 Label label = new Label {
                     Text = attribute.Name,
-                    Width = 50,
+                    Width = 70,
                     Location = new Point(xPos, yPos + 5),
                     Name = "_" + attribute.Name
 				};
                 if (attribute.Key == 2) {
                     label.BorderStyle = BorderStyle.FixedSingle;
-                    FKAtribute = attribute;
+                    FKAtribute.Add(attribute);
                 }
 				panel1.Controls.Add(label);
 
@@ -101,7 +101,8 @@ namespace Manager {
                         break;
 				}
                 if (Table.Attributes[i].Key == 2) {
-                    FKValue = Register[i];
+                    FKValue.Add(Register[i]);
+
                 }
                 if (Table.Attributes[i].Key == 1) {
                     PKValue = Register[i];

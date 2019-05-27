@@ -7,6 +7,7 @@ namespace Manager {
     public partial class AttributeDialog : Form {
         public Attribute Attr { get; set; }
         private List<Attribute> keys;
+        private Attribute parentPK;
         private Table currentTable;
         private int index;
         private bool modificable = false;
@@ -30,6 +31,8 @@ namespace Manager {
                 comboBox2.Text = attr.Name;
                 numericUpDown1.Value = attr.Size;
                 comboBox1.Text = attr.Type;
+
+
 
                 if (currentTable.HasPK) {
                     if (attr.Key == 1) {
@@ -80,7 +83,7 @@ namespace Manager {
                     }
                     else {
                         Attr.Key = 2;
-                        Attr.ParentTable = keys[index].ParentTable;
+                        Attr.ParentTable = parentPK.ParentTable;
                     }
                 }
 
@@ -110,18 +113,22 @@ namespace Manager {
             }
             else {
                 index = comboBox2.SelectedIndex - 1;
-                //Attr = keys[index];
 
-                //textBox1.Enabled = false;
+                parentPK = keys.Find(x => x.Name == comboBox2.Text.Substring(comboBox2.Text.IndexOf('>') + 1));
+
                 comboBox1.Enabled = false;
                 radioButton1.Enabled = false;
                 radioButton3.Enabled = false;
                 radioButton1.Checked = false;
                 radioButton3.Checked = false;
 
-                textBox1.Text = keys[index].Name;
-                comboBox1.Text = keys[index].Type;
-                numericUpDown1.Value = Convert.ToInt32(keys[index].Size);
+                //textBox1.Text = keys[index].Name;
+                //comboBox1.Text = keys[index].Type;
+                //numericUpDown1.Value = Convert.ToInt32(keys[index].Size);
+
+                textBox1.Text = parentPK.Name;
+                comboBox1.Text = parentPK.Type;
+                numericUpDown1.Value = Convert.ToInt32(parentPK.Size);
             }
         }
 
