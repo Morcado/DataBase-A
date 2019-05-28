@@ -396,7 +396,7 @@
             // 
             this.btnAddEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnAddEntry.Enabled = false;
-            this.btnAddEntry.Location = new System.Drawing.Point(279, 353);
+            this.btnAddEntry.Location = new System.Drawing.Point(280, 353);
             this.btnAddEntry.Name = "btnAddEntry";
             this.btnAddEntry.Size = new System.Drawing.Size(92, 23);
             this.btnAddEntry.TabIndex = 14;
@@ -409,7 +409,7 @@
             this.groupBox1.Controls.Add(this.btnRenameTable);
             this.groupBox1.Controls.Add(this.btnNewTable);
             this.groupBox1.Controls.Add(this.btnDeleteTable);
-            this.groupBox1.Location = new System.Drawing.Point(151, 37);
+            this.groupBox1.Location = new System.Drawing.Point(151, 51);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(123, 132);
             this.groupBox1.TabIndex = 15;
@@ -431,7 +431,7 @@
             // 
             this.btnDeleteEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDeleteEntry.Enabled = false;
-            this.btnDeleteEntry.Location = new System.Drawing.Point(377, 353);
+            this.btnDeleteEntry.Location = new System.Drawing.Point(378, 353);
             this.btnDeleteEntry.Name = "btnDeleteEntry";
             this.btnDeleteEntry.Size = new System.Drawing.Size(92, 23);
             this.btnDeleteEntry.TabIndex = 17;
@@ -443,7 +443,7 @@
             // 
             this.btnModifyEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnModifyEntry.Enabled = false;
-            this.btnModifyEntry.Location = new System.Drawing.Point(475, 353);
+            this.btnModifyEntry.Location = new System.Drawing.Point(476, 353);
             this.btnModifyEntry.Name = "btnModifyEntry";
             this.btnModifyEntry.Size = new System.Drawing.Size(92, 23);
             this.btnModifyEntry.TabIndex = 18;
@@ -455,7 +455,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(239, 385);
+            this.label3.Location = new System.Drawing.Point(239, 389);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 19;
@@ -467,9 +467,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxQuery.Enabled = false;
             this.textBoxQuery.Font = new System.Drawing.Font("Franklin Gothic Book", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxQuery.Location = new System.Drawing.Point(280, 385);
+            this.textBoxQuery.Location = new System.Drawing.Point(279, 385);
             this.textBoxQuery.Name = "textBoxQuery";
-            this.textBoxQuery.Size = new System.Drawing.Size(502, 21);
+            this.textBoxQuery.Size = new System.Drawing.Size(539, 21);
             this.textBoxQuery.TabIndex = 20;
             this.textBoxQuery.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxQuery_KeyDown);
             // 
@@ -477,9 +477,9 @@
             // 
             this.btnExecute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExecute.Enabled = false;
-            this.btnExecute.Location = new System.Drawing.Point(788, 385);
+            this.btnExecute.Location = new System.Drawing.Point(824, 383);
             this.btnExecute.Name = "btnExecute";
-            this.btnExecute.Size = new System.Drawing.Size(75, 23);
+            this.btnExecute.Size = new System.Drawing.Size(57, 23);
             this.btnExecute.TabIndex = 21;
             this.btnExecute.Text = "Execute";
             this.btnExecute.UseVisualStyleBackColor = true;
@@ -488,9 +488,9 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(869, 385);
+            this.button1.Location = new System.Drawing.Point(887, 383);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(57, 23);
             this.button1.TabIndex = 22;
             this.button1.Text = "Clear";
             this.button1.UseVisualStyleBackColor = true;

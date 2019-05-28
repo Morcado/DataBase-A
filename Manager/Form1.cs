@@ -445,10 +445,11 @@ namespace Manager {
                 if (!currentTable.PK.Register.Contains(regDlg.PKValue)) {
                     if (currentTable.HasFK()) {
                         bool insert = true;
-                        for (int i  = 0; i < regDlg.FKAtribute.Count; i++) { 
-                        //foreach (var fkattr in regDlg.FKAtribute) {
+                        int i = 0;
+                        for (i = 0; i < regDlg.FKAtribute.Count; i++) { 
                             if (!dataBase.RegisterExists(regDlg.FKValue[i], regDlg.FKAtribute[i])) {
                                 insert = false;
+                                break;
                             }
                         }
                         if (insert) {
@@ -459,10 +460,9 @@ namespace Manager {
                             ToggleAttribButtons(false, false, false);
                         }
                         else {
-                            MessageBox.Show("Couldn't insert register. PK value doesn't exists");
+                            MessageBox.Show("Couldn't insert register. The " + regDlg.FKAtribute[i].Name + " with value \"" + regDlg.FKValue[i] +  "\" doesn't exists");
                         }
-                       
-                        
+                                      
                     }
                     else {
                         currentTable.AddRegister(regDlg.Register);
@@ -473,7 +473,7 @@ namespace Manager {
                     }
                 }
                 else {
-                    MessageBox.Show("Couldn't add register. PK already exists");
+                    MessageBox.Show("Couldn't add register. The " + currentTable.PK.Name + " with value \"" + regDlg.PKValue.ToString()  + "\" already exists");
                 }
             }
         }
@@ -582,17 +582,22 @@ namespace Manager {
 
                 if (regDlg.ShowDialog() == DialogResult.OK) {
                     if (currentTable.HasFK()) {
-                        foreach (var fkattr in regDlg.FKAtribute) {
-                            if (dataBase.RegisterExists(regDlg.FKValue, fkattr)) {
-
-                                currentTable.DeleteRegister(dataGridView1.CurrentCell.RowIndex);
-                                currentTable.AddRegister(regDlg.Register);
-                            }
-                            else {
-                                MessageBox.Show("Cannot modify, PK value doesn't exist");
+                        bool correct = true;
+                        int i;
+                        for (i = 0; i < regDlg.FKAtribute.Count; i++) { 
+                            if (!dataBase.RegisterExists(regDlg.FKValue[i], regDlg.FKAtribute[i])) {
+                                correct = false;
                                 break;
                             }
                         }
+                        if (correct) {
+                            currentTable.DeleteRegister(dataGridView1.CurrentCell.RowIndex);
+                            currentTable.AddRegister(regDlg.Register);
+                        }
+                        else {
+                            MessageBox.Show("Cannot modify, The " + regDlg.FKAtribute[i].Name + " with value " + regDlg.FKValue[i] + " doesn't exist");
+                        }
+
                     }
                     else {
                         currentTable.DeleteRegister(dataGridView1.CurrentCell.RowIndex);
@@ -610,7 +615,7 @@ namespace Manager {
         private void BtnExecute_Click(object sender, EventArgs e) {
             string res = ExecuteQuery();
             if (res == "") {
-                QueryData queryData = new QueryData(queryTable);
+                QueryData queryData = new QueryData(queryTable, textBoxQuery.Text);
                 queryData.Show();
             }
             else {
@@ -638,7 +643,7 @@ namespace Manager {
                 object rightSide = null;
                 string oper = "";
                 int min = 0, max = 0;
-                queryTable = new Table("query1");
+                queryTable = new Table("Query");
 
                 /* Si la tabla indicada no se encuentra, se sale*/
 

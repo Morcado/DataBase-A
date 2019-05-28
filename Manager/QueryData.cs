@@ -10,14 +10,16 @@ using System.Windows.Forms;
 
 namespace Manager {
     public partial class QueryData : Form {
-        public QueryData(Table table) {
+        public QueryData(Table table, string text) {
             InitializeComponent();
+            Text = text;
             // Agrega las columnas de los atributos al datagrid
             foreach (Attribute attribute in table.Attributes) {
                 DataGridViewTextBoxColumn dgc = new DataGridViewTextBoxColumn {
                     Name = attribute.Name,
                     HeaderText = attribute.ParentTable.Name + "." + attribute.Name,
-                    SortMode = DataGridViewColumnSortMode.Programmatic
+                    SortMode = DataGridViewColumnSortMode.Programmatic,
+                    Width = 120
                 };
                 dataGridView1.Columns.Add(dgc);
             }

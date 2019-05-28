@@ -28,10 +28,11 @@ namespace Manager {
 
             if (attr != null) {
                 modificable = true;
-                comboBox2.Text = attr.Name;
+                textBox1.Text = attr.Name;
                 numericUpDown1.Value = attr.Size;
                 comboBox1.Text = attr.Type;
 
+                parentPK = attr;
 
 
                 if (currentTable.HasPK) {
@@ -39,8 +40,18 @@ namespace Manager {
                         radioButton1.Checked = true;
                     }
                     else {
-                        radioButton3.Checked = true;
-                        radioButton1.Enabled = false;
+                        if (attr.Key == 2) {
+                            radioButton1.Checked = false;
+                            radioButton3.Checked = false;
+                            radioButton1.Enabled = false;
+                            radioButton3.Enabled = false;
+                            comboBox1.Enabled = false;
+                            numericUpDown1.Enabled = false;
+                        }
+                        else {
+                            radioButton3.Checked = true;
+                            radioButton1.Enabled = false;
+                        }
                     }
                 }
                 else {
@@ -48,7 +59,17 @@ namespace Manager {
                         radioButton1.Checked = true;
                     }
                     else {
-                        radioButton3.Checked = true;
+                        if (attr.Key == 2) {
+                            radioButton1.Checked = false;
+                            radioButton3.Checked = false;
+                            radioButton1.Enabled = false;
+                            radioButton3.Enabled = false;
+                            comboBox1.Enabled = false;
+                            numericUpDown1.Enabled = false;
+                        }
+                        else {
+                            radioButton3.Checked = true;
+                        }
                     }
                 }
             }
