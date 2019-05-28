@@ -268,9 +268,11 @@
             // 
             // treeView1
             // 
+            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.treeView1.Location = new System.Drawing.Point(12, 51);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(133, 285);
+            this.treeView1.Size = new System.Drawing.Size(133, 356);
             this.treeView1.TabIndex = 1;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
             this.treeView1.Leave += new System.EventHandler(this.TreeView1_Leave);
@@ -396,7 +398,7 @@
             // 
             this.btnAddEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnAddEntry.Enabled = false;
-            this.btnAddEntry.Location = new System.Drawing.Point(280, 353);
+            this.btnAddEntry.Location = new System.Drawing.Point(279, 355);
             this.btnAddEntry.Name = "btnAddEntry";
             this.btnAddEntry.Size = new System.Drawing.Size(92, 23);
             this.btnAddEntry.TabIndex = 14;
@@ -431,7 +433,7 @@
             // 
             this.btnDeleteEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDeleteEntry.Enabled = false;
-            this.btnDeleteEntry.Location = new System.Drawing.Point(378, 353);
+            this.btnDeleteEntry.Location = new System.Drawing.Point(377, 355);
             this.btnDeleteEntry.Name = "btnDeleteEntry";
             this.btnDeleteEntry.Size = new System.Drawing.Size(92, 23);
             this.btnDeleteEntry.TabIndex = 17;
@@ -443,7 +445,7 @@
             // 
             this.btnModifyEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnModifyEntry.Enabled = false;
-            this.btnModifyEntry.Location = new System.Drawing.Point(476, 353);
+            this.btnModifyEntry.Location = new System.Drawing.Point(475, 355);
             this.btnModifyEntry.Name = "btnModifyEntry";
             this.btnModifyEntry.Size = new System.Drawing.Size(92, 23);
             this.btnModifyEntry.TabIndex = 18;
@@ -455,7 +457,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(239, 389);
+            this.label3.Location = new System.Drawing.Point(239, 388);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 19;
@@ -467,9 +469,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxQuery.Enabled = false;
             this.textBoxQuery.Font = new System.Drawing.Font("Franklin Gothic Book", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxQuery.Location = new System.Drawing.Point(279, 385);
+            this.textBoxQuery.Location = new System.Drawing.Point(280, 385);
             this.textBoxQuery.Name = "textBoxQuery";
-            this.textBoxQuery.Size = new System.Drawing.Size(539, 21);
+            this.textBoxQuery.Size = new System.Drawing.Size(538, 21);
             this.textBoxQuery.TabIndex = 20;
             this.textBoxQuery.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxQuery_KeyDown);
             // 
@@ -477,7 +479,7 @@
             // 
             this.btnExecute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExecute.Enabled = false;
-            this.btnExecute.Location = new System.Drawing.Point(824, 383);
+            this.btnExecute.Location = new System.Drawing.Point(824, 384);
             this.btnExecute.Name = "btnExecute";
             this.btnExecute.Size = new System.Drawing.Size(57, 23);
             this.btnExecute.TabIndex = 21;
@@ -488,7 +490,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(887, 383);
+            this.button1.Location = new System.Drawing.Point(887, 384);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(57, 23);
             this.button1.TabIndex = 22;
@@ -518,7 +520,9 @@
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(972, 482);
             this.Name = "Form1";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Data Base Management System";
             this.menuStrip1.ResumeLayout(false);

@@ -21,6 +21,29 @@ namespace Manager {
             dataBase = null;
             InitializeComponent();
             currentTable = null;
+
+            ToolStripStatusLabel statusPanel = new ToolStripStatusLabel();
+            ToolStripStatusLabel datetimePanel = new ToolStripStatusLabel();
+
+            // Set first panel properties and add to StatusBar  
+            
+            statusPanel.ToolTipText = "Location of database: ";
+            statusPanel.Spring = true;
+            statusPanel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            statusPanel.BorderStyle = Border3DStyle.Sunken;
+            statusStrip1.Items.Add(statusPanel);
+
+            // Set second panel properties and add to StatusBar  
+
+            datetimePanel.ToolTipText = "DateTime: " + System.DateTime.Today.ToString();
+            datetimePanel.RightToLeft = RightToLeft;
+            datetimePanel.Text = System.DateTime.Today.ToLongDateString();
+            datetimePanel.Spring = true;
+            datetimePanel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            datetimePanel.BorderStyle = Border3DStyle.Sunken;
+            statusStrip1.Items.Add(datetimePanel);
+
+
         }
         #region Utilities
 
@@ -122,8 +145,10 @@ namespace Manager {
                     btnNewTable.Enabled = true;
                     ToggleTableButtons(true, false, false, true);
                     ToggleDBButtons(true);
+                    statusStrip1.Items[0].Text = dataBase.Path;
                 }
             }
+            
         }
 
         /*Abrir una nueva base de datos. Se selecciona la carpeta que contenga la base de datos y
@@ -155,6 +180,7 @@ namespace Manager {
                         }
                     }
                     dataBase.AddTable(t);
+
                     // Carga toda la información de los archivos de las tablas y almacena en dataBase
                     //LoadFile(Path.GetFileName(file));
                 }
@@ -169,7 +195,9 @@ namespace Manager {
                 // Activa algunos botones
                 ToggleTableButtons(true, false, false, true);
                 ToggleDBButtons(true);
+                statusStrip1.Items[0].Text = dataBase.Path;
             }
+
         }
 
         /*Opción del menu que permite cambiar el nombre de la base de datos. Se muestra un dialogo de confirmación
@@ -180,8 +208,10 @@ namespace Manager {
                 if (Directory.Exists(dataBase.Path)) { // Verifica que exite el directorio
                     // Se mueve la carpeta en la misma dirección con un nuevo nombre
                     Directory.Move(dataBase.Path, dataBase.Path.Replace("\\" + dataBase.Name, "") + "\\" + nt.NewName);
+                    dataBase.Path = dataBase.Path.Replace("\\" + dataBase.Name, "") + "\\" + nt.NewName;
                 }
                 label1.Text = nt.NewName;
+                statusStrip1.Items[0].Text = dataBase.Path;
             }
         }
 
@@ -198,6 +228,7 @@ namespace Manager {
             ToggleAttribButtons(false, false, false);
             ToggleDBButtons(false);
             ToggleRegisterButtons(false, false, false);
+            statusStrip1.Items[0].Text = "";
         }
 
         /* Elimina la base de datos elegida. Se comporta de la misma manera que cerrar, pero las variables
@@ -219,6 +250,7 @@ namespace Manager {
                 ToggleAttribButtons(false, false, false);
                 ToggleDBButtons(false);
                 dataGridView1.Columns.Clear();
+                statusStrip1.Items[0].Text = "";
             }
         }
 
@@ -363,6 +395,9 @@ namespace Manager {
                     HeaderText = attribute.Name,
                     SortMode = DataGridViewColumnSortMode.Programmatic
                 };
+                if (attribute.Key == 1) {
+                    dgc.HeaderCell.Style.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold|System.Drawing.FontStyle.Underline);
+                }
                 data.Columns.Add(dgc);
             }
 
@@ -561,6 +596,7 @@ namespace Manager {
                     // Si no quedan mas entradas, se desactiva el boton de eliminar y modificar
                     if (!currentTable.HasRegisters()) {
                         ToggleRegisterButtons(true, false, false);
+                        ToggleAttribButtons(true, false, false);
                     }
                 }
             }
@@ -664,7 +700,16 @@ namespace Manager {
                         innerAt1 = t1.FindAttribute(from[8].Text);
                         innerAt2 = t2.FindAttribute(from[12].Text);
                         if (innerAt1 == null || innerAt2 == null) {
-                            return "Error: Attribute \"" + from[8].Text + "/" + from[12].Text + "\" not found";
+                            innerAt1 = t2.FindAttribute(from[8].Text);
+                            innerAt2 = t1.FindAttribute(from[12].Text);
+                            if (innerAt1 == null || innerAt2 == null) {
+                                if (innerAt1 == null) {
+                                    return "Error: Attribute \"" + from[8].Text + "\" not found";
+                                }
+                                if (innerAt2 == null) {
+                                    return "Error: Attribute \"" + from[12].Text + "\" not found";
+                                }
+                            }
                         }
                         if (innerAt1.Type != innerAt2.Type) {
                             return "Error: can not join on diferent types";
