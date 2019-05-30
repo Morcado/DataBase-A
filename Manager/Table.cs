@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TSQL.Tokens;
 
 namespace Manager {
     [Serializable]
@@ -20,6 +21,7 @@ namespace Manager {
 
         public void AddAttribute(Attribute attr) {
             Attributes.Add(attr);
+
 
             if (attr.Key == 1) {
                 HasPK = true;

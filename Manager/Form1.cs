@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TSQL;
 using TSQL.Statements;
@@ -173,6 +172,9 @@ namespace Manager {
                 foreach (string file in files) {
                     treeView1.Nodes.Add(Path.GetFileNameWithoutExtension(file));
                     Table t = LoadTable(Path.GetFileNameWithoutExtension(file));
+                    if (t == null) {
+                        MessageBox.Show("Unable to open database. Check that is a database");
+                    }
 
                     foreach (Attribute attribute in t.Attributes) {
                         if (attribute.Key == 1) {
@@ -277,6 +279,7 @@ namespace Manager {
                 SaveTable(currentTable);
                 currentTable = null;
             }
+          
         }
 
         /*Elimina una tabla de la base de datos. Actualiza el tree view y elimina los datos de la tabla*/
@@ -659,44 +662,56 @@ namespace Manager {
             }
         }
 
-        /* Ejecuta una sentencia en el manejador. Los datos en la sentencia tienen que ser válidos y regresa los errores que pueda tener*/
+        /* Ejecuta una sentencia en el manejador. Valida los datos de la secuencia escrita 
+         * y regresa los errores que pueda tener. Se utiliza TSQL para haceer el arbol de la 
+         * secuencia y poder verificar sus partes. 
+         * Crea una nueba tabla con los valores obtenidos de la secuencia */
         private string ExecuteQuery() {
-            /* Guarda la sentencia en un arbol TSQL, despues se separa en las partes de select y from*/
+            // Si la secuenci está vacía
             if (textBoxQuery.Text == "") {
                 return "Error: no query entered";
             }
+
+            // Guarda la sentencia en un arbol TSQL, despues se separa en las partes de select y from
             var query = TSQLStatementReader.ParseStatements(@textBoxQuery.Text)[0] as TSQLSelectStatement;
             if (query != null) {
+                // Guarda los tokens del select y del from.
                 var select = query.Select.Tokens;
                 var from = query.From.Tokens;
                 
-                List<string> columns = new List<string>();
-                Table t1 = dataBase.FindTable(from[1].Text);
-                Table t2 = null;
+                Table t1 = dataBase.FindTable(from[1].Text); // Tabla del FROM
+                Table t2 = null; //Tabla que puede ser usada en INNER JOIN
                 Attribute innerAt1 = null;
+                Attribute whereAttribute = null;
                 Attribute innerAt2 = null;
-                string leftSide = "";
+                List<Attribute> innerAttributes = new List<Attribute>();
+                string leftSide = "", resp = "";
                 object rightSide = null;
                 string oper = "";
                 int min = 0, max = 0;
                 queryTable = new Table("Query");
 
-                /* Si la tabla indicada no se encuentra, se sale*/
-
+                // No se escribio bien la sentencia
                 if (query.From == null) {
                     return "Error: Incorrect sintaxis";
                 }
+                // La tabla indicada no se encuentra
                 if (t1 == null) {
                     return "Error: Table \"" + from[1].Text + "\" not found";
                 }
 
                 /* Si hay 13 tokens entonces es posible que haya una sentencia de inner join*/
                 if (from.Count == 13) {
+
+                    // Verifica que se haya escrito INNER JOIN .. ON
                     if (from[2].Type == TSQLTokenType.Keyword && from[3].Type == TSQLTokenType.Keyword && from[5].Type == TSQLTokenType.Keyword) {
+                        // Busca la tabla con la que hace inner
                         t2 = dataBase.FindTable(from[4].Text);
                         if (t2 == null) {
                             return "Error: Table \"" + from[1].Text + "\" not found";
                         }
+                        /* Intenta buscar los atributos de cada tabla, si no los encuentra los intenta 
+                         buscar de la forma invertida, si no los ecuentra entonces no existen*/
                         innerAt1 = t1.FindAttribute(from[8].Text);
                         innerAt2 = t2.FindAttribute(from[12].Text);
                         if (innerAt1 == null || innerAt2 == null) {
@@ -711,18 +726,22 @@ namespace Manager {
                                 }
                             }
                         }
+                        // Hace inner join entre diferentes tipos de datos
                         if (innerAt1.Type != innerAt2.Type) {
                             return "Error: can not join on diferent types";
                         }
+                        // Hace inner join entre dos diferentes llaves
                         if (!innerAt1.ParentTable.Name.Equals(innerAt2.ParentTable.Name)) {
                             return "Error: must compare between same keys";
                         }
+                        // Busca las tablas que fue escrita en la parte de ON
                         if (dataBase.FindTable(from[6].Text) == null) {
                             return "Error: table not found";
                         }
                         if (dataBase.FindTable(from[10].Text) == null) {
                             return "Error: table not found";
                         }
+                        // Verifica que no se haga inner join con *
                         if (select[1].Text == "*") {
                             return "Error: Can't make inner join with *";
                         }
@@ -737,33 +756,36 @@ namespace Manager {
                     }
                 }
 
-                /* SELECT: 
-                 * Agrega todos los atribuutos de la tabla */
+                /* Se realiza la sentencia select de la tabla especificada. 
+                 Se agrega todos los atribuutos de la tabla a la nueva tabla, con constructor de copia */
                 if (select[1].Type == TSQLTokenType.Operator) {
                     foreach (var attribu in t1.Attributes) {
-                        columns.Add(attribu.Name);
                         Attribute att = new Attribute(attribu);
                         att.ParentTable = t1;
+
                         queryTable.AddAttribute(att);
                     }
                 }
                 else {
-                    /*Agrega los atributos indicados, si uno no se encuentra, se sale*/
-                    //foreach (var token in select) {
+                    /*Agrega los atributos indicado en el orden, si uno no se encuentra se sale 
+                     y marca error. Si la sentencia está escrita de la forma Tabla.Atributo, primero
+                     busca la tabla*/
                     for (int i = 1; i < select.Count; i++) {
                         if (select[i].Type == TSQLTokenType.Identifier && dataBase.FindTable(select[i].Text) == null) {
                             Attribute at = t1.FindAttribute(select[i].Text);
                             if (at == null) {
+                                // Si no la encontro en la primera tabla, la empieza a buscar en la segunda
                                 if (t2 != null) {
                                     at = t2.FindAttribute(select[i].Text);
                                     if (at == null) {
                                         return "Error: Attribute \"" + select[i].Text + "\" not found";
                                     }
                                     else {
-                                        columns.Add(select[i].Text);
+                                        // Agraga la tabla a las columnas y establece el padre como la tabla 2 o 1
                                         Attribute att = new Attribute(at);
                                         att.ParentTable = t2;
                                         queryTable.AddAttribute(att);
+                                        innerAttributes.Add(at);
                                     }
                                 }
                                 else {
@@ -771,10 +793,11 @@ namespace Manager {
                                 }
                             }
                             else {
-                                columns.Add(select[i].Text);
+                                // Agrega la columna y etablece como padre a la tabla
                                 Attribute att = new Attribute(at);
                                 att.ParentTable = t1;
                                 queryTable.AddAttribute(att);
+                                innerAttributes.Add(at);
                             }
                         }
                     }
@@ -783,6 +806,7 @@ namespace Manager {
                 /* Verifica que la oracion tenga un where, si lo tiene, generaliza la condicion y 
                  la separa en el lado izquierdo, derecho y operador*/
                 if (query.Where != null) {
+                    // Verifica que no se compare con una cadena ingresada
                     if (query.Where.Tokens[3].Type == TSQLTokenType.StringLiteral) {
                         return "Error: can't compare with string";
                     }
@@ -791,13 +815,15 @@ namespace Manager {
                     rightSide = query.Where.Tokens[3].Text;
                     oper = query.Where.Tokens[2].Text;
 
+                    // Intenta convertir a entero para saber que no es cadena
                     try {
                         int dumm = Convert.ToInt32(rightSide);
                     }
                     catch {
                         return "Error: string compared";
                     }
-                    //Attribute at = t1.Attributes.Any(x => x.Name == leftSide);
+
+                    // Busca el atributo con el que se compara
                     Attribute at = t1.Attributes.Find(x => x.Name == leftSide);
                     if (leftSide == "" || rightSide == null || oper == "") {
                         return "Error: Incorrect query syntaxis on WHERE";
@@ -806,42 +832,45 @@ namespace Manager {
                     if (at == null) {
                         return "Error: Attribute " + leftSide + " not found";
                     }
-
+                    // Verifica que el atributo con el que se compara no sea string
                     if (at.Type == "String") {
                         return "Error: can't do WHERE on string type";
                     }
+
+                    // Busca el atributo del where.
+                    for (int h = 0; h < t1.Attributes.Count; h++) {
+                        if (t1.Attributes[h].Name == leftSide) {
+                            whereAttribute = t1.Attributes[h];
+                            //object tReg = t1.Attributes[h].Register[i];
+                            //valid = VerifyWhere(t1.Attributes[h].Type, oper, rightSide, tReg);
+                            break;
+                        }
+                    }
+                    if (whereAttribute == null) {
+                        return "Error: Attribute \"" + leftSide.ToString() + "\" not found";
+                    }
                 }
 
+                /* Busca el maximo y minimo de registros de las dos tablas para realizar el inner join. Se
+                hace un ciclo de min*max para agregar todas */
                 min = t2 != null ? Math.Min(t1.PK.Register.Count, t2.PK.Register.Count) : t1.PK.Register.Count;
                 max = t2 != null ? Math.Max(t1.PK.Register.Count, t2.PK.Register.Count) : t1.PK.Register.Count;
 
-                /* Llena la tabla de la sentencia con los valores de los registros de la otra tabla, si tiene where, checa la condicion*/
+                /* Llena la tabla de la sentencia con los valores de los registros 
+                 * de la otra tabla, por lo tanto no es inner join. si tiene where, checa la condicion*/
                 if (t2 == null) {
                     for (int i = 0; i < min; i++) {
-                        List<object> r = t1.GetRegisterAt(i);
+                        /* Crea un nuevo registro vacío, los datos se llenan en el orden en que
+                          la tabla de la sentencia tiene los atributos */
                         List<object> nr = new List<object>();
                         int valid = 0;
-                        /* Agrega */
-                        foreach (var atDst in queryTable.Attributes) {
-                            for (int k = 0; k < t1.Attributes.Count; k++) {
-                                if (t1.Attributes[k].Name == atDst.Name) {
-
-                                    /* Si tiene where abntes verifica que el registro cumpla la condicion para insertarlo*/
-                                    if (query.Where != null) {
-                                        int h;
-                                        for (h = 0; h < t1.Attributes.Count; h++) {
-                                            if (t1.Attributes[h].Name == leftSide) {
-                                                object tReg = t1.Attributes[h].Register[i];
-                                                valid = VerifyWhere(t1.Attributes[h].Type, oper, rightSide, tReg);
-                                                break;
-                                            }
-                                        }
-                                    }
-
-                                    nr.Add(t1.Attributes[k].Register[i]);
-                                    break;
-                                }
-                            }
+                        if (query.Where != null) {
+                            valid = CompareValues(whereAttribute.Type, oper, rightSide, whereAttribute.Register[i]);
+                        }
+                        /* Busca el atributo actual en todos los atributos de la tabla destino y la
+                        tabla de la sentencia */
+                        foreach (var attribute in innerAttributes) {
+                            nr.Add(attribute.Register[i]);
                         }
 
                         if (query.Where != null) {
@@ -854,35 +883,20 @@ namespace Manager {
                         }
                     }
                 }
+                // Si la sentencia tiene inner join, agrega los valores de las dos tablas
                 else {
                     for (int h = 0; h < innerAt1.Register.Count; h++) {
                         for (int g = 0; g < innerAt2.Register.Count; g++) {
                             bool valid = false;
-                            int resul = VerifyWhere(innerAt1.Type, "=", innerAt2.Register[g], innerAt1.Register[h]);
+                            List<object> nr = new List<object>();
+                            int resul = CompareValues(innerAt1.Type, "=", innerAt2.Register[g], innerAt1.Register[h]);
                             if (resul == 1) {
-                                List<object> nr = new List<object>();
-                                foreach (var attribute in queryTable.Attributes) {
-                                    bool found = false;
-
-                                    foreach (var att in t1.Attributes) {
-                                        if (attribute.Name == att.Name) {
-                                            nr.Add(att.Register[h]);
-                                            found = true;
-                                            break;
-                                        }
+                                foreach (var attribute in innerAttributes) {
+                                    if (attribute.ParentTable.Name.Equals(t1.Name)) {
+                                        nr.Add(attribute.Register[h]);
                                     }
-                                    if (found) {
-                                        continue;
-                                    }
-                                    foreach (var att in t2.Attributes) {
-                                        if (attribute.Name == att.Name) {
-                                            nr.Add(att.Register[g]);
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-                                    if (found) {
-                                        continue;
+                                    else {
+                                        nr.Add(attribute.Register[g]);
                                     }
                                 }
                                 if (query.Where != null) {
@@ -908,10 +922,12 @@ namespace Manager {
                 return "Error: Incorrect query syntaxis";
             }
         }
-        
-        /* Verifica la condición en el where, recibe los datos del lado derecho y el registro, y hace
-         el cast de acuerdo al tipo de elemento */
-        private int VerifyWhere(string type, string oper, object a, object b) {
+
+        /* Verifica dos datos de tipo objeto, recibe dos objetos y los intenta 
+        * convertir al tipo que se recibe. El comparador se encuentra en oper
+        * y solo valida las opciones ==, <, >, <=, >=, != */
+        private int CompareValues(string type, string oper, object a, object b) {
+            /* Si es entero, o flotante los convierte a su tipo */
             if (type == "Int") {
                 int n1, n2;
                 try {
@@ -957,7 +973,14 @@ namespace Manager {
                 }
             }
             if (type == "Float") {
-                float n1 = Convert.ToSingle(b), n2 = Convert.ToSingle(a);
+                float n1, n2;
+                try {
+                    n1 = Convert.ToSingle(b);
+                    n2 = Convert.ToSingle(a);
+                }
+                catch {
+                    return -1;
+                }
                 switch (oper) {
                     case "=":
                         if (n1 == n2) {
@@ -1009,21 +1032,25 @@ namespace Manager {
             return 0;
         }
 
+        /* Cuando se presiona la tecla ENTER en el textbox de la query*/
         private void TextBoxQuery_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Enter) {
                 BtnExecute_Click(this, null);
             }
         }
 
+        /* Boton para limpiar el cuadro de texto */
         private void Button1_Click(object sender, EventArgs e) {
             textBoxQuery.Clear();
          
         }
 
+        /* Abre el diálogo de el Acerca de */
         private void AboutToolStripMenuItem1_Click(object sender, EventArgs e) {
             AboutBox1 about = new AboutBox1();
             about.ShowDialog();
         }
+
 
         private void ExportToolStripMenuItem_Click(object sender, EventArgs e) {
             var cvs = new StringBuilder();
